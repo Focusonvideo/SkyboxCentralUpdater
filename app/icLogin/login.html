@@ -1,0 +1,36 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Connection Information</h3>
+    </div>
+    <span us-spinner spinner-on="showSpinner"></span>
+    <div class="panel-body">
+        <form tovalidate class="form-group">
+            <fieldset>
+                <label for="username">Username</label>
+                <input class="form-control" type="email" id="username" ng-model="user.name"/>
+            </fieldset>
+            <fieldset>
+                <label for="password">Password</label>
+                <input class="form-control" type="password" id="password" ng-model="user.pass"/>
+            </fieldset>
+            <fieldset>
+                <label for="username">Application Name</label>
+                <input class="form-control" type="text" id="applicationName" ng-model="user.appName"/>
+            </fieldset>
+            <fieldset>
+                <label for="username">Vendor Name</label>
+                <input class="form-control" type="text" id="vendorName" ng-model="user.vendName"/>
+            </fieldset>
+            <fieldset>
+                <label for="username">Business Unit #</label>
+                <input class="form-control" type="text" id="businessUnit" ng-model="user.BusUnit"/>
+            </fieldset>
+            <fieldset>
+                <label for="username">Soap Password</label>
+                <input class="form-control" type="text" id="soapPassword" ng-model="user.soapPass"/>
+            </fieldset>
+            <br/>
+            <input type="submit" class="btn btn-primary btn-lg" ng-click="attemptLogin(user)" value="Login" />
+        </form>
+    </div>
+</div>

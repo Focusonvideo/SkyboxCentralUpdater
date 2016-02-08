@@ -1,0 +1,25 @@
+<h2 class="text-center">Campaigns</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Campaign No</TH>
+        <th>Campaign Name</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="camp in CampaignData">
+        <td>{{camp.CampaignNo}}</td>
+        <td>{{camp.CampaignName}}</td>
+        <td>{{camp.Status}}</td>
+        <td>{{camp.Description}}</td>
+        <td>{{camp.Notes}}</td>
+        <td>{{camp.LastModified}}</td>
+        <td><button ng-click="ModCampaign(camp)">Mod</button> </td>
+    </tr>
+</table>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddCampaign()" value="ADD Campaign" />

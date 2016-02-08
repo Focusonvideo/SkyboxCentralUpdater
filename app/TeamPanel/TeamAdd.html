@@ -1,0 +1,32 @@
+<h2 class="text-center">Teams Update</h2>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Team No</TH>
+        <th>Team Name</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+        <th>Max Concurrent Chats</th>
+    </tr>
+    <tr >
+        <td>{{modTeamData.TeamNo}}</td>
+        <td><input type="text" ng-model="modTeamData.TeamName"/></td>
+        <td>
+            <select ng-model="modTeamData.Status">
+                <option value="{{statusOpt[0].name}}" {{statusOpt[0].sel}}>{{statusOpt[0].name}}</option>
+                <option value="{{statusOpt[1].name}}" {{statusOpt[1].sel}}>{{statusOpt[1].name}}</option>
+            </select>
+        </td>
+        <td><input type="text" ng-model="modTeamData.Description"/></td>
+        <td><input type="text" ng-model="modTeamData.Notes"/></td>
+        <td>{{modTeamData.LastModified}}</td>
+        <td><input type="text" ng-model="modTeamData.MaxConcurrentChats"/></td>
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updateTeam()" value="{{buttonName}}" />
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelTeamUpdate()" value="Cancel" />
+

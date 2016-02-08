@@ -1,0 +1,25 @@
+<h2 class="text-center">Dispositions</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddDisposition()" value="ADD Disposition" />
+
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Disposition No</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="tm in DispositionData">
+        <td>{{tm.DispositionID}}</td>
+        <td>{{tm.Description}}</td>
+        <td>{{tm.Status}}</td>
+        <td>{{tm.LongDescription}}</td>
+        <td>{{tm.Notes}}</td>
+        <td>{{tm.LastModified}}</td>
+        <td><button ng-click="ModDisposition(tm)">Mod</button> </td>
+    </tr>
+</table>

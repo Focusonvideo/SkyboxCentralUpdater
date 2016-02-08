@@ -1,0 +1,37 @@
+<h2 class="text-center">Team/Unavailables Association</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateTeamOutstate()" value="Update Team/Unavailable Assoc." />
+<br/><br/>
+<label > Select Team: </label>
+<select  ng-model="modTeamSelected" ng-change="teamSelected()">
+    <option ng-repeat="selTeam in teams" value="{{selTeam.TeamNo}}" >{{selTeam.TeamName}}</option>
+ </select>
+<br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Unavailable Codes</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Assoc.</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+        <th>IsACW</th>
+        <th>Last Modified</th>
+    </tr>
+    <tr ng-repeat="tm in OutstateData">
+        <td>{{tm.OutstateCode}}</td>
+        <td>{{tm.Description}}</td>
+        <td>{{tm.Status}}</td>
+        <td>
+            <select  ng-model="tm.Assoc" ng-change="AssocChanged(tm.idx)">
+                <option  value="{{tm.yesnos[0].name}}" {{tm.yesnos[0].sel}} >{{tm.yesnos[0].name}}</option>
+                <option  value="{{tm.yesnos[1].name}}" {{tm.yesnos[1].sel}} >{{tm.yesnos[1].name}}</option>
+            </select>
+        </td>
+        <td>{{tm.LongDescription}}</td>
+        <td>{{tm.Notes}}</td>
+        <td>{{tm.IsACW}}</td>
+        <td>{{tm.LastModified}}</td>
+    </tr>
+</table>

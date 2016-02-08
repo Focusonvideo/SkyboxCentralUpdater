@@ -1,0 +1,25 @@
+<h2 class="text-center">Skills</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Skill No</TH>
+        <th>Skill Name</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="sk in SkillData">
+        <td>{{sk.SkillNo}}</td>
+        <td>{{sk.SkillName}}</td>
+        <td>{{sk.Status}}</td>
+        <td>{{sk.Description}}</td>
+        <td>{{sk.Notes}}</td>
+        <td>{{sk.LastModified}}</td>
+        <td><button ng-click="ModCampaign(camp)">Mod</button> </td>
+    </tr>
+</table>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddCampaign()" value="ADD Skill" />

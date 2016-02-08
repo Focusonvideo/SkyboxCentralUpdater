@@ -1,0 +1,30 @@
+<h2 class="text-center">Campaign Update</h2>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Campaign No</TH>
+        <th>Campaign Name</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+    </tr>
+    <tr >
+        <td>{{modCampaignData.CampaignNo}}</td>
+        <td><input type="text" ng-model="modCampaignData.CampaignName"/></td>
+        <td>
+            <select ng-model="modCampaignData.Status">
+                <option value="{{statusOpt[0].name}}" {{statusOpt[0].sel}}>{{statusOpt[0].name}}</option>
+                <option value="{{statusOpt[1].name}}" {{statusOpt[1].sel}}>{{statusOpt[1].name}}</option>
+            </select>
+        </td>
+        <td><input type="text" ng-model="modCampaignData.Description"/></td>
+        <td><input type="text" ng-model="modCampaignData.Notes"/></td>
+        <td>{{modCampaignData.LastModified}}</td>
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updateCampaign()" value="{{buttonName}}" />
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelCampaignUpdate()" value="Cancel" />
+

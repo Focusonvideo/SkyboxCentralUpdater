@@ -1,0 +1,27 @@
+<h2 class="text-center">Teams</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Team No</TH>
+        <th>Team Name</th>
+        <th>Status</th>
+        <th>Description</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+        <th>Max Concurrent Chats</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="tm in TeamData">
+        <td>{{tm.TeamNo}}</td>
+        <td>{{tm.TeamName}}</td>
+        <td>{{tm.Status}}</td>
+        <td>{{tm.Description}}</td>
+        <td>{{tm.Notes}}</td>
+        <td>{{tm.LastModified}}</td>
+        <td>{{tm.MaxConcurrentChats}}</td>
+        <td><button ng-click="ModTeam(tm)">Mod</button> </td>
+    </tr>
+</table>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddTeam()" value="ADD Team" />

@@ -1,0 +1,37 @@
+<h2 class="text-center">Unavailable Code Update</h2>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Unavailable Code</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+        <th>IsACW</th>
+        <th>Last Modified</th>
+    </tr>
+    <tr >
+        <td>{{modOutstateData.OutstateCode}}</td>
+        <td><input type="text" ng-model="modOutstateData.Description"/></td>
+        <td>
+            <select ng-model="modOutstateData.Status">
+                <option value="{{statusOpt[0].name}}" {{statusOpt[0].sel}}>{{statusOpt[0].name}}</option>
+                <option value="{{statusOpt[1].name}}" {{statusOpt[1].sel}}>{{statusOpt[1].name}}</option>
+            </select>
+        </td>
+        <td><input type="text" ng-model="modOutstateData.LongDescription"/></td>
+        <td><input type="text" ng-model="modOutstateData.Notes"/></td>
+        <td>
+            <select ng-model="modOutstateData.IsACW">
+                <option value="{{IsACWOpt[0].name}}" {{IsACWOpt[0].sel}}>{{IsACWOpt[0].name}}</option>
+                <option value="{{IsACWOpt[1].name}}" {{IsACWOpt[1].sel}}>{{IsACWOpt[1].name}}</option>
+            </select>
+        </td>
+       <td>{{modOutstateData.LastModified}}</td>
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updateOutstate()" value="{{buttonName}}" />
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelOutstateUpdate()" value="Cancel" />
+

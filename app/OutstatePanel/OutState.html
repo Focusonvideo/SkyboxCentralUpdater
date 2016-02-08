@@ -1,0 +1,27 @@
+<h2 class="text-center">Unavailables</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddOutstate()" value="ADD Unavailable Code" />
+
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Unavailable Codes</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+        <th>IsACW</th>
+        <th>Last Modified</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="tm in OutstateData">
+        <td>{{tm.OutstateCode}}</td>
+        <td>{{tm.Description}}</td>
+        <td>{{tm.Status}}</td>
+        <td>{{tm.LongDescription}}</td>
+        <td>{{tm.Notes}}</td>
+        <td>{{tm.IsACW}}</td>
+        <td>{{tm.LastModified}}</td>
+        <td><button ng-click="ModOutstate(tm)">Mod</button> </td>
+    </tr>
+</table>

@@ -1,0 +1,30 @@
+<h2 class="text-center">Dispositions Update</h2>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Disposition No</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+    </tr>
+    <tr >
+        <td>{{modDispositionData.DispositionID}}</td>
+        <td><input type="text" ng-model="modDispositionData.Description"/></td>
+        <td>
+            <select ng-model="modDispositionData.Status">
+                <option value="{{statusOpt[0].name}}" {{statusOpt[0].sel}}>{{statusOpt[0].name}}</option>
+                <option value="{{statusOpt[1].name}}" {{statusOpt[1].sel}}>{{statusOpt[1].name}}</option>
+            </select>
+        </td>
+        <td><input type="text" ng-model="modDispositionData.LongDescription"/></td>
+        <td><input type="text" ng-model="modDispositionData.Notes"/></td>
+        <td>{{modDispositionData.LastModified}}</td>
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updateDisposition()" value="{{buttonName}}" />
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelDispositionUpdate()" value="Cancel" />
+

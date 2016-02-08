@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app="SkyboxApp">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Skybox BRD Wizard</title>
+  <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="bower_components/angular-route/angular-route.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+  <script type="text/javascript" src="Services.js"></script>
+  <script type="text/javascript" src="bower_components/angular-spin/spin.js"></script>
+  <script type="text/javascript" src="bower_components/angular-spin/angular-spinner.js"></script>
+  <script type="text/javascript" src="bower_components/angular-soap-master/angular.soap.js"></script>
+  <script type="text/javascript" src="bower_components/angular-soap-master/soapclient.js"></script>
+  <script type="text/javascript" src="icLogin/login.js"></script>
+  <script type="text/javascript" src="MainPanel/main.js"></script>
+  <script type="text/javascript" src="TeamPanel/Team.js"></script>
+  <script type="text/javascript" src="TeamPanel/Teamadd.js"></script>
+  <script type="text/javascript" src="TeamOutstate/TeamOutState.js"></script>
+  <script type="text/javascript" src="OutstatePanel/OutState.js"></script>
+  <script type="text/javascript" src="OutstatePanel/OutStateadd.js"></script>
+  <script type="text/javascript" src="DispositionPanel/Disposition.js"></script>
+  <script type="text/javascript" src="DispositionPanel/Dispositionadd.js"></script>
+  <script type="text/javascript" src="CampaignPanel/Campaign.js"></script>
+  <script type="text/javascript" src="CampaignPanel/CampaignAdd.js"></script>
+  <script type="text/javascript" src="SkillPanel/Skill.js"></script>
+
+  <!-- include the Bootstrap CSS -->
+  <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+</head>
+
+
+
+<body ng-controller="SkyboxController as SC">
+<!-- set our tabs with the AngularJS Bootstrap directive -->
+<header>
+  <nav class="navbar navbar-default">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Skybox BRD Wizard</a>
+      </div>
+
+      <ul class="nav navbar-nav navbar-right"  ng-repeat="tab in tabs">
+        <li><a href="{{tab.ref}}"  ng-show="LoggedIN"><i class="{{tab.pgclass}}"></i> {{tab.title}}</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<div id="main">
+  <div ng-view></div>
+</div>
+
+</body>
+</html>

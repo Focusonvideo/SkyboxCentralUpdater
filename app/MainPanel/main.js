@@ -36,6 +36,12 @@ angular.module('SkyboxApp')
             ref:"#teamoutstate"
         },
         {
+            title: "Skill/Disposition",
+            url: "SkillDisposition/SkillDisp.html",
+            pgclass:"fa fa-shield",
+            ref:"#skilldisp"
+        },
+        {
             title: "Skill",
             url: "SkillPanel/Skill.html",
             pgclass:"fa fa-shield",

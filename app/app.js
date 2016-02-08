@@ -106,6 +106,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  templateUrl:'TeamOutState/TeamOutState.html',
                  controller: 'TeamOutstateCtrl'
              })
+             .when('/skilldisp',{
+                 templateUrl:'SkillDisposition/SkillDisp.html',
+                 controller: 'SkillDispCtrl'
+             })
              .when('/outstate',{
                  templateUrl:'OutStatePanel/OutState.html',
                  controller: 'OutstateCtrl'

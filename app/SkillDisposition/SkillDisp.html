@@ -1,0 +1,41 @@
+<h2 class="text-center">Skill/Disposition Association</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateSkillDisp()" value="Update Skill/Disposition Assoc." />
+<br/><br/>
+<label > Select Skill: </label>
+<select  ng-model="modSkillSelected" ng-change="skillSelected()">
+    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillNo}}" >{{selSkill.SkillName}}</option>
+ </select>
+<br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Disp.ID</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Assoc.</th>
+        <th>List Pri.</th>
+        <th>Use Comment</th>
+        <th>Comment Req.</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+        <th>Last Modified</th>
+    </tr>
+    <tr ng-repeat="tm in SkillDispData">
+        <td>{{tm.DispositionID}}</td>
+        <td>{{tm.Description}}</td>
+        <td>{{tm.Status}}</td>
+        <td>
+            <select  ng-model="tm.Assoc" ng-change="AssocChanged(tm.idx)">
+                <option  value="{{tm.yesnos[0].name}}" {{tm.yesnos[0].sel}} >{{tm.yesnos[0].name}}</option>
+                <option  value="{{tm.yesnos[1].name}}" {{tm.yesnos[1].sel}} >{{tm.yesnos[1].name}}</option>
+            </select>
+        </td>
+        <td>{{tm.ListPriority}}</td>
+        <td>{{tm.UseComments}}</td>
+        <td>{{tm.CommentsRequired}}</td>
+        <td>{{tm.LongDescription}}</td>
+        <td>{{tm.Notes}}</td>
+        <td>{{tm.LastModified}}</td>
+    </tr>
+</table>

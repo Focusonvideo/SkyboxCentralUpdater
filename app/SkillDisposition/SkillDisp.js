@@ -4,30 +4,30 @@
 'use strict';
 
 angular.module('SkyboxApp')
-    .controller('TeamOutstateCtrl', ['$scope', 'icSOAPServices', '$location',  function($scope, icSOAPServices, $location) {
+    .controller('SkillDispCtrl', ['$scope', 'icSOAPServices', '$location',  function($scope, icSOAPServices, $location) {
         $scope.showSpinner = true;
-        $scope.modTeamSelected = "";
+        $scope.modSkillSelected = "";
         $scope.newAssociated = "";
-        icSOAPServices.icGet("Team_GetList").then(
+        icSOAPServices.icGet("Skill_GetList").then(
             function(data){
                 $scope.showSpinner = false;
-                $scope.teams = data;
+                $scope.skills = data;
             },
             function(response){
                 $scope.showSpinner = false;
                 alert("BAD:" + JSON.stringify(response));
             }
         );
-        icSOAPServices.icGet("Outstate_GetList").then(
+        icSOAPServices.icGet("Disposition_GetList").then(
             function(data){
                 $scope.showSpinner = false;
-                $scope.OutstateData = data;
-                for(var i=0;i<$scope.OutstateData.length;i++){
-                    $scope.OutstateData[i].yesnos = [
+                $scope.SkillDispData = data;
+                for(var i=0;i<$scope.SkillDispData.length;i++){
+                    $scope.SkillDispData[i].yesnos = [
                         {name:"Yes", sel:"selected"},
                         {name:"No", sel:""}
                     ];
-                    $scope.OutstateData[i].idx = i;
+                    $scope.SkillDispData[i].idx = i;
 //                    $scope.OutStateData[i].changed = false;
                 }
             },
@@ -36,32 +36,32 @@ angular.module('SkyboxApp')
                 alert("BAD:" + JSON.stringify(response));
             }
         );
-        $scope.teamSelected = function(){
-            for(var i=0;i<$scope.OutstateData.length;i++){
-                $scope.OutstateData[i].AssocChanged = false;
+        $scope.skillSelected = function(){
+            for(var i=0;i<$scope.SkillDispData.length;i++){
+                $scope.SkillDispData[i].AssocChanged = false;
             }
-                var parm = {"teamNo":$scope.modTeamSelected};
+                var parm = {"SkillNo":$scope.modSkillSelected};
             $scope.showSpinner = true;
-            icSOAPServices.icGet("TeamOutstate_GetList", parm).then(
+            icSOAPServices.icGet("SkillDisposition_GetList", parm).then(
                 function(data){
                     $scope.showSpinner = false;
-                    $scope.teamoutdata = data;
-                    for(var i=0;i<$scope.OutstateData.length;i++){
+                    $scope.skilloutdata = data;
+                    for(var i=0;i<$scope.SkillDispData.length;i++){
                         var found = false;
                         for(var x=0;x<data.length;x++){
-                            if(data[x].OutstateCode == $scope.OutstateData[i].OutstateCode){
+                            if(data[x].DispositionID == $scope.SkillDispData[i].DispositionID){
                                 found = true;
                                 break;
                             }
                         }
                         if(found){
-                            $scope.OutstateData[i].Assoc = "Yes";
-                            $scope.OutstateData[i].yesnos[0].sel = 'selected';
-                            $scope.OutstateData[i].yesnos[1].sel = '';
+                            $scope.SkillDispData[i].Assoc = "Yes";
+                            $scope.SkillDispData[i].yesnos[0].sel = 'selected';
+                            $scope.SkillDispData[i].yesnos[1].sel = '';
                         }else{
-                            $scope.OutstateData[i].Assoc = "No";
-                            $scope.OutstateData[i].yesnos[1].sel = 'selected';
-                            $scope.OutstateData[i].yesnos[0].sel = '';
+                            $scope.SkillDispData[i].Assoc = "No";
+                            $scope.SkillDispData[i].yesnos[1].sel = 'selected';
+                            $scope.SkillDispData[i].yesnos[0].sel = '';
                         }
                     }
 
@@ -78,14 +78,14 @@ angular.module('SkyboxApp')
             $location.path("/outstateadd");
         };
         $scope.AssocChanged = function(index){
-            $scope.OutstateData[index].AssocChanged = true;
+            $scope.SkillDispData[index].AssocChanged = true;
         };
-        $scope.UpdateTeamOutstate = function(){
-            for (var x=0;x<$scope.OutstateData.length;x++){
-                if($scope.OutstateData[x].AssocChanged){
-                    if($scope.OutstateData[x].Assoc == 'Yes'){
+        $scope.UpdateSkillDisp = function(){
+            for (var x=0;x<$scope.SkillDispData.length;x++){
+                if($scope.SkillDispData[x].AssocChanged){
+                    if($scope.SkillDispData[x].Assoc == 'Yes'){
                         var parm = {teamNo:$scope.modTeamSelected,
-                            outstateCode:$scope.OutstateData[x].OutstateCode};
+                            outstateCode:$scope.SkillDispData[x].OutstateCode};
                         icSOAPServices.icGet("TeamOutstate_Add", parm).then(
                             function(data){ // good
                                 alert("Good");

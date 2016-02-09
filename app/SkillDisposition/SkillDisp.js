@@ -27,8 +27,11 @@ angular.module('SkyboxApp')
                         {name:"Yes", sel:"selected"},
                         {name:"No", sel:""}
                     ];
+                    $scope.SkillDispData[i].useSelected = [
+                        {sel:""},
+                        {sel:""}
+                    ];
                     $scope.SkillDispData[i].idx = i;
-//                    $scope.OutStateData[i].changed = false;
                 }
             },
             function(response){
@@ -40,7 +43,7 @@ angular.module('SkyboxApp')
             for(var i=0;i<$scope.SkillDispData.length;i++){
                 $scope.SkillDispData[i].AssocChanged = false;
             }
-                var parm = {"SkillNo":$scope.modSkillSelected};
+                var parm = {"skillNo":$scope.modSkillSelected};
             $scope.showSpinner = true;
             icSOAPServices.icGet("SkillDisposition_GetList", parm).then(
                 function(data){
@@ -58,10 +61,28 @@ angular.module('SkyboxApp')
                             $scope.SkillDispData[i].Assoc = "Yes";
                             $scope.SkillDispData[i].yesnos[0].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[1].sel = '';
+                            $scope.SkillDispData[i].ListPriority = data[x].ListPriority;
+                            $scope.SkillDispData[i].UseComments = data[x].UseComments;
+                            $scope.SkillDispData[i].CommentsRequired = data[x].CommentsRequired;
+                            if(data[x].UseComments){
+                                $scope.SkillDispData[i].useComm = "true";
+                                $scope.SkillDispData[i].useSelected[0].sel = "selected";
+                                $scope.SkillDispData[i].useSelected[1].sel = "";
+                            }else{
+                                $scope.SkillDispData[i].useSelected[0].sel = "";
+                                $scope.SkillDispData[i].useSelected[1].sel = "Selected";
+                            }
+
                         }else{
+                            $scope.SkillDispData[i].useComm = "false";
                             $scope.SkillDispData[i].Assoc = "No";
                             $scope.SkillDispData[i].yesnos[1].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[0].sel = '';
+                            $scope.SkillDispData[i].ListPriority = "";
+                            $scope.SkillDispData[i].UseComments = "";
+                            $scope.SkillDispData[i].CommentsRequired = "";
+                            $scope.SkillDispData[i].useSelected[0].sel = "";
+                            $scope.SkillDispData[i].useSelected[1].sel = "";
                         }
                     }
 

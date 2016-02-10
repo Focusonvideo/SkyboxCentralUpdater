@@ -64,17 +64,20 @@ angular.module('SkyboxApp')
                             $scope.SkillDispData[i].ListPriority = data[x].ListPriority;
                             $scope.SkillDispData[i].UseComments = data[x].UseComments;
                             $scope.SkillDispData[i].CommentsRequired = data[x].CommentsRequired;
+                            $scope.SkillDispData[i].showit = true;
                             if(data[x].UseComments){
                                 $scope.SkillDispData[i].useComm = "true";
                                 $scope.SkillDispData[i].useSelected[0].sel = "selected";
                                 $scope.SkillDispData[i].useSelected[1].sel = "";
                             }else{
+                                $scope.SkillDispData[i].useComm = "false";
                                 $scope.SkillDispData[i].useSelected[0].sel = "";
                                 $scope.SkillDispData[i].useSelected[1].sel = "Selected";
                             }
 
                         }else{
-                            $scope.SkillDispData[i].useComm = "false";
+                            $scope.SkillDispData[i].showit = false;
+                            $scope.SkillDispData[i].useComm = "";
                             $scope.SkillDispData[i].Assoc = "No";
                             $scope.SkillDispData[i].yesnos[1].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[0].sel = '';
@@ -95,11 +98,25 @@ angular.module('SkyboxApp')
             console.log($scope);
 
         };
-        $scope.AddOutstate = function(){
-            $location.path("/outstateadd");
+        $scope.priorityChanged = function(index){
+            // priorities change
+            $scope.SkillDispData[index].AssocChanged = true;
+
         };
+        $scope.useComChanged = function(index){
+
+        }
+        $scope.reqComChanged = function(index){
+
+        }
         $scope.AssocChanged = function(index){
             $scope.SkillDispData[index].AssocChanged = true;
+           if($scope.SkillDispData[index].Assoc == "No"){
+                // reset show
+                $scope.SkillDispData[index].showit = false;
+            }else{
+                $scope.SkillDispData[index].showit = true;
+            }
         };
         $scope.UpdateSkillDisp = function(){
             for (var x=0;x<$scope.SkillDispData.length;x++){

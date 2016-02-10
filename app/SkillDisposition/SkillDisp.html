@@ -31,14 +31,15 @@
                 <option  value="{{tm.yesnos[1].name}}" {{tm.yesnos[1].sel}} >{{tm.yesnos[1].name}}</option>
             </select>
         </td>
-        <td><input type="text" ng-model="tm.ListPriority" /></td>
         <td>
-            <select ng-model="tm.useComm" ng-change="priorityChanged(tm.idx)">
-                <option value="true" {{tm.useSelected[0].sel}}>true</option>
-                <option value="false" {{tm.useSelected[1].sel}}>false</option>
-            </select>
+            <input type="text" ng-model="tm.ListPriority" ng-show="tm.showit" ng-change="priorityChanged(tm.idx)"/>
         </td>
-        <td>{{tm.CommentsRequired}}</td>
+        <td>
+            <input type="checkbox" ng-model="tm.UseComments" ng-checked="tm.UseComments" ng-show="tm.showit" ng-change="useComChanged(tm.idx)"/>
+       </td>
+        <td>
+            <input type="checkbox" ng-model="tm.CommentsRequired" ng-checked="tm.CommentsRequired" ng-show="tm.showit" ng-change="reqComChanged(tm.idx)"/>
+        </td>
         <td>{{tm.LongDescription}}</td>
         <td>{{tm.Notes}}</td>
         <td>{{tm.LastModified}}</td>

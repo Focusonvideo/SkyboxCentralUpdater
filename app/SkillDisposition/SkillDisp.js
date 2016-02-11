@@ -105,10 +105,10 @@ angular.module('SkyboxApp')
         };
         $scope.useComChanged = function(index){
 
-        }
+        };
         $scope.reqComChanged = function(index){
 
-        }
+        };
         $scope.AssocChanged = function(index){
             $scope.SkillDispData[index].AssocChanged = true;
            if($scope.SkillDispData[index].Assoc == "No"){
@@ -132,7 +132,7 @@ angular.module('SkyboxApp')
                             });
 
                     }else{
-                        var parm = {teamNo:$scope.modTeamSelected,
+                        parm = {teamNo:$scope.modTeamSelected,
                             outstateCode:$scope.OutstateData[x].OutstateCode};
                         icSOAPServices.icGet("TeamOutstate_Delete", parm).then(
                         function(data){ // good

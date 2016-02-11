@@ -14,34 +14,31 @@ angular.module('SkyboxApp')
       soapPass: '10BC037E-35B9-4FBD-95A8-F342C0D9ACB8'
     };
     $scope.attemptLogin = function(newUser){
-//        alert(JSON.stringify(newUser));
         $scope.showSpinner = true;
-        icSOAPServices.token(newUser).then(
-            function(data) { // good
-              var tokenData = data.data;
-//              alert(JSON.stringify(tokenData));
-              SOAPClient.tokenData = tokenData;
-              SOAPClient.SOAPData = {
-                  BusNo : newUser.BusUnit,
-                  SOAPPass : newUser.soapPass
-              };
+        var url = {resource_server_base_uri : "https://login.incontact.com/"};
+        SOAPClient.tokenData = url;
+        SOAPClient.SOAPData = {
+          BusNo : newUser.BusUnit,
+          SOAPPass : newUser.soapPass
+        };
+        icSOAPServices.icGet("GetURL").then(
+          function(data){
+              url = {resource_server_base_uri : data.replace("inSideWS.asmx","")};
               icSOAPServices.icGet("TestConnection").then(
-                  function(data){
-//                    alert("DATA:" + JSON.stringify(data));
-                    $scope.showSpinner = false;
-                    $location.path("/main");
-                    $rootScope.$emit('loggin_event');
+                  function(data){  // good
+                      $scope.showSpinner = false;
+                      $location.path("/main");
+                      $rootScope.$emit('loggin_event');
                   },
                   function(response){
                       $scope.showSpinner = false;
-                      alert("ERROR:" + JSON.stringify(response));
                   }
-              )
-            } ,
-            function(response) {  // bad
-              alert(JSON.stringify(response));
-              alert("Cannot Log into InContact - verify login parameters");
-            }
-        )
+              );
+          },
+          function(response){
+              $scope.showSpinner = false;
+              alert("ERROR:" + JSON.stringify(response));
+          }
+        );
     }
 }]);

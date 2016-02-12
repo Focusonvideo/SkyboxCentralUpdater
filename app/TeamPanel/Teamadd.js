@@ -36,7 +36,7 @@ var app = angular.module('SkyboxApp');
             }
             icSOAPServices.icGet("Team_Update", parm).then(
                 function (data) {
-                    alert("Update Completed");
+//                    alert("Update Completed");
                     $location.path("/team");
                 },
                 function (response) {
@@ -60,14 +60,14 @@ var app = angular.module('SkyboxApp');
             "MaxConcurrentChats": 0
         };
         $scope.statusOpt = [
-            {name: 'Active', sel: ''},
+            {name: 'Active', sel: 'selected'},
             {name: 'InActive', sel: ''}
         ];
-        for (var opt = 0; opt < $scope.statusOpt; opt++) {
-            if ($scope.statusOpt[opt].name == $scope.modTeamData.Status) {
-                $scope.statusOpt[opt].sel = 'selected';
-            }
-        }
+ //       for (var opt = 0; opt < $scope.statusOpt; opt++) {
+ //           if ($scope.statusOpt[opt].name == $scope.modTeamData.Status) {
+ //               $scope.statusOpt[opt].sel = 'selected';
+ //           }
+ //       }
         $scope.updateTeam = function () {
             if ($scope.modTeamData.TeamName.length > 0) {
                 var parm = {
@@ -87,7 +87,7 @@ var app = angular.module('SkyboxApp');
                 }
                 icSOAPServices.icGet("Team_Add", parm).then(
                     function (data) {
-                        alert("Addition Completed");
+//                        alert("Addition Completed");
                         $location.path("/team");
                     },
                     function (response) {

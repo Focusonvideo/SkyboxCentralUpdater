@@ -38,7 +38,7 @@ var app = angular.module('SkyboxApp');
             }
             icSOAPServices.icGet("Disposition_Update", parm).then(
                 function (data) {
-                    alert("Update Completed");
+//                    alert("Update Completed");
                     $location.path("/disposition");
                 },
                 function (response) {
@@ -61,14 +61,14 @@ var app = angular.module('SkyboxApp');
             "Notes": ""
         };
         $scope.statusOpt = [
-            {name: 'Active', sel: ''},
+            {name: 'Active', sel: 'selected'},
             {name: 'InActive', sel: ''}
         ];
-        for (var opt = 0; opt < $scope.statusOpt; opt++) {
+ /*       for (var opt = 0; opt < $scope.statusOpt; opt++) {
             if ($scope.statusOpt[opt].name == $scope.modDispositionData.Status) {
                 $scope.statusOpt[opt].sel = 'selected';
             }
-        }
+        } */
         $scope.updateDisposition = function () {
             if ($scope.modDispositionData.Description.length > 0) {
                 var parm = {
@@ -90,7 +90,7 @@ var app = angular.module('SkyboxApp');
                 }
                 icSOAPServices.icGet("Disposition_Add", parm).then(
                     function (data) {
-                        alert("Addition Completed");
+ //                       alert("Addition Completed");
                         $location.path("/disposition");
                     },
                     function (response) {

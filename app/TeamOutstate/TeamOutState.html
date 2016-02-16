@@ -2,6 +2,8 @@
 <span us-spinner spinner-on="showSpinner"></span>
 <br/><br/>
 <input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateTeamOutstate()" value="Update Team/Unavailable Assoc." />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="SaveTeamOutstate()" value="Save Team/Unavailable Assoc. Config" ng-show="showSave"/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UseTeamOutstate()" value="Apply saved Team/Unavailable Assoc." ng-show="showUse"/>
 <br/><br/>
 <label > Select Team: </label>
 <select  ng-model="modTeamSelected" ng-change="teamSelected()">

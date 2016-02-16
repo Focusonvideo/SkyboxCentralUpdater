@@ -8,6 +8,9 @@ angular.module('SkyboxApp')
         $scope.showSpinner = true;
         $scope.modSkillSelected = "";
         $scope.newAssociated = "";
+        $scope.showAddConfig = false;
+        $scope.showUseConfig = false;
+
         icSOAPServices.icGet("Skill_GetList").then(
             function(data){
                 $scope.showSpinner = false;
@@ -58,12 +61,14 @@ angular.module('SkyboxApp')
                             }
                         }
                         if(found){
+                            $scope.SkillDispData[i].SkillNo = $scope.modSkillSelected;
                             $scope.SkillDispData[i].Assoc = "Yes";
                             $scope.SkillDispData[i].yesnos[0].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[1].sel = '';
                             $scope.SkillDispData[i].ListPriority = data[x].ListPriority;
                             $scope.SkillDispData[i].UseComments = data[x].UseComments;
                             $scope.SkillDispData[i].CommentsRequired = data[x].CommentsRequired;
+                            $scope.SkillDispData[i].SkillDispositionID = data[x].SkillDispositionID;
                             $scope.SkillDispData[i].showit = true;
                             if(data[x].UseComments){
                                 $scope.SkillDispData[i].useComm = "true";
@@ -76,14 +81,15 @@ angular.module('SkyboxApp')
                             }
 
                         }else{
+                            $scope.SkillDispData[i].SkillNo = $scope.modSkillSelected;
                             $scope.SkillDispData[i].showit = false;
                             $scope.SkillDispData[i].useComm = "";
                             $scope.SkillDispData[i].Assoc = "No";
                             $scope.SkillDispData[i].yesnos[1].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[0].sel = '';
                             $scope.SkillDispData[i].ListPriority = "";
-                            $scope.SkillDispData[i].UseComments = "";
-                            $scope.SkillDispData[i].CommentsRequired = "";
+                            $scope.SkillDispData[i].UseComments = "false";
+                            $scope.SkillDispData[i].CommentsRequired = "false";
                             $scope.SkillDispData[i].useSelected[0].sel = "";
                             $scope.SkillDispData[i].useSelected[1].sel = "";
                         }
@@ -96,6 +102,7 @@ angular.module('SkyboxApp')
                 }
             );
             console.log($scope);
+            $scope.showAddConfig = true;
 
         };
         $scope.priorityChanged = function(index){
@@ -122,14 +129,55 @@ angular.module('SkyboxApp')
                 $scope.SkillDispData[index].showit = true;
             }
         };
-        $scope.UpdateSkillDisp = function(){
+        $scope.SaveConfig = function(){
+            $scope.savedConfig = new Array($scope.SkillDispData.length);
+            for (var x=0;x < $scope.SkillDispData.length; x++) {
+                $scope.savedConfig[x]= {Assoc : $scope.SkillDispData[x].Assoc,
+                             CommentsRequired : $scope.SkillDispData[x].CommentsRequired,
+                                 ListPriority : $scope.SkillDispData[x].ListPriority,
+                                        Status: $scope.SkillDispData[x].Status,
+                                  UseComments : $scope.SkillDispData[x].UseComments,
+                                       showit : $scope.SkillDispData[x].showit,
+                                      UseComm : $scope.SkillDispData[x].UseComm,
+                                    useSelected:[{sel:$scope.SkillDispData[x].useSelected[0].sel},
+                                                {sel:$scope.SkillDispData[x].useSelected[1].sel}],
+                                         yesnos:[{name:$scope.SkillDispData[x].yesnos[0].name,
+                                                  sel:$scope.SkillDispData[x].yesnos[0].sel},
+                                                {name:$scope.SkillDispData[x].yesnos[1].name,
+                                                  sel:$scope.SkillDispData[x].yesnos[1].sel}
+                                        ]
+                }
+
+            }
+            $scope.showUseConfig = true;
             console.log($scope);
-            for (var x=0;x<$scope.SkillDispData.length;x++){
+        };
+        $scope.UseConfig = function(){
+            for (var x = 0; x < $scope.SkillDispData.length; x++) {
+                $scope.SkillDispData[x].Assoc = $scope.savedConfig[x].Assoc;
+                $scope.SkillDispData[x].CommentsRequired = $scope.savedConfig[x].CommentsRequired;
+                $scope.SkillDispData[x].ListPriority = $scope.savedConfig[x].ListPriority;
+                $scope.SkillDispData[x].Status = $scope.savedConfig[x].Status;
+                $scope.SkillDispData[x].UseComments = $scope.savedConfig[x].UseComments;
+                $scope.SkillDispData[x].UseComm = $scope.savedConfig[x].UseComm;
+                $scope.SkillDispData[x].useSelected[0].sel = $scope.savedConfig[x].useSelected[0].sel;
+                $scope.SkillDispData[x].useSelected[1].sel = $scope.savedConfig[x].useSelected[1].sel;
+                $scope.SkillDispData[x].yesnos[0].name = $scope.savedConfig[x].yesnos[0].name;
+                $scope.SkillDispData[x].yesnos[0].sel = $scope.savedConfig[x].yesnos[0].sel;
+                $scope.SkillDispData[x].yesnos[1].name = $scope.savedConfig[x].yesnos[1].name;
+                $scope.SkillDispData[x].yesnos[1].sel = $scope.savedConfig[x].yesnos[1].sel;
+                $scope.SkillDispData[x].showit = $scope.savedConfig[x].showit;
+            }
+            console.log($scope);
+        };
+        $scope.UpdateSkillDisp = function() {
+            $scope.showSpinner = true;
+            for (var x = 0; x < $scope.SkillDispData.length; x++) {
                 $scope.SkillDispData[x].action = "";
-                if($scope.SkillDispData[x].Assoc == "Yes") {
+                if ($scope.SkillDispData[x].Assoc == "Yes") {
                     // look for it in the old data
                     var foundit = false;
-                    for (var i = 0; i < $scope.skilloutdata.length; i++) {
+                    for (i = 0; i < $scope.skilloutdata.length; i++) {
                         if ($scope.SkillDispData[x].DispositionID == $scope.skilloutdata[i].DispositionID) {
                             foundit = true;
                             // check properties - if changed MOD else already assoc. do nothing
@@ -142,12 +190,12 @@ angular.module('SkyboxApp')
                             if ($scope.SkillDispData[x].CommentsRequired != $scope.skilloutdata[i].CommentsRequired) {
                                 $scope.SkillDispData[x].action = "Mod";
                             }
-                       }
+                        }
                     }
-                    if(!foundit){
+                    if (!foundit) {
                         $scope.SkillDispData[x].action = "Add";
                     }
-                }else {
+                } else {
                     // not associated now - see if it was prior
                     for (var i = 0; i < $scope.skilloutdata.length; i++) {
                         if ($scope.SkillDispData[x].DispositionID == $scope.skilloutdata[i].DispositionID) {
@@ -157,37 +205,89 @@ angular.module('SkyboxApp')
                     }
                 }
             }
-
-
-
-
-
-
-
-
- /*            for (var x=0;x<$scope.SkillDispData.length;x++){
-                if($scope.SkillDispData[x].AssocChanged){
-                    if($scope.SkillDispData[x].Assoc == 'Yes'){
-                        var parm = {teamNo:$scope.modTeamSelected,
-                            outstateCode:$scope.SkillDispData[x].OutstateCode};
-                        icSOAPServices.icGet("TeamOutstate_Add", parm).then(
-                            function(data){ // good
-                                alert("Good");
-                            }, function(reponse){
-                                alert("Failure");
-                            });
-
-                    }else{
-                        parm = {teamNo:$scope.modTeamSelected,
-                            outstateCode:$scope.OutstateData[x].OutstateCode};
-                        icSOAPServices.icGet("TeamOutstate_Delete", parm).then(
-                        function(data){ // good
-                                alert("Good");
-                            }, function(reponse){
-                                alert("Failure - this change must be done in Central");
-                            });
-                    }
+            console.log($scope);
+            // go through all dispositions twice, processing their action
+            // first pass to delete. Second pass to add
+            // Pass 1 delete
+            doDeletes();
+        };
+        var doDeletes = function(){
+            var found = false;
+            for (var x = 0; x < $scope.SkillDispData.length; x++) {
+                if ($scope.SkillDispData[x].action == "Delete" || $scope.SkillDispData[x].action == "Mod") {
+                    // delete association
+                    found = true;
+                    SoapDelete(x);
+                    break;
                 }
-            } */
-        }
+            }
+            if(!found){
+                doAdds();
+            }
+        };
+        var SoapDelete = function(index){
+            var parm = {skillDispositionID: $scope.SkillDispData[index].SkillDispositionID};
+            icSOAPServices.icGet("SkillDisposition_Delete", parm).then(
+                function (data) { // good
+                    for (var x = 0; x < $scope.SkillDispData.length; x++) {
+                        if ($scope.SkillDispData[x].action == "Delete" || $scope.SkillDispData[x].action == "Mod") {
+                            if ($scope.SkillDispData[x].action == "Delete") {
+                                $scope.SkillDispData[x].action = "";
+                                break;
+                            } else {
+                                $scope.SkillDispData[x].action = "Add";
+                                break;
+                            }
+                        }
+                    }
+                    doDeletes();
+                }, function (response) {
+                    alert("Failure");
+                }
+            );
+
+        };
+        var doAdds = function() {
+            var found = false;
+            for (var x = 0; x < $scope.SkillDispData.length; x++) {
+                if ($scope.SkillDispData[x].action == "Add" || $scope.SkillDispData[x].action == "Mod") {
+                    found = true;
+                    SoapAdd(x);
+                    break;
+                }
+            }
+            if(!found){
+                $scope.showSpinner = false;
+            }
+        };
+        var SoapAdd = function(index) {
+            var parm = {
+                skilldisposition: {
+                    SkillNo: $scope.SkillDispData[index].SkillNo,
+                    DispositionID: $scope.SkillDispData[index].DispositionID,
+                    ListPriority: $scope.SkillDispData[index].ListPriority,
+                    UseComments: $scope.SkillDispData[index].UseComments,
+                    CommentsRequired: $scope.SkillDispData[index].CommentsRequired
+                }
+            };
+
+            icSOAPServices.icGet("SkillDisposition_Add", parm).then(
+                function (data) { // good
+                    for (var x = 0; x < $scope.SkillDispData.length; x++) {
+                        if ($scope.SkillDispData[x].action == "Add") {
+                            $scope.SkillDispData[x].action = "";
+                            break
+                        }
+                    }
+                    doAdds();
+                }, function (response) {
+                    alert("Failure");
+                });
+
+        };
+
+        // pass 2 Add
+
+        $scope.showSpinner = false;
+
     }]);

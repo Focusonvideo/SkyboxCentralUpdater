@@ -2,6 +2,8 @@
 <span us-spinner spinner-on="showSpinner"></span>
 <br/><br/>
 <input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateSkillDisp()" value="Update Skill/Disposition Assoc." />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="SaveConfig()" ng-show="showAddConfig"  value="Save Current Skill/Disp Assoc." />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UseConfig()" ng-show="showUseConfig" value="Apply Saved Skill/Disp Assoc." />
 <br/><br/>
 <label > Select Skill: </label>
 <select  ng-model="modSkillSelected" ng-change="skillSelected()">

@@ -37,7 +37,7 @@ angular.module('SkyboxApp')
           },
           function(response){
               $scope.showSpinner = false;
-              alert("ERROR:" + JSON.stringify(response));
+              alert("ERROR GETURL:" + JSON.stringify(response));
           }
         );
     }

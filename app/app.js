@@ -134,10 +134,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  templateUrl:'CampaignPanel/CampaignAdd.html',
                  controller: 'CampaignaddCtrl'
              })
-             .when('/skill',{
+  /*           .when('/skill',{
                  templateUrl:'SkillPanel/Skill.html',
                  controller: 'SkillCtrl'
-             })
+             }) */
              .when('/main',{
                 templateUrl:'MainPanel/Main.html',
                 controller: 'MainCtrl'

@@ -74,38 +74,45 @@ angular.module('SkyboxApp')
             icGet: function(action, parms){
                 return $soap.post(base_url,action,parms);
             },
-            token:function(userData){
-//                var myurl = "https://api.incontact.com/InContactAuthorizationServer/Token";
- //               var user = "mladewski@skyboxcommunications.com";
-//                var pw = "BR@ves2020";
-//                var vendor = "Skybox_communications";
-//                var BU = "4594585";
-//                var application = "Skybox_mobil";
-                var myurl = "https://api.incontact.com/InContactAuthorizationServer/Token";
-                var user = userData.name;
-                var pw = userData.pass;
-                var vendor = userData.vendName;
-                var BU = userData.BusUnit;
-                var application = userData.appName;
-
-                var AuthCode = Base64.encode(application + "@" + vendor + ":" + BU);
-                var mydata = {
-                    "grant_Type":"password",
-                    "username":user,
-                    "password":pw,
-                    "scope":"AgentApi AdminApi RealTimeApi"
-                };
+            token:function(){
+                var UserName = "chester.ladewski@skyboxcommunications.com";
+                var UserPassword = "colleeN101";
+                var SecurityToken = "KiYOWIm3oyA7XsI0idoWktFah";
+                var ConsumerKey = "3MVG9fMtCkV6eLhcL8onJchoL4FLP4YrN8oQdgDm80YQEBGzmpws17NW2EexNUuTNU1dRUfKsIy1t040CNYI3";
+                var SecretKey = "3334220952769447215";
+                var requestURL = "https://login.salesforce.com/services/oauth2/token";
                 var config = {
                     method:'POST',
-                    url:myurl,
-                    data:mydata,
+                    url:requestURL,
+                    data:
+                    "&grant_type=password" +
+                    "&client_id="+ ConsumerKey +
+                    "&client_secret=" + SecretKey +
+                    "&password=" + UserPassword + SecurityToken +
+                    "&username=" + UserName
+                    ,
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Authorization':'Basic ' + AuthCode
+                        'Content-Type': 'application/x-www-form-urlencoded',
+//                        'Access-Control-Allow-Origin' : '*',
+//                        'Access-Control-Allow-Headers' : 'X-Requested-with',
+//                        'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE',
+                        'Accept': '*/*'
                     }
                 };
                 return $http(config);
+            } ,
+            SFgetIt:function(selectStmt,tokenRtn){
+                var config = {
+                    method: 'GET',
+                    url: tokenRtn.instance_url + "/services/data/v25.0/query?q=" + encodeURIComponent(selectStmt),
+                    headers: {
+                        'Authorization': tokenRtn.token_type + " " + tokenRtn.access_token,
+                        //                       'Access-Control-Allow-Origin' : '*',
+                        //                      'Access-Control-Allow-Headers' : 'X-Requested-with'},
+                        //                      'Access-Control-Allow-Methods' : 'GET, POST, PUT, DELETE',
+                        Accept: 'application/json'}
+                    };
+                return  $http(config);
             }
 
         }

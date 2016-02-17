@@ -21,54 +21,14 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
         });
 
 
-  /*      icSOAPServices.token().then(
-            function(data){ // good
-                tokenData = data.data;
-                // set current contactId based on AgentID;
-                SOAPClient.tokenData = tokenData;
-                /*				icSOAPServices.icGet("Skill_GetList").then(function(response){
-                 alert(JSON.stringify(response));
-                 },
-                 function(errors){
-                 alert(errors);
-                 },
-                 function(unknown){
-                 alert("AppUnkownError");
-                 alert(unknown);
-                 });
-                 icSOAPServices.icGet("Agent_GetList").then(function(response){
-                 alert(JSON.stringify(response));
-                 },
-                 function(errors){
-                 alert(errors);
-                 },
-                 function(unknown){
-                 alert("AppUnkownError");
-                 alert(unknown);
-                 });  */
- /*               var parm = {"agentNo" : "447493"};
-                icSOAPServices.icGet("Agent_Find", parm).then(function(response){
-                        alert(JSON.stringify(response));
-                    },
-                    function(errors){
-                        alert(errors);
-                    },
-                    function(unknown){
-                        alert("AppUnkownError");
-                        alert(unknown);
-                    });
-
-            },
-            function(e){ //error
-                alert(JSON.stringify(e));
-            }
-        ); */
 
     }])
     .controller('testController',function($scope){
         $scope.msg="hi there";
     })
-    .config(function($routeProvider, $locationProvider){
+    .config(function($routeProvider, $locationProvider, $httpProvider){
+//        $httpProvider.defaults.useXdomain = true;
+//        delete $httpProvider.defaults.headers.common['X-Requested-With'];
          $routeProvider
              .when('/',{
                  templateUrl:'icLogin/login.html',

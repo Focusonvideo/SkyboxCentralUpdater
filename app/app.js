@@ -94,10 +94,18 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  templateUrl:'CampaignPanel/CampaignAdd.html',
                  controller: 'CampaignaddCtrl'
              })
-  /*           .when('/skill',{
+             .when('/skillAdd',{
+                 templateUrl:'SkillPanel/SkillAddMod.html',
+                 controller: 'SkillAddCtrl'
+             })
+             .when('/skillMod',{
+                 templateUrl:'SkillPanel/SkillAddMod.html',
+                 controller: 'SkillModCtrl'
+             })
+             .when('/skill',{
                  templateUrl:'SkillPanel/Skill.html',
                  controller: 'SkillCtrl'
-             }) */
+             })
              .when('/main',{
                 templateUrl:'MainPanel/Main.html',
                 controller: 'MainCtrl'

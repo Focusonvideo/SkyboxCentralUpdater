@@ -1,0 +1,102 @@
+<h2 class="text-center">Skills {{buttonName}}</h2>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <th>SkillNo</TH>
+        <th>SkillName</TH>
+        <th>MediaType</TH>
+        <th>Status</TH>
+        <th>CampaignNo</TH>
+        <th>OutboundSkill</TH>
+        <th>SLASeconds</TH>
+        <th>SLAPercent</TH>
+        <th>Notes</TH>
+        <th>Description</TH>
+        <th>Interruptible</TH>
+        <th>FromEmailEditable</TH>
+        <th>FromEmailAddress</TH>
+        <th>BccEmailAddress</TH>
+        <th>UseDispositions</TH>
+        <th>RequireDispositions</TH>
+        <th>DispositionTimer</TH>
+        <th>QueueInitPriority</TH>
+        <th>QueueAcceleration</TH>
+        <th>QueueFunction</TH>
+        <th>QueueMaxPriority</TH>
+        <th>ActiveMinWorkTime</TH>
+        <th>OverrideCallerID</TH>
+        <th>CallerIDNumber</TH>
+        <th>UseScreenPops</TH>
+        <th>UseCustomScreenPops</TH>
+        <th>CustomScreenPopApp</TH>
+        <th>CampaignName</TH>
+        <th>LastModified</TH>
+        <th>ShortAbandonThreshold</TH>
+        <th>UseShortAbandonThreshold</TH>
+        <th>IncludeShortAbandons</TH>
+        <th>IncludeOtherAbandons</TH>
+        <th>CustomScriptID</TH>
+        <th>CustomScriptName</TH>
+        <th>IsDialer>boolean</TH>
+        <th>EnableBlending</TH>
+    </tr>
+    <tr >
+
+        <td>{{modSkillData.SkillNo}}</td>
+        <td>{{modSkillData.SkillName}}</td>
+        <td>{{modSkillData.MediaType}}</td>
+        <td>{{modSkillData.Status}}</td>
+        <td>{{modSkillData.CampaignNo}}</td>
+        <td>{{modSkillData.OutboundSkill}}</td>
+        <td>{{modSkillData.SLASeconds</td>
+        <td>{{modSkillData.SLAPercent</td>
+        <td>{{modSkillData.Notes</td>
+        <td>{{modSkillData.Description</td>
+        <td>{{modSkillData.Interruptible</td>
+        <td>{{modSkillData.FromEmailEditable</td>
+        <td>{{modSkillData.FromEmailAddress</td>
+        <td>{{modSkillData.BccEmailAddress</td>
+        <td>{{modSkillData.UseDispositions</td>
+        <td>{{modSkillData.RequireDispositions</td>
+        <td>{{modSkillData.DispositionTimer</td>
+        <td>{{modSkillData.QueueInitPriority</td>
+        <td>{{modSkillData.QueueAcceleration</td>
+        <td>{{modSkillData.QueueFunction</td>
+        <td>{{modSkillData.QueueMaxPriority</td>
+        <td>{{modSkillData.ActiveMinWorkTime</td>
+        <td>{{modSkillData.OverrideCallerID</td>
+        <td>{{modSkillData.CallerIDNumber</td>
+        <td>{{modSkillData.UseScreenPops</td>
+        <td>{{modSkillData.UseCustomScreenPops</td>
+        <td>{{modSkillData.CustomScreenPopApp</td>
+        <td>{{modSkillData.CampaignName</td>
+        <td>{{modSkillData.LastModified</td>
+        <td>{{modSkillData.ShortAbandonThreshold</td>
+        <td>{{modSkillData.UseShortAbandonThreshold</td>
+        <td>{{modSkillData.IncludeShortAbandons</td>
+        <td>{{modSkillData.IncludeOtherAbandons</td>
+        <td>{{modSkillData.CustomScriptID</td>
+        <td>{{modSkillData.CustomScriptName</td>
+        <td>{{modSkillData.IsDialer>boolean</td>
+        <td>{{modSkillData.EnableBlending</td>
+
+
+<!--
+        <td>{{modSkillData.SkillID}}</td>
+        <td><input type="text" ng-model="modSkillData.Description"/></td>
+        <td>
+            <select ng-model="modSkillData.Status">
+                <option value="{{statusOpt[0].name}}" {{statusOpt[0].sel}}>{{statusOpt[0].name}}</option>
+                <option value="{{statusOpt[1].name}}" {{statusOpt[1].sel}}>{{statusOpt[1].name}}</option>
+            </select>
+        </td>
+        <td><input type="text" ng-model="modSkillData.LongDescription"/></td>
+        <td><input type="text" ng-model="modSkillData.Notes"/></td>
+        <td>{{modSkillData.LastModified}}</td> -->
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updateSkill()" value="{{buttonName}}" />
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelSkillUpdate()" value="Cancel" />
+

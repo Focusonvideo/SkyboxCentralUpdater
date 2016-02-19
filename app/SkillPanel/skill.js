@@ -8,20 +8,25 @@ angular.module('SkyboxApp')
         $scope.showSpinner = true;
         icSOAPServices.icGet("Skill_GetList").then(
             function(data){
-                $scope.showSpinner = false;
                 $scope.SkillData = data;
+                for (var x =0;x<data.length;x++){
+                    $scope.SkillData.index = x;
+                }
+                $scope.showSpinner = false;
             },
             function(response){
                 $scope.showSpinner = false;
                 alert("BAD:" + JSON.stringify(response));
             }
         );
-        $scope.ModCampaign = function(idxData){
+        ;
+        console.log($scope);
+        $scope.ModSkill = function(idxData){
             SOAPClient.passData = idxData;
-            $location.path("/campaignmod");
-        }
-        $scope.AddCampaign = function(idxData){
+            $location.path("/skillMod");
+        };
+        $scope.AddSkill = function(idxData){
             SOAPClient.passData = {};
-            $location.path("/campaignadd");
+            $location.path("/skillAdd");
         }
     }]);

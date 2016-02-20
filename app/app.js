@@ -98,6 +98,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  templateUrl:'SkillPanel/SkillAddMod.html',
                  controller: 'SkillAddCtrl'
              })
+             .when('/skillBRDAdd',{
+                 templateUrl:'SkillPanel/SkillBRDAdd.html',
+                 controller: 'SkillBRDAddCtrl'
+             })
              .when('/skillMod',{
                  templateUrl:'SkillPanel/SkillAddMod.html',
                  controller: 'SkillModCtrl'

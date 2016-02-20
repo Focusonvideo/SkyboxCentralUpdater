@@ -29,4 +29,8 @@ angular.module('SkyboxApp')
             SOAPClient.passData = {};
             $location.path("/skillAdd");
         }
+        $scope.AddBRDSkill = function(idxData){
+            $location.path("/skillBRDAdd");
+        }
+
     }]);

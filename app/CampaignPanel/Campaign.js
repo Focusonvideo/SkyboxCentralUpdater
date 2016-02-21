@@ -19,7 +19,7 @@ angular.module('SkyboxApp')
         $scope.ModCampaign = function(idxData){
             SOAPClient.passData = idxData;
             $location.path("/campaignmod");
-        }
+        };
         $scope.AddCampaign = function(idxData){
             SOAPClient.passData = {};
             $location.path("/campaignadd");

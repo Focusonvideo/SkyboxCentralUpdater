@@ -47,7 +47,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', functio
         );
     };
     $scope.cancelSkillUpdate = function () {
-        $location.path("/Skill");
+        $location.path("/skill");
     };
 }]);
 app.controller('SkillAddCtrl', ['$scope', 'icSOAPServices', '$location', function ($scope, icSOAPServices, $location) {

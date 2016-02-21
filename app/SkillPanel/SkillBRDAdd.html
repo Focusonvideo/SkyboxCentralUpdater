@@ -1,0 +1,85 @@
+<h2 class="text-center">Skills BRD Add</h2>
+<br/><br/><br/>
+<label > Select Skill Type </label>
+<select  ng-model="SkillTypeSel" ng-change="skillTypeSelected()">
+    <option ng-repeat="skillType in skillTypes" value="{{skillType.name}}" >{{skillType.name}}</option>
+</select>
+<br/><br/>
+<label  ng-show="showCallerID"> Convert Inbound Skill to Outbound</label>
+<input type="checkbox" ng-model="ConvertIn2Out" ng-checked="ConvertIn2Out"  ng-show="showCallerID"/>
+<br/><br/>
+
+<dev ng-show="showTable">
+<table class="table table-bordered" >
+    <tr  class="active">
+        <th>Skill Name</TH>
+        <th ng-show="showDirection">OB<br/>Skill</TH>
+        <th ng-show="showCallerID" >Caller ID </TH>
+        <th>Campaign Name</TH>
+        <th ng-show="showFromAddress">From Address</th>
+        <th ng-show="showSLA">SLA<br/>Seconds</TH>
+        <th ng-show="showSLA">SLA<br/>Percent</TH>
+        <th ng-show="showShortAbandon">Use Short<br/>Abandon Threshold</TH>
+        <th ng-show="showShortAbandon">Short Abandon<br/>Threshold</TH>
+        <th>Queue Init<br/>Priority</TH>
+        <th>Queue<br/>Acc.</TH>
+        <th>Queue Max<Br/>Priority</TH>
+    </tr>
+
+
+    <tr >
+
+        <td>
+            <input type="text" ng-model="modSkillData.SkillName"/>
+        </td>
+
+        <td ng-show="showDirection">
+            <input type="checkbox" ng-model="modSkillData.OutboundSkill" ng-checked="modSkillData.OutboundSkill" />
+        </td>
+        <td  ng-show="showCallerID" >
+            <input type="text" ng-model="modSkillData.CallerIDNumber" size="12"/>
+        </td>
+        <td>
+            <select  ng-model="SkillCampSel" ng-change="CampSelected()">
+                <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
+            </select>
+        </td>
+        <td ng-show="showFromAddress">
+            <input type="text" ng-model="modSkillData.FromEmailAddress" size="30"/>
+        </td>
+        <td ng-show="showSLA">
+            <input type="text" ng-model="modSkillData.SLASeconds" size="5"/>
+        </td>
+        <td ng-show="showSLA">
+            <input type="text" ng-model="modSkillData.SLAPercent" size="5"/>
+        </td>
+        <td ng-show="showShortAbandon">
+            <input type="checkbox" ng-model="modSkillData.UseShortAbandonThreshold" ng-checked="modSkillData.UseShortAbandonThreshold" />
+        </td>
+        <td ng-show="showShortAbandon">
+            <input type="text" ng-model="modSkillData.ShortAbandonThreshold" size="5"/>
+        </td>
+        <td>
+            <input type="text" ng-model="modSkillData.QueueInitPriority" size="5"/>
+        </td>
+        <td>
+            <input type="text" ng-model="modSkillData.QueueAcceleration" size="5"/>
+        </td>
+        <td>
+            <input type="text" ng-model="modSkillData.QueueMaxPriority" size="5"/>
+        </td>
+
+
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddBRDSkill()" value="ADD Skill" ng-disabled="disableAdd"/>
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelSkillUpdate()" value="Cancel" />
+<input type="submit" class="btn btn-warning btn-lg" ng-click="SkipSkillBtn()" value="Skip Skill" />
+
+
+
+<br/><br/>
+Copy and Paste Skill stuff here from BRD <textarea style="width:500px;height:150px;" ng-model="massBRDInput" ng-change="SkillsDropped()"/>
+</dev>

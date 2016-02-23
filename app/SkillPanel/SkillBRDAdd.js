@@ -52,15 +52,15 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
      } */
     $scope.AddBRDSkill = function () {
        var  parms4Add = CreateAddParms();
-        alert(JSON.stringify(parms4Add));
- /*      icSOAPServices.icGet("Skill_Add", parms4Add).then(
+ //       alert(JSON.stringify(parms4Add));
+       icSOAPServices.icGet("Skill_Add", parms4Add).then(
             function (data) {
                  $scope.SkipSkillBtn();
             },
             function (response) {
                 alert("failed" + JSON.stringify(response));
             }
-        ); */
+        );
     };
     $scope.cancelSkillUpdate = function () {
         $location.path("/skill");

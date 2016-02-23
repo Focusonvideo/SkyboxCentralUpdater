@@ -35,7 +35,7 @@
         <td>{{sk.CallerIDNumber}}</td>
         <td>{{sk.SLASeconds}}/{{sk.SLAPercent}}</td>
         <td>{{sk.UseShortAbandonThreshold}},{{sk.ShortAbandonThreshold}}</td>
-        <td>{{sk.QueueInitPriority}}</td>
+        <td>({{sk.QueueInitPriority}}|{{sk.QueueAcceleration}}|{{sk.QueueMaxPriority}})</td>
         <td><button ng-click="ModSkill(sk)">Mod</button> </td>
     </tr>
 </table>

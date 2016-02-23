@@ -98,10 +98,58 @@ var app = angular.module('SkyboxApp');
                     }
                 );
             } else {
-                alert("Need to input Disposition Description");
+                if($scope.massDispInput != ""){
+                    var DispList = $scope.massDispInput.split(String.fromCharCode(10));
+                    $scope.DispAdds = new Array(DispList.length);
+                    for (var x=0;x<DispList.length;x++){
+                        $scope.DispAdds[x] = {name : DispList[x],
+                            Processed : false };
+                    }
+                    ProcessList();
+                }else{
+                    $scope.showSpinner = false;
+                    alert("Need Disposition Name(s)");
+                }
             }
 
         };
+        function ProcessList(){
+            var found = false;
+            for (var i=0;i<$scope.DispAdds.length;i++){
+                if(!$scope.DispAdds[i].Processed){
+                    found = true;
+                    var parm = {
+                        disposition: {
+                            "Description": $scope.DispAdds[i].name,
+                            "Status": "Active",
+                            "LongDescription": "",
+                            "Notes": ""
+                        }
+                    };
+                    $scope.DispAdds[i].Processed = true;
+
+                    DoAdd(parm);
+                    break;
+                }
+            }
+            if(!found){
+                $scope.showSpinner = false;
+                $location.path("/disposition");
+            }
+        }
+        function DoAdd(inputParm){
+           icSOAPServices.icGet("Disposition_Add", inputParm).then(
+                function (data) {
+                    //                   alert("Addition Completed");
+                    ProcessList();
+                },
+                function (response) {
+                    alert("failed" + JSON.stringify(response));
+                    $scope.showSpinner = false;
+                }
+            );
+        }
+
         $scope.cancelDispositionUpdate = function () {
             $location.path("/disposition");
         };

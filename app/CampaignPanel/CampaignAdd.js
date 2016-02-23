@@ -105,6 +105,7 @@ angular.module('SkyboxApp')
                     ProcessList();
                  }else{
                     $scope.showSpinner = false;
+                    alert("Need Campaign Name(s)");
                 }
             }
         };

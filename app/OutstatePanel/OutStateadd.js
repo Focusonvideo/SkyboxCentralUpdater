@@ -50,7 +50,7 @@ var app = angular.module('SkyboxApp');
             }
             icSOAPServices.icGet("Outstate_Update", parm).then(
                 function (data) {
-                    alert("Update Completed");
+//                    alert("Update Completed");
                     $location.path("/outstate");
                 },
                 function (response) {
@@ -108,7 +108,6 @@ var app = angular.module('SkyboxApp');
                 }
                 icSOAPServices.icGet("Outstate_Add", parm).then(
                     function (data) {
-                        alert("Addition Completed");
                         $location.path("/outstate");
                     },
                     function (response) {

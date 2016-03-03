@@ -9,8 +9,8 @@
   <script type="text/javascript" src="Services.js"></script>
   <script type="text/javascript" src="bower_components/angular-spin/spin.js"></script>
   <script type="text/javascript" src="bower_components/angular-spin/angular-spinner.js"></script>
-  <script type="text/javascript" src="bower_components/angular-soap-master/angular.soap.js"></script>
-  <script type="text/javascript" src="bower_components/angular-soap-master/soapclient.js"></script>
+  <script type="text/javascript" src="SOAP/angular.soap.js"></script>
+  <script type="text/javascript" src="SOAP/soapclient.js"></script>
   <script type="text/javascript" src="icLogin/login.js"></script>
   <script type="text/javascript" src="MainPanel/main.js"></script>
   <script type="text/javascript" src="TeamPanel/Team.js"></script>
@@ -23,7 +23,6 @@
   <script type="text/javascript" src="DispositionPanel/Dispositionadd.js"></script>
   <script type="text/javascript" src="CampaignPanel/Campaign.js"></script>
   <script type="text/javascript" src="CampaignPanel/CampaignAdd.js"></script>
-  <script type="text/javascript" src="configCORS.js"></script>
   <script type="text/javascript" src="SkillPanel/skill.js"></script>
   <script type="text/javascript" src="SkillPanel/SkillAddMod.js"></script>
   <script type="text/javascript" src="SkillPanel/SkillBRDAdd.js"></script>
@@ -39,7 +38,7 @@
   <nav class="navbar navbar-default">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">Skybox Central Updater  -  {{Acct}}</a>
+        <a class="navbar-brand" >Skybox Central Updater  -  {{Acct}}</a>
       </div>
 
       <ul class="nav navbar-nav navbar-right"  ng-repeat="tab in tabs">

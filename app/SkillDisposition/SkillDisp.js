@@ -62,7 +62,10 @@ angular.module('SkyboxApp')
                         }
                         if(found){
                             $scope.SkillDispData[i].SkillNo = $scope.modSkillSelected;
-                            $scope.SkillDispData[i].Assoc = "Yes";
+
+//                            $scope.SkillDispData[i].Assoc = "Yes";
+                            $scope.SkillDispData[i].Assoc = true;
+
                             $scope.SkillDispData[i].yesnos[0].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[1].sel = '';
                             $scope.SkillDispData[i].ListPriority = data[x].ListPriority;
@@ -84,7 +87,8 @@ angular.module('SkyboxApp')
                             $scope.SkillDispData[i].SkillNo = $scope.modSkillSelected;
                             $scope.SkillDispData[i].showit = false;
                             $scope.SkillDispData[i].useComm = "";
-                            $scope.SkillDispData[i].Assoc = "No";
+ //                           $scope.SkillDispData[i].Assoc = "No";
+                            $scope.SkillDispData[i].Assoc = false;
                             $scope.SkillDispData[i].yesnos[1].sel = 'selected';
                             $scope.SkillDispData[i].yesnos[0].sel = '';
                             $scope.SkillDispData[i].ListPriority = "";
@@ -122,12 +126,29 @@ angular.module('SkyboxApp')
         };
         $scope.AssocChanged = function(index){
             $scope.SkillDispData[index].AssocChanged = true;
-           if($scope.SkillDispData[index].Assoc == "No"){
+           if($scope.SkillDispData[index].Assoc == false){
                 // reset show
                 $scope.SkillDispData[index].showit = false;
-            }else{
+               // remove from list priority
+               var curPri = $scope.SkillDispData[index].ListPriority;
+               $scope.SkillDispData[index].ListPriority = "";
+               for (var x=0;x < $scope.SkillDispData.length; x++) {
+                   if ($scope.SkillDispData[x].ListPriority > curPri ) {
+                       $scope.SkillDispData[x].ListPriority = $scope.SkillDispData[x].ListPriority - 1;
+                   }
+               }
+           }else{
                 $scope.SkillDispData[index].showit = true;
-            }
+                // add to list priority
+               //find current max priority this will be the next
+               var maxPri = 0;
+               for (var x=0;x < $scope.SkillDispData.length; x++) {
+                   if ($scope.SkillDispData[x].ListPriority > maxPri ) {
+                       maxPri = $scope.SkillDispData[x].ListPriority;
+                   }
+               }
+               $scope.SkillDispData[index].ListPriority = maxPri + 1;
+           }
         };
         $scope.SaveConfig = function(){
             $scope.savedConfig = new Array($scope.SkillDispData.length);
@@ -174,7 +195,7 @@ angular.module('SkyboxApp')
             $scope.showSpinner = true;
             for (var x = 0; x < $scope.SkillDispData.length; x++) {
                 $scope.SkillDispData[x].action = "";
-                if ($scope.SkillDispData[x].Assoc == "Yes") {
+                if ($scope.SkillDispData[x].Assoc == true) {
                     // look for it in the old data
                     var foundit = false;
                     for (i = 0; i < $scope.skilloutdata.length; i++) {

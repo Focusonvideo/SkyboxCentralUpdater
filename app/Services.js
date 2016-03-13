@@ -4,6 +4,8 @@
 angular.module('SkyboxApp')
 
     .factory("icSOAPServices",function icSOAPServicesFactory($soap,$http){
+       var proxyAdd = "http://tools.skybox.tech:8080";
+ //       var proxyAdd = "http://localhost:8080";
         var Base64 = {
             // private property
             _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -69,10 +71,11 @@ angular.module('SkyboxApp')
             }
 
         };
-        var base_url = "https://login.incontact.com/inSideWS/insidews.asmx";
+     //  var base_url = "https://login.incontact.com/inSideWS/insidews.asmx";
+        var base_url = "http://localhost:8080";
         return {
             icGet: function(action, parms){
-                return $soap.post(base_url,action,parms);
+                return $soap.post(proxyAdd,action,parms);
             },
             token:function(){
                 var UserName = "chester.ladewski@skyboxcommunications.com";
@@ -113,7 +116,14 @@ angular.module('SkyboxApp')
                         Accept: 'application/json'}
                     };
                 return  $http(config);
+            },
+            SFProxy:function(BusinessUnit){
+                var config = {
+                    method: 'GET',
+                    url: proxyAdd + "/SkyboxProxy/Updater/SFlookup/" + BusinessUnit,
+                    headers: {Accept: 'application/json'}
+                };
+                return $http(config);
             }
-
         }
     });

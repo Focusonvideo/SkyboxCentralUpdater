@@ -13,6 +13,32 @@ angular.module('SkyboxApp')
             BusUnit: '', //'4594585',
             soapPass: '' //'10BC037E-35B9-4FBD-95A8-F342C0D9ACB8'
         };
+    $scope.attemptLogin2 = function(newUser) {
+        $scope.showSpinner = true;
+        var url = {resource_server_base_uri: "https://login.incontact.com/"};
+        SOAPClient.tokenData = url;
+        // check if there is no soapPass - if not, look up BU in SF for soapPass
+        if ($scope.user.soapPass == "" && $scope.user.BusUnit.length != "") {
+            icSOAPServices.SFProxy($scope.user.BusUnit).then(
+                function(newdata) { // good
+                    if (newdata.data.records.length > 0) {
+                        var SFData = newdata.data.records[0];
+                        $scope.user.soapPass = SFData.inSideWS_Password__c;
+                        $scope.Acct = SFData.Name;
+                        doLogin();
+                    }else{
+                        $scope.showSpinner = false;
+                        alert("SOAP Password needed");
+                    }
+                },
+                function(res){ // error
+                    alert(JSON.stringify(res));
+                }
+            );
+        }else{
+            doLogin();
+        }
+    };
     $scope.attemptLogin = function(newUser) {
         $scope.showSpinner = true;
         var url = {resource_server_base_uri: "https://login.incontact.com/"};

@@ -25,13 +25,13 @@ angular.module('SkyboxApp')
         },
         {
             title: "Unavailable",
-            url: "OutstatePanel/Outstate.html",
+            url: "OutStatePanel/Outstate.html",
             pgclass:"fa fa-shield",
             ref:"#outstate"
         },
         {
             title: "Team/Unavailable",
-            url: "TeamOutstate/TeamOutstate.html",
+            url: "TeamOutState/TeamOutState.html",
             pgclass:"fa fa-shield",
             ref:"#teamoutstate"
         },

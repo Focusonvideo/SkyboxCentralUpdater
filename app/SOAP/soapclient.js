@@ -137,15 +137,17 @@ SOAPClient._loadWsdl = function(url, method, parameters, async, callback)
 		}
 		// get wsdl
 		var xmlHttp = SOAPClient._getXmlHttp();
-		xmlHttp.open("GET", url + "?wsdl", async);
-	//	xmlHttp.open("GET", url , async);
+//		xmlHttp.open("GET", url + "?wsdl", async);
+	    var wsdlURL =  url + "/SkyboxProxy/Updater/WSDL"
+	    xmlHttp.open("GET", wsdlURL);
+
 
 	//	var soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + method;
 	//	xmlHttp.setRequestHeader("SOAPAction", "\"" + method + "\"");
 	//	xmlHttp.setRequestHeader("Content-Type","text/xml; charset=utf-8");
-		xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
-		xmlHttp.setRequestHeader("Access-Control-Allow-Headers", "X-Requested-With");
-	    xmlHttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	//	xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+	//	xmlHttp.setRequestHeader("Access-Control-Allow-Headers", "X-Requested-With");
+	//    xmlHttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
 
 
 		if(async)
@@ -196,26 +198,26 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 
 
 	var sr =
-		"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + String.fromCharCode(13) +
-		"<soap:Envelope " + String.fromCharCode(13) +
-		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " + String.fromCharCode(13) +
-		"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " + String.fromCharCode(13) +
-		"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + String.fromCharCode(13) +
-		"<soap:Header> " + String.fromCharCode(13) +
-		"<inCredentials " + " xmlns=\"" + ns + "\">" + String.fromCharCode(13) +
-		"<busNo>" + SOAPClient.SOAPData.BusNo + "</busNo> " + String.fromCharCode(13) +
-		"<password>" + SOAPClient.SOAPData.SOAPPass + "</password> " + String.fromCharCode(13) +
-		"</inCredentials> " + String.fromCharCode(13) +
-		"</soap:Header> " + String.fromCharCode(13) +
-		"<soap:Body>" + String.fromCharCode(13) +
-		"<" + method + " xmlns=\"" + ns + "\"" + String.fromCharCode(13);
+		"<?xml version=\"1.0\" encoding=\"utf-8\"?>" + String.fromCharCode(10) +
+		"<soap:Envelope " + String.fromCharCode(10) +
+		"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " + String.fromCharCode(10) +
+		"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " + String.fromCharCode(10) +
+		"xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" + String.fromCharCode(10) +
+		"<soap:Header> " + String.fromCharCode(10) +
+		"<inCredentials " + " xmlns=\"" + ns + "\">" + String.fromCharCode(10) +
+		"<busNo>" + SOAPClient.SOAPData.BusNo + "</busNo> " + String.fromCharCode(10) +
+		"<password>" + SOAPClient.SOAPData.SOAPPass + "</password> " + String.fromCharCode(10) +
+		"</inCredentials> " + String.fromCharCode(10) +
+		"</soap:Header> " + String.fromCharCode(10) +
+		"<soap:Body>" + String.fromCharCode(10) +
+		"<" + method + " xmlns=\"" + ns + "\"" + String.fromCharCode(10);
 //				"<" + soapaction + " xmlns=\"" + ns + "\"" +  String.fromCharCode(13) ;
 	if(parameters.toXml().length > 0 ) {
-		sr = sr + ">" + parameters.toXml() + "</" + method + ">";
+		sr = sr + ">" + parameters.toXml() + "</" + method + ">" + String.fromCharCode(10);
 	}else{
 		sr = sr + " />"
 	}
-	sr = sr + "</soap:Body></soap:Envelope>";
+	sr = sr + "</soap:Body></soap:Envelope>" + String.fromCharCode(10);
 	// send request
 
 //	alert(sr);
@@ -235,16 +237,22 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 	else{
 		url = url.replace("https://login.incontact.com/",SOAPClient.tokenData.resource_server_base_uri);
 		url = url.replace("inContactAPI/","");
+		url = url + "/SkyboxProxy/Updater/SOAP"
+//		alert(url);
 		xmlHttp.open("POST", url, async);
 	}
 	var soapaction = ((ns.lastIndexOf("/") != ns.length - 1) ? ns + "/" : ns) + encodeURIComponent(method);
-	xmlHttp.setRequestHeader("SOAPAction", soapaction );
-	xmlHttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+	// added for proxy
+	sr = sr + "SOAPACTION:" + soapaction + String.fromCharCode(10);
+	sr = sr + "BU_URL:" + SOAPClient.tokenData.resource_server_base_uri + "insidews/insidews.asmx"+ String.fromCharCode(10);
+
+//	xmlHttp.setRequestHeader("SOAPAction", soapaction );
+	xmlHttp.setRequestHeader("Content-Type", "plain/text; charset=utf-8");
 	xmlHttp.setRequestHeader("Accept", "text/xml; charset=utf-8");
 //	xmlHttp.setRequestHeader("Content-Length", sr.length);
-	xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
-	xmlHttp.setRequestHeader("Access-Control-Allow-Headers", "X-Requested-With");
-	xmlHttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST", "PUT", "DELETE");
+//	xmlHttp.setRequestHeader("Access-Control-Allow-Origin", "*");
+//	xmlHttp.setRequestHeader("Access-Control-Allow-Headers", "X-Requested-With");
+//	xmlHttp.setRequestHeader("Access-Control-Allow-Methods", "GET, POST", "PUT", "DELETE");
 //	xmlHttp.setRequestHeader("Authorization", "Bearer " + SOAPClient.tokenData.access_token);
 	if(async)
 	{

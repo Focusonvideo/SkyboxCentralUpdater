@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('SkyboxApp')
-.controller('View1Ctrl', ['$rootScope', '$scope', 'icSOAPServices', '$location', function( $rootScope, $scope, icSOAPServices , $location) {
+.controller('View1Ctrl', ['$rootScope', '$scope', 'icSOAPServices', '$location', '$filter', function( $rootScope, $scope, icSOAPServices , $location, $filter) {
 
     $scope.showSpinner = false;
+    var orderBy = $filter('orderBy');
     $scope.Acct = "";
         $scope.user = {
             name: "chester.ladewski@skyboxcommunications.com",
@@ -13,9 +14,21 @@ angular.module('SkyboxApp')
             BusUnit: '', //'4594585',
             soapPass: '' //'10BC037E-35B9-4FBD-95A8-F342C0D9ACB8'
         };
-    $scope.attemptLogin2 = function(newUser) {
+ /*   icSOAPServices.SFListProxy().then(
+        function(Listdata) { // good
+            var orderedlist;
+            orderedlist = orderBy(Listdata.data.records, "Name", false);
+            $scope.BUList = orderedlist;
+        },
+        function(res){ // error
+            alert(JSON.stringify(res));
+        }
+    );
+    console.log($scope); */
+    $scope.attemptLogin2 = function() {
         $scope.showSpinner = true;
-        var url = {resource_server_base_uri: "https://login.incontact.com/"};
+        var url;
+        url = {resource_server_base_uri: "https://login.incontact.com/"};
         SOAPClient.tokenData = url;
         // check if there is no soapPass - if not, look up BU in SF for soapPass
         if ($scope.user.soapPass == "" && $scope.user.BusUnit.length != "") {
@@ -39,9 +52,10 @@ angular.module('SkyboxApp')
             doLogin();
         }
     };
-    $scope.attemptLogin = function(newUser) {
+    $scope.attemptLogin = function() {
         $scope.showSpinner = true;
-        var url = {resource_server_base_uri: "https://login.incontact.com/"};
+        var url;
+        url = {resource_server_base_uri: "https://login.incontact.com/"};
         SOAPClient.tokenData = url;
         // check if there is no soapPass - if not, look up BU in SF for soapPass
         if ($scope.user.soapPass == "" && $scope.user.BusUnit.length != "") {
@@ -87,12 +101,12 @@ angular.module('SkyboxApp')
           function(data){
               SOAPClient.tokenData = {resource_server_base_uri : data.replace("inSideWS/inSideWS.asmx","")};
               icSOAPServices.icGet("TestConnection").then(
-                  function(data){  // good
+                  function(){  // good
                       $scope.showSpinner = false;
                       $location.path("/main");
                       $rootScope.$emit('loggin_event');
                   },
-                  function(response){
+                  function(){
                       $scope.showSpinner = false;
                   }
               );

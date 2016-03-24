@@ -124,6 +124,14 @@ angular.module('SkyboxApp')
                     headers: {Accept: 'application/json'}
                 };
                 return $http(config);
+            },
+            SFListProxy:function(){
+                var config = {
+                    method: 'GET',
+                    url: proxyAdd + "/SkyboxProxy/Updater/SFlookup" ,
+                    headers: {Accept: 'application/json'}
+                };
+                return $http(config);
             }
         }
     });

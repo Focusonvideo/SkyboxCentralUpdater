@@ -4,6 +4,7 @@
 
 <input type="submit" class="btn btn-primary btn-lg" ng-click="AddSkill()" value="ADD Skill" />
 <input type="submit" class="btn btn-primary btn-lg" ng-click="AddBRDSkill()" value="ADD BRD Skills" />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="SkillPost()" value="Skill Post Mapping" />
 <br/><br/>
 <table class="table table-bordered">
     <tr  class="active">
@@ -13,7 +14,9 @@
         <th>Status</th>
         <th>Campaign</th>
         <th>OB</th>
+        <th>Over<br/>ride</th>
         <th>Custom<br/>CallerID</th>
+        <th>ScriptID</th>
         <th>SL/%</th>
         <th>Short<br/>Abandons</th>
         <th>Priority</th>
@@ -30,9 +33,13 @@
         <td>{{sk.Status}}</td>
         <td>{{sk.CampaignName}}</td>
         <td>
-        <input type="checkbox" ng-model="sk.OutboundSkill" ng-checked="sk.OutboundSkill" disabled="disabled"/>
+            <input type="checkbox" ng-model="sk.OutboundSkill" ng-checked="sk.OutboundSkill" disabled="disabled"/>
+        </td>
+        <td>
+            <input type="checkbox" ng-model="sk.OverrideCallerID" ng-checked="sk.OverrideCallerID" disabled="disabled"/>
         </td>
         <td>{{sk.CallerIDNumber}}</td>
+        <td>{{sk.CustomScriptID}}</td>
         <td>{{sk.SLASeconds}}/{{sk.SLAPercent}}</td>
         <td>{{sk.UseShortAbandonThreshold}},{{sk.ShortAbandonThreshold}}</td>
         <td>({{sk.QueueInitPriority}}|{{sk.QueueAcceleration}}|{{sk.QueueMaxPriority}})</td>

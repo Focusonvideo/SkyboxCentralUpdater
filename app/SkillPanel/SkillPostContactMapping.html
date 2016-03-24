@@ -1,0 +1,34 @@
+<h2 class="text-center">Skill Post Contact Mapping</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Skill Name</TH>
+        <th>Automatic Wrap Up<br/>or Disposition?</th>
+        <th>Auto Max Time (sec.)</th>
+        <th>Disp. Reqired</th>
+        <th>Max. Time Limit<br/>(not Disp req)</th>
+    </tr>
+    <tr ng-repeat="sk in Skills">
+        <td>{{sk.SkillName}}</td>
+        <td>
+            <label>
+                <input type="radio" ng-model="sk.AWUorDisp" value="ACW">
+                ACW
+            </label>
+            <label>
+                <input type="radio" ng-model="sk.AWUorDisp" value="Disp">
+                Disp.
+            </label>
+            <label>
+                <input type="radio" ng-model="sk.AWUorDisp" value="None">
+                None
+            </label>
+        </td>
+        <td>{{sk.DispositionTimer}}</td>
+        <td>{{sk.RequireDispositions}}</td>
+        <td>{{sk.Description}}</td>
+    </tr>
+</table>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddTeam()" value="ADD Team" />

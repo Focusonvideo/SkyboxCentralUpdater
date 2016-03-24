@@ -7,7 +7,8 @@
 <br/><br/>
 <label > Select Skill: </label>
 <select  ng-model="modSkillSelected" ng-change="skillSelected()">
-    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillNo}}" >{{selSkill.SkillName}}</option>
+    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillName}}" >{{selSkill.SkillName}}</option>
+<!--    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillNo}}" {{selSkill.Selected}}>{{selSkill.SkillName}}</option> -->
  </select>
 <br/><br/>
 <table class="table table-bordered">

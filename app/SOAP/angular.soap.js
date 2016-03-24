@@ -12,11 +12,12 @@ angular.module('angularSoap', [])
 				}
 
 				//Create Callback
-				var soapCallback = function(e){
+				var soapCallback = function(e, extra){
 					if(e == null || e.constructor.toString().indexOf("function Error()") != -1){
-						deferred.reject("An error/timeout has occurred.");
-//						alert('error sent');
-
+						var resp = new XMLSerializer().serializeToString(extra);
+//						alert('error received :' + resp);
+						var errorResp = {"error" : resp};
+						deferred.reject(errorResp);
 					} else {
 						deferred.resolve(e);
 					}

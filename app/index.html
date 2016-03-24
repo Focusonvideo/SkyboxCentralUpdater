@@ -2,7 +2,7 @@
 <html ng-app="SkyboxApp">
 <head>
   <meta charset="ISO-8859-1">
-  <title>Skybox Central Updater</title>
+  <title>SkyCentral Updater</title>
   <script type="text/javascript" src="bower_components/angular/angular.js"></script>
   <script type="text/javascript" src="bower_components/angular-route/angular-route.js"></script>
   <script type="text/javascript" src="app.js"></script>
@@ -21,11 +21,15 @@
   <script type="text/javascript" src="OutStatePanel/OutStateadd.js"></script>
   <script type="text/javascript" src="DispositionPanel/Disposition.js"></script>
   <script type="text/javascript" src="DispositionPanel/Dispositionadd.js"></script>
+  <script type="text/javascript" src="DispositionPanel/DispositionListMod.js"></script>
   <script type="text/javascript" src="CampaignPanel/Campaign.js"></script>
   <script type="text/javascript" src="CampaignPanel/CampaignAdd.js"></script>
   <script type="text/javascript" src="SkillPanel/Skill.js"></script>
   <script type="text/javascript" src="SkillPanel/SkillAddMod.js"></script>
   <script type="text/javascript" src="SkillPanel/SkillBRDAdd.js"></script>
+  <script type="text/javascript" src="Agents/Agent.js"></script>
+  <script type="text/javascript" src="UserLogin/UserLogin.js"></script>
+  <script type="text/javascript" src="SkillPanel/SkillPostContactMapping.js"></script>
 
   <!-- include the Bootstrap CSS -->
   <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
@@ -38,7 +42,7 @@
   <nav class="navbar navbar-default">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" >Skybox Central Updater  -  {{Acct}}</a>
+        <a class="navbar-brand" >SkyCentral Updater  -  {{Acct}}</a>
       </div>
 
       <ul class="nav navbar-nav navbar-right"  ng-repeat="tab in tabs">

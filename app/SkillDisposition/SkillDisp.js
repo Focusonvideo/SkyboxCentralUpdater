@@ -4,17 +4,23 @@
 'use strict';
 
 angular.module('SkyboxApp')
-    .controller('SkillDispCtrl', ['$scope', 'icSOAPServices', '$location',  function($scope, icSOAPServices, $location) {
+    .controller('SkillDispCtrl', ['$scope', 'icSOAPServices', '$location', '$filter',  function($scope, icSOAPServices, $location, $filter) {
         $scope.showSpinner = true;
         $scope.modSkillSelected = "";
         $scope.newAssociated = "";
         $scope.showAddConfig = false;
         $scope.showUseConfig = false;
-
+        var orderBy = $filter('orderBy');
         icSOAPServices.icGet("Skill_GetList").then(
             function(data){
                 $scope.showSpinner = false;
-                $scope.skills = data;
+                var orderedlist = orderBy(data,"SkillName",false);
+                $scope.skills = orderedlist;
+                for (var x = 0; x < $scope.skills.length; x++){
+                    $scope.skills[x].Selected = "";
+                }
+                $scope.skills[3].Selected = 'selected="selected"';
+                $scope.modSkillSelected = $scope.skills[3].SkillNo;
             },
             function(response){
                 $scope.showSpinner = false;
@@ -42,11 +48,17 @@ angular.module('SkyboxApp')
                 alert("BAD:" + JSON.stringify(response));
             }
         );
+        console.log($scope);
         $scope.skillSelected = function(){
             for(var i=0;i<$scope.SkillDispData.length;i++){
                 $scope.SkillDispData[i].AssocChanged = false;
             }
-                var parm = {"skillNo":$scope.modSkillSelected};
+            for (var x=0;x<$scope.skills.length;x++){
+                if($scope.modSkillSelected == $scope.skills[x].SkillName){
+                    $scope.skillID = $scope.skills[x].SkillNo
+                }
+            }
+            var parm = {"skillNo":$scope.skillID};
             $scope.showSpinner = true;
             icSOAPServices.icGet("SkillDisposition_GetList", parm).then(
                 function(data){
@@ -61,7 +73,7 @@ angular.module('SkyboxApp')
                             }
                         }
                         if(found){
-                            $scope.SkillDispData[i].SkillNo = $scope.modSkillSelected;
+                            $scope.SkillDispData[i].SkillNo = $scope.skillID;
 
 //                            $scope.SkillDispData[i].Assoc = "Yes";
                             $scope.SkillDispData[i].Assoc = true;
@@ -84,7 +96,7 @@ angular.module('SkyboxApp')
                             }
 
                         }else{
-                            $scope.SkillDispData[i].SkillNo = $scope.modSkillSelected;
+                            $scope.SkillDispData[i].SkillNo = $scope.skillID;
                             $scope.SkillDispData[i].showit = false;
                             $scope.SkillDispData[i].useComm = "";
  //                           $scope.SkillDispData[i].Assoc = "No";
@@ -171,7 +183,6 @@ angular.module('SkyboxApp')
 
             }
             $scope.showUseConfig = true;
-            console.log($scope);
         };
         $scope.UseConfig = function(){
             for (var x = 0; x < $scope.SkillDispData.length; x++) {
@@ -189,7 +200,6 @@ angular.module('SkyboxApp')
                 $scope.SkillDispData[x].yesnos[1].sel = $scope.savedConfig[x].yesnos[1].sel;
                 $scope.SkillDispData[x].showit = $scope.savedConfig[x].showit;
             }
-            console.log($scope);
         };
         $scope.UpdateSkillDisp = function() {
             $scope.showSpinner = true;
@@ -226,7 +236,6 @@ angular.module('SkyboxApp')
                     }
                 }
             }
-            console.log($scope);
             // go through all dispositions twice, processing their action
             // first pass to delete. Second pass to add
             // Pass 1 delete
@@ -278,6 +287,24 @@ angular.module('SkyboxApp')
                 }
             }
             if(!found){
+                var nextSkillName = "";
+                for (var x = 0; x < $scope.skills.length; x++){
+                    $scope.skills[x].Selected = "";
+                }
+                for (x = 0; x < $scope.skills.length; x++){
+                    // find current one
+                    if ($scope.skills[x].SkillNo == $scope.skillID){
+                        if (x+1 != $scope.skills.length){
+                            nextSkillName = $scope.skills[x+1].SkillName;
+                            $scope.skills[x + 1].Selected = "selected";
+                        }else{
+                            nextSkillName = $scope.skills[0].SkillName;
+                            $scope.skills[0].Selected = "selected";
+                        }
+                    }
+                }
+                $scope.modSkillSelected = nextSkillName;
+                $scope.skillSelected();
                 $scope.showSpinner = false;
             }
         };
@@ -308,7 +335,6 @@ angular.module('SkyboxApp')
         };
 
         // pass 2 Add
-
-        $scope.showSpinner = false;
+         $scope.showSpinner = false;
 
     }]);

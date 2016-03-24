@@ -30,10 +30,14 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
 //        $httpProvider.defaults.useXdomain = true;
 //        delete $httpProvider.defaults.headers.common['X-Requested-With'];
          $routeProvider
-             .when('/',{
+            .when('/',{
                  templateUrl:'icLogin/login.html',
                  controller: 'View1Ctrl'
              })
+ /*          .when('/',{
+                 templateUrl:'UserLogin/Userlogin.html',
+                 controller: 'UserLoginCtrl'
+             }) */
              .when('/initialization',{
                  templateUrl:'icLogin/login.html',
                  controller: 'View1Ctrl'
@@ -61,6 +65,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
              .when('/dispositionadd',{
                  templateUrl:'DispositionPanel/DispositionAdd.html',
                  controller: 'DispositionaddCtrl'
+             })
+             .when('/displistmod',{
+                 templateUrl:'DispositionPanel/DispositionListMod.html',
+                 controller: 'DispositionListCtrl'
              })
              .when('/teamoutstate',{
                  templateUrl:'TeamOutState/TeamOutState.html',
@@ -109,6 +117,14 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
              .when('/skill',{
                  templateUrl:'SkillPanel/Skill.html',
                  controller: 'SkillCtrl'
+             })
+             .when('/skillPost',{
+                 templateUrl:'SkillPanel/SkillPostContactMapping.html',
+                 controller: 'SkillPostContactCtrl'
+             })
+             .when('/agent',{
+                 templateUrl:'Agents/Agent.html',
+                 controller: 'AgentCtrl'
              })
              .when('/main',{
                 templateUrl:'MainPanel/Main.html',

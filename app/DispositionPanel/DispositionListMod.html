@@ -1,0 +1,31 @@
+<h2 class="text-center">Dispositions Update</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Disposition No</TH>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Long Desc.</th>
+        <th>Notes</th>
+    </tr>
+    <tr ng-repeat="disp in DispList">
+        <td>{{disp.DispositionID}}</td>
+        <td><input type="text" ng-model="disp.Description"/></td>
+        <td>
+            <select ng-model="disp.Status">
+                <option value="{{statusOpt[0].name}}" {{statusOpt[0].sel}}>{{statusOpt[0].name}}</option>
+                <option value="{{statusOpt[1].name}}" {{statusOpt[1].sel}}>{{statusOpt[1].name}}</option>
+            </select>
+        </td>
+        <td><input type="text" ng-model="disp.LongDescription"/></td>
+        <td><input type="text" ng-model="disp.Notes"/></td>
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updateDisp()" value="{{buttonName}}" />
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelDisposition()" value="Cancel" />
+
+
+

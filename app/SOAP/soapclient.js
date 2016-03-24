@@ -100,6 +100,7 @@ SOAPClientParameters._serialize = function(o)
 			// Object or custom function
 			else
 				for(var p in o)
+//					alert(o[p]);
 					s += "<" + p + ">" + SOAPClientParameters._serialize(o[p]) + "</" + p + ">";
 			break;
 		default:
@@ -265,13 +266,13 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 				}else{
 					// not a good response
 					alert("inClient2: " + xmlHttp.readyState + "  status: " + xmlHttp.status);
+					callback(null, xmlHttp.responseXML);
 					xmlHttp.abort();
-					callback(null);
 				}
 			}
 		}
 	}
-//	alert(sr);
+//    console.log(sr);
 	xmlHttp.send(sr);
 	if (!async)
 		return SOAPClient._onSendSoapRequest(method, async, callback, wsdl, xmlHttp);
@@ -279,6 +280,7 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 
 SOAPClient._onSendSoapRequest = function(method, async, callback, wsdl, req) {
 	var o = null;
+//	console.log(req.responseXML);
 	var nd = SOAPClient._getElementsByTagName(req.responseXML, method + "Result");
 	if (nd.length == 0) {
 		nd = SOAPClient._getElementsByTagName(req.responseXML, method + "Response");

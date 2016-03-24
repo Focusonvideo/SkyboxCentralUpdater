@@ -67,7 +67,7 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
     };
     function processSkillLine(SkillLine){
         var skillParsedCol = SkillLine.split(String.fromCharCode(9));
-        $scope.modSkillData.SkillName = skillParsedCol[0];
+        $scope.modSkillData.SkillName = skillParsedCol[0].trim();
         if($scope.ConvertIn2Out) {
             $scope.modSkillData.SkillName = skillParsedCol[0] + " OB";
         }
@@ -220,8 +220,18 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
     function doCallerID(myCallerID){
         if($scope.modSkillData.OutboundSkill){
             $scope.modSkillData.CallerIDNumber = myCallerID.replaceAll("-","");
+            $scope.modSkillData.CallerIDNumber = $scope.modSkillData.CallerIDNumber.replaceAll("(","");
+            $scope.modSkillData.CallerIDNumber = $scope.modSkillData.CallerIDNumber.replaceAll(")","");
+            $scope.modSkillData.CallerIDNumber = $scope.modSkillData.CallerIDNumber.replaceAll(" ","");
+            if ($scope.modSkillData.CallerIDNumber != ""){
+                $scope.modSkillData.OverrideCallerID = true;
+            }else{
+                $scope.modSkillData.OverrideCallerID = false;
+            }
+
         }else{
             $scope.modSkillData.CallerIDNumber = "";
+            $scope.modSkillData.OverrideCallerID = false;
         }
     }
     function doDirection(myDirection){

@@ -13,13 +13,18 @@
     </tr>
     <tr >
         <td>{{modSkillData.SkillNo}}</td>
-        <td>{{modSkillData.SkillName}}</td>
+        <td><input type="text" ng-model="modSkillData.SkillName"/></td>
         <td>{{modSkillData.MediaType}}</td>
         <td>{{modSkillData.Status}}</td>
-        <td>{{modSkillData.CampaignName}}</td>
-        <td>{{modSkillData.OutboundSkill}}</td>
-        <td>{{modSkillData.SLASeconds}}</td>
-        <td>{{modSkillData.SLAPercent}}</td>
+        <td>
+            <select  ng-model="SkillCampSel" ng-change="CampSelected()">
+                <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
+            </select>
+        </td>
+
+        <td><input type="checkbox" ng-model="modSkillData.OutboundSkill" ng-checked="modSkillData.OutboundSkill"/></td>
+        <td><input type="text" ng-model="modSkillData.SLASeconds"/></td>
+        <td><input type="text" ng-model="modSkillData.SLAPercent"/></td>
     </tr>
 </table>
 <table class="table table-bordered">
@@ -32,12 +37,12 @@
         <th>Bcc Email<br/>Address</TH>
     </tr>
     <tr >
-        <td>{{modSkillData.Notes}}</td>
-        <td>{{modSkillData.Description}}</td>
-        <td>{{modSkillData.Interruptible}}</td>
-        <td>{{modSkillData.FromEmailEditable}}</td>
-        <td>{{modSkillData.FromEmailAddress}}</td>
-        <td>{{modSkillData.BccEmailAddress}}</td>
+        <td><input type="text" ng-model="modSkillData.Notes"/></td>
+        <td><input type="text" ng-model="modSkillData.Description"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.Interruptible" ng-checked="modSkillData.Interruptible" /></td>
+        <td><input type="checkbox" ng-model="modSkillData.FromEmailEditable" ng-checked="modSkillData.FromEmailEditable"/></td>
+        <td><input type="text" ng-model="modSkillData.FromEmailAddress"/></td>
+        <td><input type="text" ng-model="modSkillData.BccEmailAddress"/></td>
     </tr>
 </table>
 <table class="table table-bordered">
@@ -52,14 +57,14 @@
         <th>Active<br/>Min WorkTime</TH>
     </tr>
     <tr >
-        <td>{{modSkillData.UseDispositions}}</td>
-        <td>{{modSkillData.RequireDispositions}}</td>
-        <td>{{modSkillData.DispositionTimer}}</td>
-        <td>{{modSkillData.QueueInitPriority}}</td>
-        <td>{{modSkillData.QueueAcceleration}}</td>
-        <td>{{modSkillData.QueueMaxPriority}}</td>
+        <td><input type="checkbox" ng-model="modSkillData.UseDispositions" ng-checked="modSkillData.UseDispositions"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.RequireDispositions" ng-checked="modSkillData.RequireDispositions"/></td>
+        <td><input type="text" ng-model="modSkillData.DispositionTimer"/></td>
+        <td><input type="text" ng-model="modSkillData.QueueInitPriority"/></td>
+        <td><input type="text" ng-model="modSkillData.QueueAcceleration"/></td>
+        <td><input type="text" ng-model="modSkillData.QueueMaxPriority"/></td>
         <td>{{modSkillData.QueueFunction}}</td>
-        <td>{{modSkillData.ActiveMinWorkTime}}</td>
+        <td><input type="text" ng-model="modSkillData.ActiveMinWorkTime"/></td>
     </tr>
 </table>
 <table class="table table-bordered">
@@ -78,18 +83,18 @@
         <th>Enable<br/>Blending</TH>
     </tr>
     <tr >
-        <td>{{modSkillData.OverrideCallerID}}</td>
-        <td>{{modSkillData.CallerIDNumber}}</td>
-        <td>{{modSkillData.UseScreenPops}}</td>
-        <td>{{modSkillData.UseCustomScreenPops}}</td>
-        <td>{{modSkillData.CustomScreenPopApp}}</td>
-        <td>{{modSkillData.ShortAbandonThreshold}}</td>
-        <td>{{modSkillData.UseShortAbandonThreshold}}</td>
-        <td>{{modSkillData.IncludeShortAbandons}}</td>
-        <td>{{modSkillData.IncludeOtherAbandons}}</td>
-        <td>{{modSkillData.CustomScriptName}}</td>
+        <td><input type="checkbox" ng-model="modSkillData.OverrideCallerID" ng-checked="modSkillData.OverrideCallerID"/></td>
+        <td><input type="text" ng-model="modSkillData.CallerIDNumber"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.UseScreenPops" ng-checked="modSkillData.UseScreenPops"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.UseCustomScreenPops" ng-checked="modSkillData.UseCustomScreenPops"/></td>
+        <td><input type="text" ng-model="modSkillData.CustomScreenPopApp"/></td>
+        <td><input type="text" ng-model="modSkillData.ShortAbandonThreshold"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.UseShortAbandonThreshold" ng-checked="modSkillData.UseShortAbandonThreshold"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.IncludeShortAbandons" ng-checked="modSkillData.IncludeShortAbandons"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.IncludeOtherAbandons" ng-checked="modSkillData.IncludeOtherAbandons"/></td>
+        <td><input type="text" ng-model="modSkillData.CustomScriptName"/></td>
         <td>{{modSkillData.IsDialer>boolean}}</td>
-        <td>{{modSkillData.EnableBlending}}</td>
+        <td><input type="checkbox" ng-model="modSkillData.EnableBlending" ng-checked="modSkillData.EnableBlending" /></td>
     </tr>
 </table>
 <br/>

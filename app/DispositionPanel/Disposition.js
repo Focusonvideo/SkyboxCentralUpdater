@@ -24,4 +24,7 @@ angular.module('SkyboxApp')
         $scope.AddDisposition = function(){
             $location.path("/dispositionadd");
         };
+        $scope.updateListdisp = function(){
+            $location.path("/displistmod");
+        };
     }]);

@@ -114,7 +114,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
         if (parm.skill.Notes == null || parm.skill.Notes == undefined ) {
             parm.skill.Notes = "";
         }
-        if (parm.skill.Description == null || parm.skill.Description == undefined) {
+        if (parm.skill.DescriptionA_inContact_BRD_Template.docx == null || parm.skill.Description == undefined) {
             parm.skill.Description = "";
         }
         if (parm.skill.FromEmailAddress == null  || parm.skill.FromEmailAddress == undefined){

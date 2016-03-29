@@ -50,5 +50,8 @@ angular.module('SkyboxApp')
         $scope.SkillPost = function(){
             $location.path("/skillPost");
         }
+        $scope.SkillList = function(){
+            $location.path("/skillList");
+        }
 
     }]);

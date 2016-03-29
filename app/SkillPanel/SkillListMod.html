@@ -1,0 +1,73 @@
+<h2 class="text-center">List Skills Mods</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<label > Select Skill Type </label>
+<select  ng-model="SkillTypeSel" ng-change="skillTypeSelected()">
+    <option ng-repeat="skillType in skillTypes" value="{{skillType.name}}" >{{skillType.name}}</option>
+</select>
+<br/><br/>
+<br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <th>Skill Name</th>
+        <th>Status</th>
+        <th>Campaign</th>
+        <th ng-show="showDirection">OB</th>
+        <th ng-show="showOverride">Over<br/>ride</th>
+        <th ng-show="showCalledID">Custom<br/>CallerID</th>
+        <th ng-show="showScript">Custom<br/>Script</th>
+        <th ng-show="showFromAddress">From Address</th>
+        <th>SL/%</th>
+        <th>Short<br/>Abandons</th>
+        <th>Priority</th>
+        <th>Enable<br/>Blending</th>
+        <th>Use<br/>Disp.</th>
+        <th>Req.<br>Disp.</th>
+    </tr>
+
+
+
+
+    <tr ng-repeat="sk in SkillData">
+        <td>
+            <input type="text" ng-model="sk.SkillName"/>
+        </td>
+        <td>
+            <select ng-model="sk.Status">
+                <option ng-repeat="st in skillStatus" value="{{st.Status}}" >{{st.Status}}</option>
+            </select>
+        </td>
+        <td><select  ng-model="sk.CampaignName" ng-change="campChanged(sk.index)">
+            <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
+        </select></td>
+        <td ng-show="showDirection">
+            <input type="checkbox" ng-model="sk.OutboundSkill" ng-checked="sk.OutboundSkill" />
+        </td>
+        <td ng-show="showOverride">
+            <input type="checkbox" ng-model="sk.OverrideCallerID" ng-checked="sk.OverrideCallerID" />
+        </td>
+        <td ng-show="showCalledID">
+            <input type="text" ng-model="sk.CallerIDNumber" maxlength="10" size="10" />
+        </td>
+        <td ng-show="showScript"><select  ng-model="sk.CustomScriptName" ng-change="scriptChanged(sk.index)">
+            <option ng-repeat="script in CustomScript" value="{{script.CustomScriptName}}" >{{script.CustomScriptName}}</option>
+        </select></td>
+        <td ng-show="showFromAddress">
+            <input type="text" ng-model="sk.FromEmailAddress" />
+        </td>
+        <td><input type="text" ng-model="sk.SLA" maxlength="7" size="7"/></td>
+        <td><input type="text" ng-model="sk.ShortAbandon" maxlength="10" size="10"/></td>
+        <td><input type="text" ng-model="sk.Priority" maxlength="12" size="12"/></td>
+        <td>
+            <input type="checkbox" ng-model="sk.EnableBlending" ng-checked="sk.EnableBlending" />
+        </td>
+        <td>
+            <input type="checkbox" ng-model="sk.UseDispositions" ng-checked="sk.UseDispositions" />
+        </td>
+        <td>
+            <input type="checkbox" ng-model="sk.RequireDispositions" ng-checked="sk.RequireDispositions" />
+        </td>
+    </tr>
+</table>
+<BR/><BR/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateSkills()" value="Update Skills" />

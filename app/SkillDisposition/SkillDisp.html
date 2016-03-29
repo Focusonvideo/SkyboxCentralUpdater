@@ -7,9 +7,9 @@
 <br/><br/>
 <label > Select Skill: </label>
 <select  ng-model="modSkillSelected" ng-change="skillSelected()">
-    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillName}}" >{{selSkill.SkillName}}</option>
+    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillName}}" style="{{selSkill.skillColor}}">{{selSkill.SkillName}}</option>
 <!--    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillNo}}" {{selSkill.Selected}}>{{selSkill.SkillName}}</option> -->
- </select>
+ </select>    Only Skills that 'Use Dispositions' are listed. Set Use Disp before making association.
 <br/><br/>
 <table class="table table-bordered">
     <tr  class="active">

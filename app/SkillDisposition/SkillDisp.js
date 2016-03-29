@@ -15,7 +15,16 @@ angular.module('SkyboxApp')
             function(data){
                 $scope.showSpinner = false;
                 var orderedlist = orderBy(data,"SkillName",false);
-                $scope.skills = orderedlist;
+                var x = 0;
+                $scope.skills = new Array;
+                for (var y=0;y<orderedlist.length;y++) {
+                    if(orderedlist[y].UseDispositions){
+                        $scope.skills[x] = orderedlist[y];
+                        x++;
+                    }
+                }
+
+//                $scope.skills = orderedlist;
                 for (var x = 0; x < $scope.skills.length; x++){
                     $scope.skills[x].Selected = "";
                 }

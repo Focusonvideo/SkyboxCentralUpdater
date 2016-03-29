@@ -118,9 +118,9 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  templateUrl:'SkillPanel/Skill.html',
                  controller: 'SkillCtrl'
              })
-             .when('/skillPost',{
-                 templateUrl:'SkillPanel/SkillPostContactMapping.html',
-                 controller: 'SkillPostContactCtrl'
+             .when('/skillList',{
+                 templateUrl:'SkillPanel/SkillListMod.html',
+                 controller: 'SkillListModCtrl'
              })
              .when('/agent',{
                  templateUrl:'Agents/Agent.html',

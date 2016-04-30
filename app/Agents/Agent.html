@@ -1,0 +1,27 @@
+<h2 class="text-center">Agents</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/><br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Agent No</TH>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Notes</th>
+        <th>Team Name</th>
+        <th>User Name</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="ag in AgentsData">
+        <td>{{ag.AgentNo}}</td>
+        <td>{{ag.FirstName}}<br/>{{ag.LastName}}</td>
+        <td>{{ag.Email}}</td>
+        <td>{{ag.Status}}</td>
+        <td>{{ag.Notes}}</td>
+        <td>{{ag.TeamName}}</td>
+        <td>{{ag.UserName}}@{{ag.UserNameDomain}}</td>
+        <td><button ng-click="ModAgent(ag)">Mod</button> </td>
+    </tr>
+</table>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="AddAgent()" value="ADD Agent" />

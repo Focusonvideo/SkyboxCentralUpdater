@@ -30,43 +30,43 @@
     <tr >
 
         <td>
-            <input type="text" ng-model="modSkillData.SkillName"/>
+            <input type="text" ng-model="modSkillData.skillName"/>
         </td>
 
         <td ng-show="showDirection">
-            <input type="checkbox" ng-model="modSkillData.OutboundSkill" ng-checked="modSkillData.OutboundSkill" />
+            <input type="checkbox" ng-model="modSkillData.isOutbound" ng-checked="modSkillData.OutboundSkill" />
         </td>
         <td  ng-show="showCallerID" >
-            <input type="text" ng-model="modSkillData.CallerIDNumber" size="12"/>
+            <input type="text" ng-model="modSkillData.callerIdOverride" size="12"/>
         </td>
         <td>
             <select  ng-model="SkillCampSel" ng-change="CampSelected()">
-                <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
+                <option ng-repeat="camp in NewCampData" value="{{camp.campaignName}}" >{{camp.campaignName}}</option>
             </select>
         </td>
         <td ng-show="showFromAddress">
-            <input type="text" ng-model="modSkillData.FromEmailAddress" size="30"/>
+            <input type="text" ng-model="modSkillData.emailFromAddress" size="30"/>
         </td>
         <td ng-show="showSLA">
-            <input type="text" ng-model="modSkillData.SLASeconds" size="5"/>
+            <input type="text" ng-model="modSkillData.serviceLevelThreshold" size="5"/>
         </td>
         <td ng-show="showSLA">
-            <input type="text" ng-model="modSkillData.SLAPercent" size="5"/>
+            <input type="text" ng-model="modSkillData.serviceLevelGoal" size="5"/>
         </td>
         <td ng-show="showShortAbandon">
-            <input type="checkbox" ng-model="modSkillData.UseShortAbandonThreshold" ng-checked="modSkillData.UseShortAbandonThreshold" />
+            <input type="checkbox" ng-model="modSkillData.enableShortAbandon" ng-checked="modSkillData.UseShortAbandonThreshold" />
         </td>
         <td ng-show="showShortAbandon">
-            <input type="text" ng-model="modSkillData.ShortAbandonThreshold" size="5"/>
+            <input type="text" ng-model="modSkillData.shortAbandonThreshold" size="5"/>
         </td>
         <td>
-            <input type="text" ng-model="modSkillData.QueueInitPriority" size="5"/>
+            <input type="text" ng-model="modSkillData.initialPriority" size="5"/>
         </td>
         <td>
-            <input type="text" ng-model="modSkillData.QueueAcceleration" size="5"/>
+            <input type="text" ng-model="modSkillData.acceleration" size="5"/>
         </td>
         <td>
-            <input type="text" ng-model="modSkillData.QueueMaxPriority" size="5"/>
+            <input type="text" ng-model="modSkillData.maxPriority" size="5"/>
         </td>
 
 

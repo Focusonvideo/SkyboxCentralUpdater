@@ -5,7 +5,11 @@
     <span us-spinner spinner-on="showSpinner"></span>
     <div class="panel-body">
         <form tovalidate class="form-group">
-<!--            <fieldset>
+            <fieldset>
+                <label for="username">Business Unit #</label>
+                <input class="form-control" type="text" id="businessUnit" ng-model="user.BusUnit"/>
+            </fieldset>
+            <fieldset>
                 <label for="username">Username</label>
                 <input class="form-control" type="email" id="username" ng-model="user.name"/>
             </fieldset>
@@ -20,12 +24,8 @@
             <fieldset>
                 <label for="username">Vendor Name</label>
                 <input class="form-control" type="text" id="vendorName" ng-model="user.vendName"/>
-            </fieldset>  -->
-            <fieldset>
-                <label for="username">Business Unit #</label>
-                <input class="form-control" type="text" id="businessUnit" ng-model="user.BusUnit"/>
             </fieldset>
-            <fieldset>
+             <fieldset>
                 <label for="username">Soap Password</label>
                 <input class="form-control" type="text" id="soapPassword" ng-model="user.soapPass"/>
             </fieldset>

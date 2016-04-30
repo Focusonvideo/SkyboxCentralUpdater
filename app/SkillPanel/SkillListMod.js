@@ -27,13 +27,69 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
             var orderedlist;
             orderedlist = orderBy(data, "CampaignName", false);
             $scope.CampaignData = orderedlist;
+            getScripts();
         },
         function(response){
             $scope.showSpinner = false;
             alert("BAD:" + JSON.stringify(response));
         }
     );
-    $scope.showSpinner = false;
+    function getScripts(){
+        var token = SOAPClient.ICToken;
+        var extURL = 'services/v7.0/scripts?isactive=true&testing=true';
+        icSOAPServices.ICGET(token, extURL).then(
+            function(data){
+//                alert(JSON.stringify(data.data.resultSet.scripts));
+                var orderedlist;
+                orderedlist = orderBy(data.data.resultSet.scripts, "scriptName", false);
+                $scope.allScripts = orderedlist;
+
+                var t1 = 0;
+                var t2 = 0;
+                var t3 = 0;
+                var t4 = 0;
+                var t0 = 0;
+                $scope.script1 = new Array;
+                $scope.script2 = new Array;
+                $scope.script3 = new Array;
+                $scope.script4 = new Array;
+                $scope.script0 = new Array;
+                for (var x=0;x<$scope.allScripts.length;x++){
+                    var scr = $scope.allScripts[x];
+                    switch (scr.mediaTypeId) {
+                        case "1":
+                            $scope.script1[t1] = scr;
+                            t1++;
+                            break;
+                        case "2":
+                            $scope.script2[t2] = scr;
+                            t2++;
+                            break;
+                        case "3":
+                            $scope.script3[t3] = scr;
+                            t3++;
+                            break;
+                        case "4":
+                            $scope.script4[t4] = scr;
+                            t4++;
+                            break;
+                        case "0":
+                            $scope.script0[t0] = scr;
+                            t0++;
+                            break;
+                    }
+                }
+                console.log($scope);
+                $scope.showSpinner = false;
+            },
+            function(response){
+                $scope.showSpinner = false;
+                alert("BAD:" + JSON.stringify(response));
+            }
+
+        );
+
+    }
 
     $scope.skillTypeSelected = function(){
         $scope.showSpinner = true;
@@ -101,7 +157,7 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                             $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].QueueInitPriority + "|" + $scope.SkillDataOrig[y].QueueAcceleration + "|" + $scope.SkillDataOrig[y].QueueMaxPriority;
                             $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].SLASeconds + "/" + $scope.SkillDataOrig[y].SLAPercent;
                             $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].UseShortAbandonThreshold + ", " + $scope.SkillDataOrig[y].ShortAbandonThreshold;
-                            if ($scope.SkillDataOrig[y].CustomScriptID != 0) {
+ /*                           if ($scope.SkillDataOrig[y].CustomScriptID != 0) {
                                 var found = false;
                                 var scriptIdx = $scope.CustomScript.length;
                                 for (var w = 0; w < scriptIdx; w++) {
@@ -117,7 +173,7 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                                     };
                                 }
                             }
-                            y++;
+*/                            y++
                         }else{
                             if(orderedlist[x].OutboundSkill) {
                                 $scope.SkillDataOrig[y] = orderedlist[x];
@@ -125,26 +181,37 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                                 $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].QueueInitPriority + "|" + $scope.SkillDataOrig[y].QueueAcceleration + "|" + $scope.SkillDataOrig[y].QueueMaxPriority;
                                 $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].SLASeconds + "/" + $scope.SkillDataOrig[y].SLAPercent;
                                 $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].UseShortAbandonThreshold + ", " + $scope.SkillDataOrig[y].ShortAbandonThreshold;
-                                if ($scope.SkillDataOrig[y].CustomScriptID != 0) {
-                                    var found = false;
-                                    var scriptIdx = $scope.CustomScript.length;
-                                    for (var w = 0; w < scriptIdx; w++) {
-                                        if ($scope.CustomScript[w].CustomScriptID == $scope.SkillDataOrig[y].CustomScriptID) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        $scope.CustomScript[scriptIdx] = {
-                                            'CustomScriptID': $scope.SkillDataOrig[y].CustomScriptID,
-                                            'CustomScriptName': $scope.SkillDataOrig[y].CustomScriptName
-                                        };
-                                    }
-                                }
+                                //if ($scope.SkillDataOrig[y].CustomScriptID != 0) {
+                                //    var found = false;
+                                //    var scriptIdx = $scope.CustomScript.length;
+                                //    for (var w = 0; w < scriptIdx; w++) {
+                                //        if ($scope.CustomScript[w].CustomScriptID == $scope.SkillDataOrig[y].CustomScriptID) {
+                                //            found = true;
+                                //            break;
+                                //        }
+                                //    }
+                                //    if (!found) {
+                                //        $scope.CustomScript[scriptIdx] = {
+                                //            'CustomScriptID': $scope.SkillDataOrig[y].CustomScriptID,
+                                //            'CustomScriptName': $scope.SkillDataOrig[y].CustomScriptName
+                                //        };
+                                //    }
+                                //}
                                 y++;
                             }
                         }
                     }
+                }
+                switch (type){
+                    case "PhoneCall":
+                        $scope.CustomScript = $scope.script4;
+                        break;
+                    case "Chat":
+                        $scope.CustomScript = $scope.script3;
+                        break;
+                    case "Email":
+                        $scope.CustomScript = $scope.script1;
+                        break;
                 }
                 $scope.SkillData = JSON.parse(JSON.stringify($scope.SkillDataOrig));
 

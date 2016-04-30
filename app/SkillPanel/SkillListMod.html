@@ -50,7 +50,7 @@
             <input type="text" ng-model="sk.CallerIDNumber" maxlength="10" size="10" />
         </td>
         <td ng-show="showScript"><select  ng-model="sk.CustomScriptName" ng-change="scriptChanged(sk.index)">
-            <option ng-repeat="script in CustomScript" value="{{script.CustomScriptName}}" >{{script.CustomScriptName}}</option>
+            <option ng-repeat="script in CustomScript" value="{{script.scriptName}}" >{{script.scriptName}}</option>
         </select></td>
         <td ng-show="showFromAddress">
             <input type="text" ng-model="sk.FromEmailAddress" />

@@ -5,7 +5,8 @@
 
 var app = angular.module('SkyboxApp');
 
-app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', function ($scope, icSOAPServices, $location) {
+app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$filter', function ($scope, icSOAPServices, $location, $filter) {
+    var orderBy = $filter('orderBy');
     $scope.showSpinner = false;
     $scope.skillTypes = new Array(4);
     $scope.skillTypes[0] = {name : "Chat"};
@@ -15,35 +16,61 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
     $scope.showTable = false;
     String.prototype.replaceAll = function (find, replace) {
         var str = this;
-        return str.replace(new RegExp(find, 'g'), replace);
+//        return str.replace(new RegExp(find, 'g'), replace);
+        return str.split(find).join(replace);
     };
     function clearAll() {
         $scope.modSkillData = {
-            SkillName: "",
-            OutboundSkill: "",
-            CallerIDNumber: "",
-            CampaignName: "",
-            SLASeconds: "",
-            SLAPercent: "",
-            UseShortAbandonThreshold: false,
-            ShortAbandonThreshold: "",
-            QueueInitPriority: "",
-            QueueAcceleration: "",
-            QueueMaxPriority: ""
+            skillName: "",
+            isOutbound: "",
+            callerIdOverride: "",
+            campaignName: "",
+            serviceLevelThreshold: "",
+            serviceLevelGoal: "",
+            enableShortAbandon: false,
+            shortAbandonThreshold: "",
+            initialPriority: "",
+            acceleration: "",
+            maxPriority: ""
         };
         $scope.SkillCampSel = "";
         $scope.disableAdd = true;
     }
     clearAll();
-    icSOAPServices.icGet("Campaign_GetList").then(
+
+    function parseBool(val) { return val === true || val === "True" }
+
+    var token = SOAPClient.ICToken;
+    var extURL = 'services/v7.0/campaigns';
+    icSOAPServices.ICGET(token,extURL).then(
         function(data){
-            $scope.CampaignData = data;
+            var orderedlist;
+
+//                alert(JSON.stringify(data));
+            orderedlist = orderBy(data.data.resultSet.campaigns, "campaignName", false);
+            $scope.NewCampData = orderedlist;
+            for (var x =0;x<data.data.resultSet.campaigns.length;x++){
+                $scope.NewCampData[x].index = x;
+                $scope.NewCampData[x].isActive = parseBool($scope.NewCampData[x].isActive);
+            }
+            console.log($scope);
         },
         function(response){
-            $scope.showSpinner = false;
             alert("BAD:" + JSON.stringify(response));
         }
     );
+
+
+
+    // icSOAPServices.icGet("Campaign_GetList").then(
+    //     function(data){
+    //         $scope.CampaignData = data;
+    //     },
+    //     function(response){
+    //         $scope.showSpinner = false;
+    //         alert("BAD:" + JSON.stringify(response));
+    //     }
+    // );
 
      /*       for (var opt = 0; opt < $scope.statusOpt; opt++) {
      if ($scope.statusOpt[opt].name == $scope.modSkillData.Status) {
@@ -67,7 +94,7 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
     };
     function processSkillLine(SkillLine){
         var skillParsedCol = SkillLine.split(String.fromCharCode(9));
-        $scope.modSkillData.SkillName = skillParsedCol[0].trim();
+        $scope.modSkillData.skillName = skillParsedCol[0].trim();
         if($scope.ConvertIn2Out) {
             $scope.modSkillData.SkillName = skillParsedCol[0] + " OB";
         }
@@ -107,13 +134,13 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
     }
 
     function ValidateElements(){
-        if($scope.SkillCampSel != "" && $scope.modSkillData.SkillName != ""){
+        if($scope.SkillCampSel != "" && $scope.modSkillData.skillName != ""){
             $scope.disableAdd = false;
         }else{
             $scope.disableAdd = true;
         }
         if($scope.SkillTypeSel == "EMail"){
-            if($scope.modSkillData.FromEmailAddress == ""){
+            if($scope.modSkillData.emailFromAddress == ""){
                 $scope.disableAdd = true;
             }
         }
@@ -122,10 +149,10 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
 
 
     $scope.CampSelected = function(){
-        for (var x = 0;x<$scope.CampaignData.length;x++){
-            if($scope.CampaignData[x].CampaignName == $scope.SkillCampSel){
-                $scope.modSkillData.CampaignName = $scope.SkillCampSel;
-                $scope.modSkillData.CampaignId =  $scope.CampaignData[x].CampaignNo;
+        for (var x = 0;x<$scope.NewCampData.length;x++){
+            if($scope.NewCampData[x].campaignName == $scope.SkillCampSel){
+                $scope.modSkillData.campaignName = $scope.SkillCampSel;
+                $scope.modSkillData.campaignId =  $scope.NewCampData[x].campaignId;
             }
         }
         ValidateElements();
@@ -134,9 +161,9 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
 
     function doFromAddress(myAddress){
         if(myAddress != ""){
-            $scope.modSkillData.FromEmailAddress = myAddress;
+            $scope.modSkillData.emailfromAddress = myAddress;
         }else{
-            $scope.modSkillData.FromEmailAddress = "";
+            $scope.modSkillData.emailfromAddress = "";
         }
     }
     function doPriority(myPriority){
@@ -144,24 +171,24 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
             var priorities = myPriority.replace("(","").replace(")","");
             var prio = priorities.split("|");
             if (prio.length == 3) {
-                $scope.modSkillData.QueueInitPriority = prio[0];
-                $scope.modSkillData.QueueAcceleration = prio[1];
-                $scope.modSkillData.QueueMaxPriority = prio[2];
+                $scope.modSkillData.initialPriority = prio[0];
+                $scope.modSkillData.acceleration = prio[1];
+                $scope.modSkillData.maxPriority = prio[2];
             }else{
                 if(prio.length == 2){
-                    $scope.modSkillData.QueueInitPriority = prio[0];
-                    $scope.modSkillData.QueueAcceleration = prio[1];
-                    $scope.modSkillData.QueueMaxPriority = "1000";
+                    $scope.modSkillData.initialPriority = prio[0];
+                    $scope.modSkillData.acceleration = prio[1];
+                    $scope.modSkillData.vaxPriority = "1000";
                 }else{
-                    $scope.modSkillData.QueueInitPriority = prio[0];
-                    $scope.modSkillData.QueueAcceleration = "1";
-                    $scope.modSkillData.QueueMaxPriority = "1000";
+                    $scope.modSkillData.initialPriority = prio[0];
+                    $scope.modSkillData.acceleration = "1";
+                    $scope.modSkillData.maxPriority = "1000";
                 }
             }
         }else {
-            $scope.modSkillData.QueueInitPriority = "0";
-            $scope.modSkillData.QueueAcceleration = "1";
-            $scope.modSkillData.QueueMaxPriority = "1000";
+            $scope.modSkillData.initialPriority = "0";
+            $scope.modSkillData.acceleration = "1";
+            $scope.modSkillData.maxPriority = "1000";
         }
     }
     function doShortAbandon(myAbandons){
@@ -169,45 +196,54 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
             var ShortAbs = myAbandons.split(",");
             if (ShortAbs.length == 2) {
                 if (ShortAbs[0].toUpperCase().trim() == "Y") {
-                    $scope.modSkillData.UseShortAbandonThreshold = true;
-                    $scope.modSkillData.ShortAbandonThreshold = ShortAbs[1].replace(" sec","");
+                    $scope.modSkillData.enableShortAbandon = true;
+                    $scope.modSkillData.shortAbandonThreshold = ShortAbs[1].replace(" sec","");
                 }else{
-                    $scope.modSkillData.UseShortAbandonThreshold = false;
-                    $scope.modSkillData.ShortAbandonThreshold = "";
+                    $scope.modSkillData.enableShortAbandon = false;
+                    $scope.modSkillData.shortAbandonThreshold = ShortAbs[1].replace(" sec","");
                 }
             }else{
-                $scope.modSkillData.UseShortAbandonThreshold = true;
-                $scope.modSkillData.ShortAbandonThreshold = "15";
+                if (ShortAbs[0].toUpperCase().trim() == "Y") {
+                    $scope.modSkillData.enableShortAbandon = true;
+                    $scope.modSkillData.shortAbandonThreshold = "15";
+                }else{
+                    $scope.modSkillData.enableShortAbandon = false;
+                    $scope.modSkillData.shortAbandonThreshold = "15";
+                }
             }
         }else {
-            $scope.modSkillData.UseShortAbandonThreshold = true;
-            $scope.modSkillData.ShortAbandonThreshold = "15";
+            $scope.modSkillData.enableShortAbandon = false;
+            $scope.modSkillData.shortAbandonThreshold = "15";
+        }
+        var testval = Number($scope.modSkillData.shortAbandonThreshold);
+        if ( testval !==  testval) {
+            $scope.modSkillData.shortAbandonThreshold = "15";
         }
     }
     function doSLA(mySLA){
         if(mySLA != "") {
             var SLAs = mySLA.split("/");
             if (SLAs.length == 2) {
-                $scope.modSkillData.SLASeconds = SLAs[0];
-                $scope.modSkillData.SLAPercent = SLAs[1];
+                $scope.modSkillData.serviceLevelThreshold = SLAs[0];
+                $scope.modSkillData.serviceLevelGoal = SLAs[1];
             }else{
-                $scope.modSkillData.SLASeconds = "";
-                $scope.modSkillData.SLAPercent = "";
+                $scope.modSkillData.serviceLevelThreshold = "30";
+                $scope.modSkillData.serviceLevelGoal = "90";
             }
         }else {
-            $scope.modSkillData.SLASeconds = "";
-            $scope.modSkillData.SLAPercent = "";
+            $scope.modSkillData.serviceLevelThreshold = "30";
+            $scope.modSkillData.serviceLevelGoal = "90";
         }
     }
     function doCampaign(myCampaign){
         var found = false;
         if(myCampaign != "") {
-            for (var x = 0; x < $scope.CampaignData.length; x++) {
-                if ($scope.CampaignData[x].CampaignName.toUpperCase().replaceAll(" ", "_") == myCampaign.toUpperCase().replaceAll(" ", "_")) {
-                    $scope.SkillCampSel = $scope.CampaignData[x].CampaignName;
-                    $scope.SkillCampId = $scope.CampaignData[x].CampaignNo;
-                    $scope.modSkillData.CampaignName = $scope.CampaignData[x].CampaignName;
-                    $scope.modSkillData.CampaignId = $scope.CampaignData[x].CampaignNo;
+            for (var x = 0; x < $scope.NewCampData.length; x++) {
+                if ($scope.NewCampData[x].campaignName.toUpperCase().replaceAll(" ", "_") == myCampaign.toUpperCase().replaceAll(" ", "_")) {
+                    $scope.SkillCampSel = $scope.NewCampData[x].campaignName;
+                    $scope.SkillCampId = $scope.NewCampData[x].campaignId;
+                    $scope.modSkillData.campaignName = $scope.NewCampData[x].campaignName;
+                    $scope.modSkillData.campaignId = $scope.NewCampData[x].campaignId;
                     found = true;
                     break;
                 }
@@ -218,34 +254,34 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
         }
     }
     function doCallerID(myCallerID){
-        if($scope.modSkillData.OutboundSkill){
-            $scope.modSkillData.CallerIDNumber = myCallerID.replaceAll("-","");
-            $scope.modSkillData.CallerIDNumber = $scope.modSkillData.CallerIDNumber.replaceAll("(","");
-            $scope.modSkillData.CallerIDNumber = $scope.modSkillData.CallerIDNumber.replaceAll(")","");
-            $scope.modSkillData.CallerIDNumber = $scope.modSkillData.CallerIDNumber.replaceAll(" ","");
-            if ($scope.modSkillData.CallerIDNumber != ""){
+        if($scope.modSkillData.isOutbound){
+            $scope.modSkillData.callerIdOverride = myCallerID.replaceAll("-","");
+            $scope.modSkillData.callerIdOverride = $scope.modSkillData.callerIdOverride.replaceAll("(","");
+            $scope.modSkillData.callerIdOverride = $scope.modSkillData.callerIdOverride.replaceAll(")","");
+            $scope.modSkillData.callerIdOverride = $scope.modSkillData.callerIdOverride.replaceAll(" ","");
+            if ($scope.modSkillData.callerIdOverride != ""){
                 $scope.modSkillData.OverrideCallerID = true;
             }else{
                 $scope.modSkillData.OverrideCallerID = false;
             }
 
         }else{
-            $scope.modSkillData.CallerIDNumber = "";
+            $scope.modSkillData.callerIdOverride = "";
             $scope.modSkillData.OverrideCallerID = false;
         }
     }
     function doDirection(myDirection){
         if (myDirection.toUpperCase() == "INBOUND") {
-            $scope.modSkillData.OutboundSkill = false;
+            $scope.modSkillData.isOutbound = false;
             $scope.showShortAbandon = true;
             $scope.showSLA = true;
             if($scope.ConvertIn2Out) {
-                $scope.modSkillData.OutboundSkill = true;
+                $scope.modSkillData.isOutbound = true;
                 $scope.showShortAbandon = false;
                 $scope.showSLA = false;
             }
         }else{
-            $scope.modSkillData.OutboundSkill = true;
+            $scope.modSkillData.isOutbound = true;
         }
     }
 
@@ -282,7 +318,7 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
     };
     $scope.skillTypeSelected = function(){
         $scope.showTable = true;
-        $scope.modSkillData.MediaType = $scope.SkillTypeSel;
+        $scope.modSkillData.mediaTypeName = $scope.SkillTypeSel;
         switch ($scope.SkillTypeSel){
             case "PhoneCall":
                 $scope.showDirection = true;
@@ -315,96 +351,101 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', func
         var parm1 = {};
         switch ($scope.SkillTypeSel){
             case "PhoneCall":
-                if($scope.modSkillData.OutboundSkill) {
-                    if ($scope.modSkillData.CallerIDNumber != "") {
+                if($scope.modSkillData.isOutbound) {
+                    if ($scope.modSkillData.callerIdOverride != "") {
                         $scope.modSkillData.OverrideCallerID = true;
                     } else {
                         $scope.modSkillData.OverrideCallerID = false;
                     }
                     parm1 = {
                         skill: {
-                            SkillName: $scope.modSkillData.SkillName,
-                            MediaType: $scope.SkillTypeSel,
-                            Status: "Active",
-                            CampaignNo: $scope.modSkillData.CampaignId,
-                            OutboundSkill: $scope.modSkillData.OutboundSkill,
-                            QueueInitPriority: $scope.modSkillData.QueueInitPriority,
-                            QueueAcceleration: $scope.modSkillData.QueueAcceleration,
-                            QueueMaxPriority: $scope.modSkillData.QueueMaxPriority,
-                            OverrideCallerID: $scope.modSkillData.OverrideCallerID,
-                            CallerIDNumber: $scope.modSkillData.CallerIDNumber,
-                            SLASeconds: 30,
-                            SLAPercent: 90,
-                            CampaignName: $scope.modSkillData.CampaignName
+                            skillName: $scope.modSkillData.skillName,
+                            mediaTypeName: $scope.SkillTypeSel,
+                            mediaTypeId: 4,
+                            isActive: true,
+                            campaignId: $scope.modSkillData.campaignId,
+                            isOutbound: $scope.modSkillData.isOutbound,
+                            initialPriority: $scope.modSkillData.initialPriority,
+                            acceleration: $scope.modSkillData.acceleration,
+                            maxPriority: $scope.modSkillData.maxPriority,
+                            // OverrideCallerID: $scope.modSkillData.OverrideCallerID,
+                            callerIdOverride: $scope.modSkillData.callerIdOverride,
+                            serviceLevelThreshold: 30,
+                            serviceLevelGoal: 90,
+                            campaignName: $scope.modSkillData.campaignName
                         }
                     };
                 }else{  // Inbound
                     parm1 = {
                         skill: {
-                            SkillName: $scope.modSkillData.SkillName,
-                            MediaType: $scope.SkillTypeSel,
-                            Status: "Active",
-                            CampaignNo: $scope.modSkillData.CampaignId,
-                            OutboundSkill: $scope.modSkillData.OutboundSkill,
-                            SLASeconds: $scope.modSkillData.SLASeconds,
-                            SLAPercent: $scope.modSkillData.SLAPercent,
-                            QueueInitPriority: $scope.modSkillData.QueueInitPriority,
-                            QueueAcceleration: $scope.modSkillData.QueueAcceleration,
-                            QueueMaxPriority: $scope.modSkillData.QueueMaxPriority,
+                            skillName: $scope.modSkillData.skillName,
+                            mediaTypeName: $scope.SkillTypeSel,
+                            mediaTypeId: 4,
+                            isActive: true,
+                            campaignId: $scope.modSkillData.campaignId,
+                            isOutbound: $scope.modSkillData.isOutbound,
+                            serviceLevelThreshold: $scope.modSkillData.serviceLevelThreshold,
+                            serviceLevelGoal: $scope.modSkillData.serviceLevelGoal,
+                            initialPriority: $scope.modSkillData.initialPriority,
+                            acceleration: $scope.modSkillData.acceleration,
+                            maxPriority: $scope.modSkillData.maxPriority,
                             CampaignName: $scope.modSkillData.CampaignName,
-                            ShortAbandonThreshold: $scope.modSkillData.ShortAbandonThreshold,
-                            UseShortAbandonThreshold: $scope.modSkillData.UseShortAbandonThreshold
+                            shortAbandonThreshold: $scope.modSkillData.shortAbandonThreshold,
+                            enableShortAbandon: $scope.modSkillData.enableShortAbandon
                         }
                     };
                 }
                 break;
             case "Chat":
                  parm1 = {skill:{
-                    SkillName : $scope.modSkillData.SkillName,
-                    MediaType : $scope.SkillTypeSel,
-                    Status : "Active",
-                    CampaignNo : $scope.modSkillData.CampaignId,
-                    SLASeconds : $scope.modSkillData.SLASeconds,
-                    SLAPercent : $scope.modSkillData.SLAPercent,
-                    QueueInitPriority : $scope.modSkillData.QueueInitPriority,
-                    QueueAcceleration : $scope.modSkillData.QueueAcceleration,
-                    QueueMaxPriority : $scope.modSkillData.QueueMaxPriority,
-                    CampaignName : $scope.modSkillData.CampaignName,
-                    ShortAbandonThreshold : $scope.modSkillData.ShortAbandonThreshold,
-                    UseShortAbandonThreshold : $scope.modSkillData.UseShortAbandonThreshold
+                     skillName: $scope.modSkillData.skillName,
+                     mediaTypeName: $scope.SkillTypeSel,
+                     mediaTypeId: 3,
+                     isActive: true,
+                     campaignId: $scope.modSkillData.campaignId,
+                     serviceLevelThreshold: $scope.modSkillData.serviceLevelThreshold,
+                     serviceLevelGoal: $scope.modSkillData.serviceLevelGoal,
+                     initialPriority: $scope.modSkillData.initialPriority,
+                     acceleration: $scope.modSkillData.acceleration,
+                     maxPriority: $scope.modSkillData.maxPriority,
+                     CampaignName: $scope.modSkillData.CampaignName,
+                     shortAbandonThreshold: $scope.modSkillData.shortAbandonThreshold,
+                     enableShortAbandon: $scope.modSkillData.enableShortAbandon
                 }};
                 break;
             case "VoiceMail":
                parm1 = {skill:{
-                    SkillName : $scope.modSkillData.SkillName,
-                    MediaType : $scope.SkillTypeSel,
-                    Status : "Active",
-                    CampaignNo : $scope.modSkillData.CampaignId,
-                    OutboundSkill : $scope.modSkillData.OutboundSkill,
-                    SLASeconds : $scope.modSkillData.SLASeconds,
-                    SLAPercent : $scope.modSkillData.SLAPercent,
-                    QueueInitPriority : $scope.modSkillData.QueueInitPriority,
-                    QueueAcceleration : $scope.modSkillData.QueueAcceleration,
-                    QueueMaxPriority : $scope.modSkillData.QueueMaxPriority,
-                    CampaignName : $scope.modSkillData.CampaignName,
-                    ShortAbandonThreshold : $scope.modSkillData.ShortAbandonThreshold,
-                    UseShortAbandonThreshold : $scope.modSkillData.UseShortAbandonThreshold
+                   skillName: $scope.modSkillData.skillName,
+                   mediaTypeName: $scope.SkillTypeSel,
+                   mediaTypeId: 5,
+                   isActive: true,
+                   campaignId: $scope.modSkillData.campaignId,
+                   isOutbound: $scope.modSkillData.isOutbound,
+                   serviceLevelThreshold: $scope.modSkillData.serviceLevelThreshold,
+                   serviceLevelGoal: $scope.modSkillData.serviceLevelGoal,
+                   initialPriority: $scope.modSkillData.initialPriority,
+                   acceleration: $scope.modSkillData.acceleration,
+                   maxPriority: $scope.modSkillData.maxPriority,
+                   CampaignName: $scope.modSkillData.CampaignName,
+                   shortAbandonThreshold: $scope.modSkillData.shortAbandonThreshold,
+                   enableShortAbandon: $scope.modSkillData.enableShortAbandon
                 }};
                 break;
             case "EMail":
                 parm1 = {skill:{
-                    SkillName : $scope.modSkillData.SkillName,
-                    MediaType : $scope.SkillTypeSel,
-                    Status : "Active",
-                    CampaignNo : $scope.modSkillData.CampaignId,
-                    OutboundSkill : $scope.modSkillData.OutboundSkill,
-                    SLASeconds : $scope.modSkillData.SLASeconds,
-                    SLAPercent : $scope.modSkillData.SLAPercent,
-                    FromEmailAddress : $scope.modSkillData.FromEmailAddress,
-                    QueueInitPriority : $scope.modSkillData.QueueInitPriority,
-                    QueueAcceleration : $scope.modSkillData.QueueAcceleration,
-                    QueueMaxPriority : $scope.modSkillData.QueueMaxPriority,
-                    CampaignName : $scope.modSkillData.CampaignName
+                    skillName: $scope.modSkillData.skillName,
+                    mediaTypeName: $scope.SkillTypeSel,
+                    mediaTypeId: 1,
+                    isActive: true,
+                    campaignId: $scope.modSkillData.campaignId,
+                    isOutbound: $scope.modSkillData.isOutbound,
+                    serviceLevelThreshold: $scope.modSkillData.serviceLevelThreshold,
+                    serviceLevelGoal: $scope.modSkillData.serviceLevelGoal,
+                    emailFromAddress : $scope.modSkillData.emailFromAddress,
+                    initialPriority: $scope.modSkillData.initialPriority,
+                    acceleration: $scope.modSkillData.acceleration,
+                    maxPriority: $scope.modSkillData.maxPriority,
+                    CampaignName: $scope.modSkillData.CampaignName
                 }};
                 break;
         }

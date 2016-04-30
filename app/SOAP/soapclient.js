@@ -238,7 +238,7 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 	else{
 		url = url.replace("https://login.incontact.com/",SOAPClient.tokenData.resource_server_base_uri);
 		url = url.replace("inContactAPI/","");
-		url = url + "/SkyboxProxy/Updater/SOAP"
+		url = url + "/SkyboxProxy/Updater/SOAP";
 //		alert(url);
 		xmlHttp.open("POST", url, async);
 	}

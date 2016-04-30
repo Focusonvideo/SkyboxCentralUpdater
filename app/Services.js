@@ -4,8 +4,8 @@
 angular.module('SkyboxApp')
 
     .factory("icSOAPServices",function icSOAPServicesFactory($soap,$http){
-       var proxyAdd = "http://tools.skybox.tech:8080";
- //       var proxyAdd = "http://localhost:8080";
+         var proxyAdd = "http://tools.skybox.tech:8080";
+  //     var proxyAdd = "http://localhost:8080";
         var Base64 = {
             // private property
             _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -130,6 +130,73 @@ angular.module('SkyboxApp')
                     method: 'GET',
                     url: proxyAdd + "/SkyboxProxy/Updater/SFlookup" ,
                     headers: {Accept: 'application/json'}
+                };
+                return $http(config);
+            },
+            ICToken:function(Authkey,user, pw){
+                var accessToken = 'Basic ' + Base64.encode(Authkey);
+                var parms = '?grant_type=password&username=' + user + '&password=' + pw + '&scope=AgentApi RealTimeApi AdminApi CustomApi AuthenticationApi PatronApi';
+                parms = Base64._utf8_encode(parms);
+
+                var config = {
+                    method:'POST',
+//                    url:'https://api.incontact.com/InContactAuthorizationServer/Token',
+                    url: proxyAdd + '/SkyboxProxy/restful/token/junk',
+                    data:{
+                        grant_Type:"password",
+                        username:user,
+                        password:pw,
+                        scope:'AgentApi RealTimeApi AdminApi'
+                    },
+                    headers: {
+                        'content-type':'application/json',
+                        accept:'application/json',
+                        authorization:accessToken}
+                };
+
+                 return $http(config);
+            },
+            ICGET:function(token,ExtURL){
+                var accessBearer = 'Bearer ' + token.access_token;
+                var URL = token.resource_server_base_uri + Base64._utf8_encode(ExtURL);
+                var config = {
+                    method:'GET',
+                    url:proxyAdd + '/SkyboxProxy/restful/ICGET/' + URL,
+                    headers: {
+                        'content-type':'application/json',
+                        accept:'application/json',
+                        authorization:accessBearer
+                    }
+                 };
+                return $http(config);
+            },
+            ICPUT:function(token,ExtURL,dataParms){
+                var accessBearer = 'Bearer ' + token.access_token;
+                var URL = token.resource_server_base_uri + ExtURL;
+                var config = {
+                    method:'PUT',
+                    url:proxyAdd + '/SkyboxProxy/restful/ICPUT/' + URL,
+                    data: dataParms,
+                    headers: {
+                        'content-type':'application/json',
+                        accept:'application/json',
+                        authorization:accessBearer
+                    }
+                };
+                return $http(config);
+            },
+            ICPOST:function(token,ExtURL,dataParms){
+                var accessBearer = 'Bearer ' + token.access_token;
+                var URL = token.resource_server_base_uri + ExtURL;
+                var config = {
+                    method:'POST',
+                    url:proxyAdd + '/SkyboxProxy/restful/ICPOST/' + URL,
+                    data: dataParms,
+                    headers: {
+                        'content-type':'application/json',
+                        accept:'application/json',
+                        authorization:accessBearer
+                    }
                 };
                 return $http(config);
             }

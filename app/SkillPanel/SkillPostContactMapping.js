@@ -7,14 +7,29 @@ angular.module('SkyboxApp')
     .controller('SkillPostContactCtrl', ['$scope', 'icSOAPServices', '$location', '$filter' ,function($scope, icSOAPServices, $location, $filter) {
         var orderBy = $filter('orderBy');
         $scope.showSpinner = true;
-        icSOAPServices.icGet("Skill_GetList").then(
+        var token = SOAPClient.ICToken;
+        var extURL = 'services/v7.0/skills';
+        function parseBool(val) { return val === true || val === "True" }
+
+
+        icSOAPServices.ICGET(token, extURL).then(
             function(data){
-                var orderedlist = orderBy(data,"SkillName",false);
+                var orderedlist = orderBy(data.data.resultSet.skills, "skillName", false);
                 $scope.Skills = orderedlist;
-                for (var x =0;x<data.length;x++){
+                for (var x =0;x<$scope.Skills.length;x++){
                     $scope.Skills[x].index = x;
-                    if ($scope.Skills[x].UseDispositions == true){
-                        $scope.Skills[x].AWUorDisp = "Disp";
+                    $scope.Skills[x].agentless = parseBool($scope.Skills[x].agentless);
+                    $scope.Skills[x].requireDisposition = parseBool($scope.Skills[x].requireDisposition);
+                    switch ($scope.Skills[x].acwTypeId){
+                        case "1":
+                            $scope.Skills[x].DispACW = "None";
+                            break;
+                        case "2":
+                            $scope.Skills[x].DispACW = "Disp";
+                            break;
+                        case "3":
+                            $scope.Skills[x].DispACW = "ACW";
+                            break;
                     }
                 }
 
@@ -27,16 +42,5 @@ angular.module('SkyboxApp')
         );
         ;
         console.log($scope);
- /*       $scope.ModSkill = function(idxData){
-            SOAPClient.passData = idxData;
-            $location.path("/skillMod");
-        };
-        $scope.AddSkill = function(idxData){
-            SOAPClient.passData = {};
-            $location.path("/skillAdd");
-        }
-        $scope.AddBRDSkill = function(idxData){
-            $location.path("/skillBRDAdd");
-        } */
-
+ 
     }]);

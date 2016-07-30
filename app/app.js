@@ -83,7 +83,7 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  controller: 'OutstateCtrl'
              })
              .when('/outstatemod',{
-                 templateUrl:'OutsStatePanel/OutStateAdd.html',
+                 templateUrl:'OutStatePanel/OutStateAdd.html',
                  controller: 'OutstatemodCtrl'
              })
              .when('/outstateadd',{
@@ -118,6 +118,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
                  templateUrl:'SkillPanel/Skill.html',
                  controller: 'SkillCtrl'
              })
+             .when('/skillPost',{
+                 templateUrl:'SkillPanel/SkillPostContactMapping.html',
+                 controller: 'SkillPostContactCtrl'
+             })
              .when('/skillList',{
                  templateUrl:'SkillPanel/SkillListMod.html',
                  controller: 'SkillListModCtrl'
@@ -125,6 +129,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
              .when('/agent',{
                  templateUrl:'Agents/Agent.html',
                  controller: 'AgentCtrl'
+             })
+             .when('/POC',{
+                 templateUrl:'POCs/POCs.html',
+                 controller: 'POCCtrl'
              })
              .when('/main',{
                 templateUrl:'MainPanel/Main.html',

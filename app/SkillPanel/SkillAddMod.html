@@ -5,44 +5,44 @@
         <th>Skill No</TH>
         <th>Skill Name</TH>
         <th>Media Type</TH>
-        <th>Status</TH>
+        <th>Is<br/>Active</TH>
         <th>Campaign Name</TH>
         <th>OB<br/>Skill</TH>
         <th>SLA<br/>Seconds</TH>
         <th>SLA<br/>Percent</TH>
     </tr>
     <tr >
-        <td>{{modSkillData.SkillNo}}</td>
-        <td><input type="text" ng-model="modSkillData.SkillName"/></td>
-        <td>{{modSkillData.MediaType}}</td>
-        <td>{{modSkillData.Status}}</td>
+        <td>{{modSkillData.skillId}}</td>
+        <td><input type="text" ng-model="modSkillData.skillName"/></td>
+        <td>{{modSkillData.mediaTypeName}}</td>
+         <td><input type="checkbox" ng-model="modSkillData.isActive" ng-checked="modSkillData.isActive"/></td>
         <td>
             <select  ng-model="SkillCampSel" ng-change="CampSelected()">
                 <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
             </select>
         </td>
 
-        <td><input type="checkbox" ng-model="modSkillData.OutboundSkill" ng-checked="modSkillData.OutboundSkill"/></td>
-        <td><input type="text" ng-model="modSkillData.SLASeconds"/></td>
-        <td><input type="text" ng-model="modSkillData.SLAPercent"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.isOutbound" ng-checked="modSkillData.isOutbound"/></td>
+        <td><input type="text" ng-model="modSkillData.serviceLevelThreshold" size="4" /></td>
+        <td><input type="text" ng-model="modSkillData.serviceLevelGoal" size="4"/></td>
     </tr>
 </table>
 <table class="table table-bordered">
     <tr  class="active">
+        <th>Agent-<br/>less</th>
         <th>Notes</TH>
-        <th>Description</TH>
         <th>Interruptible</TH>
         <th>From Email<br/>Editable</TH>
         <th>From Email<br/>Address</TH>
         <th>Bcc Email<br/>Address</TH>
     </tr>
     <tr >
-        <td><input type="text" ng-model="modSkillData.Notes"/></td>
-        <td><input type="text" ng-model="modSkillData.Description"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.Interruptible" ng-checked="modSkillData.Interruptible" /></td>
-        <td><input type="checkbox" ng-model="modSkillData.FromEmailEditable" ng-checked="modSkillData.FromEmailEditable"/></td>
-        <td><input type="text" ng-model="modSkillData.FromEmailAddress"/></td>
-        <td><input type="text" ng-model="modSkillData.BccEmailAddress"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.agentless" ng-checked="modSkillData.agentless" /></td>
+        <td><input type="text" ng-model="modSkillData.notes"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.interruptible" ng-checked="modSkillData.Interruptible" /></td>
+        <td><input type="checkbox" ng-model="modSkillData.emailFromEditable" ng-checked="modSkillData.FromEmailEditable"/></td>
+        <td><input type="text" ng-model="modSkillData.emailFromAddress"/></td>
+        <td><input type="text" ng-model="modSkillData.emailBccAddress"/></td>
     </tr>
 </table>
 <table class="table table-bordered">
@@ -57,19 +57,22 @@
         <th>Active<br/>Min WorkTime</TH>
     </tr>
     <tr >
-        <td><input type="checkbox" ng-model="modSkillData.UseDispositions" ng-checked="modSkillData.UseDispositions"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.RequireDispositions" ng-checked="modSkillData.RequireDispositions"/></td>
-        <td><input type="text" ng-model="modSkillData.DispositionTimer"/></td>
-        <td><input type="text" ng-model="modSkillData.QueueInitPriority"/></td>
-        <td><input type="text" ng-model="modSkillData.QueueAcceleration"/></td>
-        <td><input type="text" ng-model="modSkillData.QueueMaxPriority"/></td>
+        <td>
+            <select  ng-model="modSkillData.acwTypeName" ng-change="DispSelected()" ng-disabled="modSkillData.agentless">
+                 <option ng-repeat="d_type in DispOpt" value="{{d_type.name}}" >{{d_type.name}}</option>
+             </select>
+        </td>
+        <td><input type="checkbox" ng-model="modSkillData.requireDispositions" ng-checked="modSkillData.RequireDispositions" ng-disabled="modSkillData.agentless"/></td>
+        <td><input type="text" ng-model="modSkillData.maxSecondsACW" ng-disabled="modSkillData.agentless"/></td>
+        <td><input type="text" ng-model="modSkillData.initialPriority" size="5"/></td>
+        <td><input type="text" ng-model="modSkillData.acceleration" size="5"/></td>
+        <td><input type="text" ng-model="modSkillData.maxPriority" size="5"/></td>
         <td>{{modSkillData.QueueFunction}}</td>
         <td><input type="text" ng-model="modSkillData.ActiveMinWorkTime"/></td>
     </tr>
 </table>
 <table class="table table-bordered">
     <tr  class="active">
-        <th>OverrideCallerID</TH>
         <th>CallerID<br/>Number</TH>
         <th>Use Screen<br/>Pops</TH>
         <th>Use Custom<br/>ScreenPops</TH>
@@ -79,24 +82,44 @@
         <th>Include<br/>Short Abandons</TH>
         <th>Include<br/>Other Abandons</TH>
         <th>Custom<br/>Script Name</TH>
-        <th>Is Dialer</TH>
-        <th>Enable<br/>Blending</TH>
+        <th>Priority<br/>Blending</TH>
     </tr>
     <tr >
-        <td><input type="checkbox" ng-model="modSkillData.OverrideCallerID" ng-checked="modSkillData.OverrideCallerID"/></td>
-        <td><input type="text" ng-model="modSkillData.CallerIDNumber"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.UseScreenPops" ng-checked="modSkillData.UseScreenPops"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.UseCustomScreenPops" ng-checked="modSkillData.UseCustomScreenPops"/></td>
-        <td><input type="text" ng-model="modSkillData.CustomScreenPopApp"/></td>
-        <td><input type="text" ng-model="modSkillData.ShortAbandonThreshold"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.UseShortAbandonThreshold" ng-checked="modSkillData.UseShortAbandonThreshold"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.IncludeShortAbandons" ng-checked="modSkillData.IncludeShortAbandons"/></td>
-        <td><input type="checkbox" ng-model="modSkillData.IncludeOtherAbandons" ng-checked="modSkillData.IncludeOtherAbandons"/></td>
-        <td><input type="text" ng-model="modSkillData.CustomScriptName"/></td>
-        <td>{{modSkillData.IsDialer>boolean}}</td>
-        <td><input type="checkbox" ng-model="modSkillData.EnableBlending" ng-checked="modSkillData.EnableBlending" /></td>
+         <td><input type="text" ng-model="modSkillData.callerIdOverride" size="10"  ng-disabled="!modSkillData.isOutbound"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.useScreenPops" ng-checked="modSkillData.UseScreenPops"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.useCustomScreenPops" ng-checked="modSkillData.UseCustomScreenPops"/></td>
+        <td><input type="text" ng-model="modSkillData.screenPopDetail"/></td>
+        <td><input type="text" ng-model="modSkillData.shortAbandonThreshold" size="5"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.enableShortAbandon" ng-checked="modSkillData.UseShortAbandonThreshold"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.countShortAbandons" ng-checked="modSkillData.IncludeShortAbandons"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.countOtherAbandons" ng-checked="modSkillData.IncludeOtherAbandons"/></td>
+        <td><input type="text" ng-model="modSkillData.scriptName"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.priorityBlending" ng-checked="modSkillData.EnableBlending" /></td>
     </tr>
 </table>
+<br/>
+
+<div ng-show="modSkillData.UseDispositions" style="width:664px;">
+    <table class="table table-bordered">
+        <col width="200" />
+        <col width="50" />
+        <col width="50" />
+        <tr  class="active">
+            <th>Disposition Name</th>
+            <th>Associated</th>
+            <th>Priority</th>
+        </tr>
+        <tr ng-repeat="disp in AllDispositions">
+            <td>{{disp.Description}}</td>
+            <td>
+                <input type="checkbox" ng-model="disp.associated" ng-checked="disp.associated"/>
+            </td>
+            <td>
+                <input type="text" ng-model="disp.priority" ng-checked="disp.priority"  size="5"/>
+            </td>
+        </tr>
+    </table>
+</div>
 <br/>
 <input type="submit" class="btn btn-primary btn-lg" ng-click="updateSkill()" value="{{buttonName}}" />
 

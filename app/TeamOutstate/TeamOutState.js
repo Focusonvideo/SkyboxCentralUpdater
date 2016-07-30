@@ -32,7 +32,7 @@ angular.module('SkyboxApp')
                     $scope.OutstateData[i].idx = i;
 //                    $scope.OutStateData[i].changed = false;
                 }
-                alert("There is no current removal function once an association is made it cannot get removed via this Application. Changes must be done in Central to remove existing associations")
+//                alert("There is no current removal function once an association is made it cannot get removed via this Application. Changes must be done in Central to remove existing associations")
             },
             function(response){
                 $scope.showSpinner = false;
@@ -85,8 +85,8 @@ angular.module('SkyboxApp')
                 for (var x = 0; x < $scope.teamoutdata.length; x++) {
                     if ($scope.teamoutdata[x].OutstateCode == $scope.OutstateData[index].OutstateCode) {
                         // there is no removal - need to be donein central
-                        alert("This action cannot be done via this interface.  Removal association needs to be done in Central.");
-                        $scope.OutstateData[index].Assoc = "Yes";
+//                        alert("This action cannot be done via this interface.  Removal association needs to be done in Central.");
+//                        $scope.OutstateData[index].Assoc = "Yes";
                         break;
                     }
 
@@ -150,14 +150,16 @@ angular.module('SkyboxApp')
                 if($scope.OutstateData[x].AssocChanged){
                     if($scope.OutstateData[x].Assoc == 'Yes'){
                         $scope.OutstateData[x].AssocChanged = false;
-                        soapAdd(x);
+ //                       soapAdd(x);
+                        alert("add index:" + x);
                         break;
                     }else{
                         $scope.OutstateData[x].AssocChanged = false;
                         //soapDelete(x);
-                        //break
-                        alert("Cannot remove this association. (" + $scope.OutstateData[x].Description + ") Need to be removed in Central. Skipping Update");
-                        $scope.OutstateData[x].Assoc = "Yes";
+                        alert("Delete index:" + x);
+                        break
+ //                       alert("Cannot remove this association. (" + $scope.OutstateData[x].Description + ") Need to be removed in Central. Skipping Update");
+ //                       $scope.OutstateData[x].Assoc = "Yes";
                     }
                 }
             }

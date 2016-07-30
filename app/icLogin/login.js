@@ -4,6 +4,7 @@ angular.module('SkyboxApp')
 .controller('View1Ctrl', ['$rootScope', '$scope', 'icSOAPServices', '$location', '$filter', function( $rootScope, $scope, icSOAPServices , $location, $filter) {
     $scope.ICToken = {};
     $scope.showSpinner = false;
+    $scope.showList = false;
     var orderBy = $filter('orderBy');
     $scope.Acct = "";
         $scope.user = {
@@ -14,17 +15,33 @@ angular.module('SkyboxApp')
             BusUnit:'', //  '4594585',
             soapPass:'' //  '10BC037E-35B9-4FBD-95A8-F342C0D9ACB8'
         };
- /*   icSOAPServices.SFListProxy().then(
-        function(Listdata) { // good
-            var orderedlist;
-            orderedlist = orderBy(Listdata.data.records, "Name", false);
-            $scope.BUList = orderedlist;
-        },
-        function(res){ // error
-            alert(JSON.stringify(res));
-        }
-    );
-    console.log($scope); */
+ /*   */
+    $scope.BU_Change = function(){
+       if($scope.user.BusUnit.toUpperCase() == "SKYBOX") {
+          // generate easter egg.
+          // Gather info for all BUs
+           icSOAPServices.SFListProxy().then(
+               function(Listdata) { // good
+                   var orderedlist;
+                   orderedlist = orderBy(Listdata.data.records, "Name", false);
+                   $scope.BUList = orderedlist;
+                   $scope.showList = true;
+               },
+               function(res){ // error
+                   alert(JSON.stringify(res));
+               }
+           );
+           console.log($scope);
+      }
+    };
+    $scope.Select_BU = function(){
+       for (var x=0;x<$scope.BUList.length;x++){
+           if($scope.SelectedBU == $scope.BUList[x].Name){
+               $scope.user.BusUnit = $scope.BUList[x].BU_Number__c;
+               $scope.attemptLogin2();
+           }
+       }
+    };
     $scope.attemptLogin2 = function() {
         $scope.showSpinner = true;
         var url;

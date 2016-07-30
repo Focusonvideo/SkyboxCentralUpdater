@@ -2,8 +2,9 @@
 <span us-spinner spinner-on="showSpinner"></span>
 <br/><br/><br/>
 
-<input type="submit" class="btn btn-primary btn-lg" ng-click="AddSkill()" value="ADD Skill" />
+<!-- <input type="submit" class="btn btn-primary btn-lg" ng-click="AddSkill()" value="ADD Skill" /> -->
 <input type="submit" class="btn btn-primary btn-lg" ng-click="AddBRDSkill()" value="ADD BRD Skills" />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="SkillList()" value="List Mod Skills" />
 <input type="submit" class="btn btn-primary btn-lg" ng-click="SkillPost()" value="Skill Post Mapping" />
 <br/><br/>
 <table class="table table-bordered">
@@ -11,38 +12,32 @@
         <TH>Skill No</TH>
         <th>Skill Name</th>
         <th>Skill Type</th>
-        <th>Status</th>
+        <th>IsActive</th>
         <th>Campaign</th>
         <th>OB</th>
-        <th>Over<br/>ride</th>
         <th>Custom<br/>CallerID</th>
-        <th>ScriptID</th>
         <th>SL/%</th>
         <th>Short<br/>Abandons</th>
         <th>Priority</th>
         <th></th>
     </tr>
 
-
-
-
-    <tr ng-repeat="sk in SkillData">
-        <td>{{sk.SkillNo}}</td>
-        <td>{{sk.SkillName}}</td>
-        <td>{{sk.MediaType}}</td>
-        <td>{{sk.Status}}</td>
-        <td>{{sk.CampaignName}}</td>
+    <tr ng-repeat="sk in NewSkillData">
+        <td>{{sk.skillId}}</td>
+        <td>{{sk.skillName}}</td>
+        <td>{{sk.mediaTypeName}}</td>
         <td>
-            <input type="checkbox" ng-model="sk.OutboundSkill" ng-checked="sk.OutboundSkill" disabled="disabled"/>
+            <input type="checkbox" ng-model="sk.isActive" ng-checked="sk.isActive" disabled="disabled"/>
         </td>
+
+         <td>{{sk.campaignName}}</td>
         <td>
-            <input type="checkbox" ng-model="sk.OverrideCallerID" ng-checked="sk.OverrideCallerID" disabled="disabled"/>
+            <input type="checkbox" ng-model="sk.isOutbound" ng-checked="sk.isOutbound" disabled="disabled"/>
         </td>
-        <td>{{sk.CallerIDNumber}}</td>
-        <td>{{sk.CustomScriptID}}</td>
-        <td>{{sk.SLASeconds}}/{{sk.SLAPercent}}</td>
-        <td>{{sk.UseShortAbandonThreshold}},{{sk.ShortAbandonThreshold}}</td>
-        <td>({{sk.QueueInitPriority}}|{{sk.QueueAcceleration}}|{{sk.QueueMaxPriority}})</td>
+         <td>{{sk.callerIdOverride}}</td>
+        <td>{{sk.serviceLevelThreshold}}/{{sk.serviceLevelGoal}}</td>
+        <td>{{sk.enableShortAbandon}},{{sk.shortAbandonThreshold}}</td>
+        <td>({{sk.initialPriority}}|{{sk.acceleration}}|{{sk.maxPriority}})</td>
         <td><button ng-click="ModSkill(sk)">Mod</button> </td>
     </tr>
 </table>

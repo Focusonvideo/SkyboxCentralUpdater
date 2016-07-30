@@ -3,31 +3,35 @@
 <br/><br/><br/>
 <table class="table table-bordered">
     <tr  class="active">
+        <TH>Master<br/>Disp.</TH>
         <TH>Skill Name</TH>
+        <TH>Media Type</TH>
         <th>Automatic Wrap Up<br/>or Disposition?</th>
-        <th>Auto Max Time (sec.)</th>
+        <th>Disp/Max<br/>Time(sec.)</th>
         <th>Disp. Reqired</th>
-        <th>Max. Time Limit<br/>(not Disp req)</th>
+
     </tr>
     <tr ng-repeat="sk in Skills">
-        <td>{{sk.SkillName}}</td>
+        <td><input type="checkbox" ng-model="sk.DispMaster" ng-checked="sk.DispMaster" ng-change="masterChange(sk.index)"/></td>
+        <td>{{sk.skillName}}</td>
+        <td>{{sk.mediaTypeName}}</td>
         <td>
             <label>
-                <input type="radio" ng-model="sk.AWUorDisp" value="ACW">
+                <input type="radio" ng-model="sk.DispACW" value="ACW">
                 ACW
             </label>
             <label>
-                <input type="radio" ng-model="sk.AWUorDisp" value="Disp">
+                <input type="radio" ng-model="sk.DispACW" value="Disp" >
                 Disp.
             </label>
             <label>
-                <input type="radio" ng-model="sk.AWUorDisp" value="None">
+                <input type="radio" ng-model="sk.DispACW" value="None">
                 None
             </label>
         </td>
-        <td>{{sk.DispositionTimer}}</td>
-        <td>{{sk.RequireDispositions}}</td>
-        <td>{{sk.Description}}</td>
+        <td>{{sk.maxSecondsACW}}</td>
+        <td><input type="checkbox" ng-model="sk.requireDisposition" ng-checked="sk.RequireDisposition" ng-disabled="sk.agentless"/></td>
+
     </tr>
 </table>
 <br/><br/>

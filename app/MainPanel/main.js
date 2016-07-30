@@ -48,6 +48,12 @@ angular.module('SkyboxApp')
             ref:"#agent"
         },
         {
+            title: "POCs",
+            url: "POCs/POCs.html",
+            pgclass:"fa fa-shield",
+            ref:"#POC"
+        },
+        {
             title: "Skill",
             url: "SkillPanel/Skill.html",
             pgclass:"fa fa-shield",

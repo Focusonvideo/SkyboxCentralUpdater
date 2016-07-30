@@ -7,7 +7,7 @@
         <form tovalidate class="form-group">
             <fieldset>
                 <label for="username">Business Unit #</label>
-                <input class="form-control" type="text" id="businessUnit" ng-model="user.BusUnit"/>
+                <input class="form-control" type="text" id="businessUnit" ng-model="user.BusUnit" ng-change="BU_Change()"/>
             </fieldset>
             <fieldset>
                 <label for="username">Username</label>
@@ -34,3 +34,7 @@
         </form>
     </div>
 </div>
+<br/>
+<select ng-show="showList" ng-model="SelectedBU"  ng-change="Select_BU()">
+    <option ng-repeat="a_bu in BUList" value="{{a_bu.Name}}">{{a_bu.Name}}</option>
+</select>

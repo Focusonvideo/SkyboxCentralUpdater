@@ -2,6 +2,67 @@
  *
  */
 angular.module('SkyboxApp')
+     .factory('AuthenticationService',
+        ['$base64','$http', '$rootScope', '$timeout', '$cookieStore',
+            function ($base64, $http,  $rootScope, $timeout, $cookieStore) {
+                var service = {};
+                var globalData = {};
+
+                service.Login = function (username, password) {
+
+                     var config = {
+                        method:'POST',
+                        url:'http://localhost:8080/SkyboxProxy/Verify/' + username,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization' : $base64.encode(username + ':' + password),
+                            'Accept': 'application/json'
+                        }
+                    };
+                    console.log(config);
+                    return $http(config);
+
+                };
+                service.UpdatePW = function (username, password){
+
+                    var config = {
+                        method:'POST',
+                        url:'http://localhost:8080/SkyboxProxy/UpdatePW/' + username,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Authorization' : $base64.encode(username + ':' + password),
+                            'Accept': 'application/json'
+                        }
+                    };
+                    console.log($base64.decode(config.headers.Authorization));
+                    return $http(config);
+                };
+                service.SetCredentials = function (username, password) {
+
+                     var authdata = $base64.encode(username + ':' + password);
+
+                    $rootScope.globals = {
+                        currentUser: {
+                            username: username,
+                            authdata: authdata
+                        }
+                    };
+                    globalData = $rootScope.globals;
+                    //                  $http.defaults.headers.common['Authorization'] = 'Basic ' + authdata; // jshint ignore:line
+                    $cookieStore.put('globals', $rootScope.globals);
+                };
+
+                service.ClearCredentials = function () {
+                    $rootScope.globals = {};
+                    $cookieStore.remove('globals');
+ //                   $http.defaults.headers.common.Authorization = 'Basic ';
+                };
+                service.GetCredentials = function() {
+                    $rootScope.globals = globalData;
+                    return $rootScope.globals;
+                };
+                return service;
+            }])
 
     .factory("icSOAPServices",function icSOAPServicesFactory($soap,$http){
          var proxyAdd = "http://tools.skybox.tech:8080";

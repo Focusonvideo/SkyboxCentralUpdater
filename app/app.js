@@ -1,7 +1,7 @@
 /**
  * chester
  */
-angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
+angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute','base64','ngCookies'])
 
     .controller('SkyboxController',['$rootScope', '$scope', 'icSOAPServices', '$soap', '$http',  function($rootScope, $scope, icSOAPServices, $soap, $http) {
         $scope.ccc = "good";
@@ -30,14 +30,18 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute'])
 //        $httpProvider.defaults.useXdomain = true;
 //        delete $httpProvider.defaults.headers.common['X-Requested-With'];
          $routeProvider
-            .when('/',{
+             .when('/info',{
                  templateUrl:'icLogin/login.html',
                  controller: 'View1Ctrl'
              })
- /*          .when('/',{
+             .when('/newPW',{
+                 templateUrl:'UserLogin/ChangePW.html',
+                 controller: 'ChangePWCtrl'
+             })
+            .when('/',{
                  templateUrl:'UserLogin/Userlogin.html',
                  controller: 'UserLoginCtrl'
-             }) */
+             })
              .when('/initialization',{
                  templateUrl:'icLogin/login.html',
                  controller: 'View1Ctrl'

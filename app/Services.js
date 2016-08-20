@@ -61,6 +61,33 @@ angular.module('SkyboxApp')
                     $rootScope.globals = globalData;
                     return $rootScope.globals;
                 };
+                service.GetBUData = function(BU){
+                    username =  globalData.currentUser.username;
+                    var config = {
+                        method: "GET",
+                        url: 'http://localhost:8080/SkyboxProxy/Get_BU_Data/' + username + '/' + BU,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Accept': 'application/json'
+                        }
+
+                    };
+                    return $http(config);
+                };
+                service.SaveBUData = function(BU, BU_DATA){
+                    username =  globalData.currentUser.username;
+                    var config = {
+                        method: "POST",
+                        url: 'http://localhost:8080/SkyboxProxy/Save_BU_Data/' + username + '/' + BU,
+                        data:BU_DATA,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+
+                    };
+                    return $http(config);
+                };
                 return service;
             }])
 

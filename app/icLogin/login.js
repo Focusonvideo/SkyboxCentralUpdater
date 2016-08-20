@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('SkyboxApp')
-.controller('View1Ctrl', ['$rootScope', '$scope', 'icSOAPServices', '$location', '$filter', function( $rootScope, $scope, icSOAPServices , $location, $filter) {
+.controller('View1Ctrl', ['$rootScope', '$scope', 'icSOAPServices', '$location', '$filter','AuthenticationService', function( $rootScope, $scope, icSOAPServices , $location, $filter,  AuthenticationService) {
     $scope.ICToken = {};
     $scope.showSpinner = false;
     $scope.showList = false;
@@ -73,8 +73,33 @@ angular.module('SkyboxApp')
                             alert("missing login information");
                         }
                     }else{
-                        $scope.showSpinner = false;
-                        alert("SOAP Password needed");
+                        // not it skybox SF - try DB
+                        AuthenticationService.GetBUData($scope.user.BusUnit).then(
+                            function(data){ // good
+                                alert("Good:" + JSON.stringify(data.data.Data));
+                                $scope.showSpinner = false;
+                                if (data.status == 201) {
+                                    // no data found for BU
+                                    alert("No data found for BU " + $scope.user.BusUnit + ". Need to provide all data for BU")
+                                }else{
+                                    // BU found
+                                    $scope.user.appName = data.data.Data.Application;
+                                    $scope.user.name = data.data.Data.UserName;
+                                    $scope.user.pass = data.data.Data.Password;
+                                    $scope.user.soapPass = data.data.Data.SOAP_PW;
+                                    $scope.user.vendName = data.data.Data.Vendor;
+                                    doLogin();
+                                }
+
+                            },
+                            function(response){  // error
+                                alert("BAD:" + JSON.stringify(response));
+                                $scope.showSpinner = false;
+                                alert("Needs more data");
+
+                            }
+                        );
+
                     }
                 },
                 function(res){ // error
@@ -148,6 +173,22 @@ angular.module('SkyboxApp')
                 $scope.ICToken = data.data;
                 SOAPClient.ICToken = $scope.ICToken;
                 $scope.showSpinner = false;
+                var BU_Data = {
+                    "BU":$scope.user.BusUnit,
+                    "UserName":$scope.user.name,
+                    "Password":$scope.user.pass,
+                    "Application":$scope.user.appName,
+                    "Vendor":$scope.user.vendName,
+                    "SOAP_PW":$scope.user.soapPass
+                };
+                AuthenticationService.SaveBUData($scope.user.BusUnit,BU_Data).then(
+                    function(data){
+                        alert("Good save:" + JSON.stringify(data));
+                    },
+                    function(response){
+                        alert("Bad save:" + JSON.stringify(response));
+                    }
+                );
                 $location.path("/main");
                 $rootScope.$emit('loggin_event');
             },

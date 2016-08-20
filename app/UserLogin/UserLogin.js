@@ -16,7 +16,7 @@ angular.module('SkyboxApp')
                     AuthenticationService.Login($scope.username, $scope.password).then(
                         function(data){
                             $scope.dataLoading = false;
-                            alert(JSON.stringify(data));
+ //                           alert(JSON.stringify(data));
                             if(data.status == 200){
                                 // valid login - check if first time
                                 var count = data.data.Result;

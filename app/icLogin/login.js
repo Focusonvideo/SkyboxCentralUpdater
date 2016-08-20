@@ -76,7 +76,7 @@ angular.module('SkyboxApp')
                         // not it skybox SF - try DB
                         AuthenticationService.GetBUData($scope.user.BusUnit).then(
                             function(data){ // good
-                                alert("Good:" + JSON.stringify(data.data.Data));
+//                                alert("Good:" + JSON.stringify(data.data.Data));
                                 $scope.showSpinner = false;
                                 if (data.status == 201) {
                                     // no data found for BU
@@ -183,7 +183,7 @@ angular.module('SkyboxApp')
                 };
                 AuthenticationService.SaveBUData($scope.user.BusUnit,BU_Data).then(
                     function(data){
-                        alert("Good save:" + JSON.stringify(data));
+//                        alert("Good save:" + JSON.stringify(data));
                     },
                     function(response){
                         alert("Bad save:" + JSON.stringify(response));

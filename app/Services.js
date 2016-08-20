@@ -5,6 +5,8 @@ angular.module('SkyboxApp')
      .factory('AuthenticationService',
         ['$base64','$http', '$rootScope', '$timeout', '$cookieStore',
             function ($base64, $http,  $rootScope, $timeout, $cookieStore) {
+                var proxyAdd = "http://tools.skybox.tech:8080";
+        //        var proxyAdd = "http://localhost:8080";
                 var service = {};
                 var globalData = {};
 
@@ -12,7 +14,7 @@ angular.module('SkyboxApp')
 
                      var config = {
                         method:'POST',
-                        url:'http://localhost:8080/SkyboxProxy/Verify/' + username,
+                        url:proxyAdd + '/SkyboxProxy/Verify/' + username,
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
                             'Authorization' : $base64.encode(username + ':' + password),
@@ -27,7 +29,7 @@ angular.module('SkyboxApp')
 
                     var config = {
                         method:'POST',
-                        url:'http://localhost:8080/SkyboxProxy/UpdatePW/' + username,
+                        url:proxyAdd + '/SkyboxProxy/UpdatePW/' + username,
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
                             'Authorization' : $base64.encode(username + ':' + password),
@@ -65,7 +67,7 @@ angular.module('SkyboxApp')
                     username =  globalData.currentUser.username;
                     var config = {
                         method: "GET",
-                        url: 'http://localhost:8080/SkyboxProxy/Get_BU_Data/' + username + '/' + BU,
+                        url: proxyAdd + '/SkyboxProxy/Get_BU_Data/' + username + '/' + BU,
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
                             'Accept': 'application/json'
@@ -78,7 +80,7 @@ angular.module('SkyboxApp')
                     username =  globalData.currentUser.username;
                     var config = {
                         method: "POST",
-                        url: 'http://localhost:8080/SkyboxProxy/Save_BU_Data/' + username + '/' + BU,
+                        url: proxyAdd + '/SkyboxProxy/Save_BU_Data/' + username + '/' + BU,
                         data:BU_DATA,
                         headers: {
                             'Content-Type': 'application/json',

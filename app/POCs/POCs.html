@@ -1,0 +1,46 @@
+<h2 class="text-center">Points-Of-Contact</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/>
+
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH>Contact Address</TH>
+        <th>Contact<br/>Description</th>
+        <th>Is<br/>Active</th>
+        <th>Notes</th>
+        <th>Default Skill Name</th>
+        <th>Media<br/>Type<br/>Name</th>
+        <th>Is<br/>OB</th>
+        <th>Script Name</th>
+    </tr>
+    <tr ng-repeat="poc in POCData">
+        <td>{{poc.ContactAddress}}</td>
+        <td>
+            <input type="text" ng-model="poc.ContactDescription" ng-change="changeDescription(poc.idx)"/>
+        </td>
+        <td>
+            <input type="checkbox" ng-model="poc.IsActive" ng-checked="poc.IsActive" ng-change="changeStatus(poc.idx)"/>
+        </td>
+        <td>
+            <input type="text" ng-model="poc.Notes" ng-change="changeNotes(poc.idx)" />
+        </td>
+        <td>
+            <select  ng-model="poc.DefaultSkillName" ng-change="newSkill(poc.idx, poc.MediaTypeId)">
+                <option ng-repeat="skill in poc.Skills" value="{{skill.skillName}}" >{{skill.skillName}}</option>
+            </select>
+        </td>
+        <td>{{poc.MediaTypeName}}</td>
+        <td>
+            <input type="checkbox" ng-model="poc.IsOutbound" ng-checked="poc.IsOutbound" disabled="disabled"/>
+        </td>
+        <td>
+        <select  ng-model="poc.ScriptName" ng-change="newScript(poc.idx)">
+            <option ng-repeat="script in poc.Scripts" value="{{script.scriptName}}" >{{script.scriptName}}</option>
+        </select>
+        </td>
+    </tr>
+</table>
+<br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="updatePOCs()" value="Update POCs" ng-disabled="disableUpdate"/>
+
+<input type="submit" class="btn btn-warning btn-lg" ng-click="cancelUpdates()" value="Cancel" />

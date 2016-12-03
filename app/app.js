@@ -39,7 +39,7 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute','base64',
                  controller: 'ChangePWCtrl'
              })
             .when('/',{
-                 templateUrl:'UserLogin/Userlogin.html',
+                 templateUrl:'UserLogin/UserLogin.html',
                  controller: 'UserLoginCtrl'
              })
              .when('/initialization',{

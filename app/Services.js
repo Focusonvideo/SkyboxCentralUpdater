@@ -64,7 +64,7 @@ angular.module('SkyboxApp')
                     return $rootScope.globals;
                 };
                 service.GetBUData = function(BU){
-                    username =  globalData.currentUser.username;
+                    var username =  globalData.currentUser.username;
                     var config = {
                         method: "GET",
                         url: proxyAdd + '/SkyboxProxy/Get_BU_Data/' + username + '/' + BU,
@@ -77,7 +77,7 @@ angular.module('SkyboxApp')
                     return $http(config);
                 };
                 service.SaveBUData = function(BU, BU_DATA){
-                    username =  globalData.currentUser.username;
+                    var username =  globalData.currentUser.username;
                     var config = {
                         method: "POST",
                         url: proxyAdd + '/SkyboxProxy/Save_BU_Data/' + username + '/' + BU,

@@ -265,7 +265,7 @@ SOAPClient._sendSoapRequest = function(url, method, parameters, async, callback,
 					SOAPClient._onSendSoapRequest(method, async, callback, wsdl, xmlHttp);
 				}else{
 					// not a good response
-					alert("inClient2: " + xmlHttp.readyState + "  status: " + xmlHttp.status);
+					alert("inClient2: " + xmlHttp.readyState + "  status: " + xmlHttp.status + "  SR: " + sr);
 					callback(null, xmlHttp.responseXML);
 					xmlHttp.abort();
 				}

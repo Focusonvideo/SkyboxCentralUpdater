@@ -19,7 +19,9 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
         var str = this;
         return str.replace(new RegExp(find, 'g'), replace);
     };
-
+    var phoneScripts = new Array();
+    var chatScripts = new Array();
+    var emailScripts = new Array();
     $scope.DispOpt = [
         {name: 'None'},
         {name: 'Disp.'},
@@ -56,7 +58,15 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
     icSOAPServices.icGet("Disposition_GetList").then(
       function(data){
           var orderList = orderBy(data, "DispositionName", false);
-          $scope.AllDispositions = orderList;
+          var orderActiveList = new Array();
+          var ctr = 0;
+          for (var m=0;m<orderList.length;m++){
+        	  if(orderList[m].Status == "Active"){
+        		  orderActiveList[ctr] = orderList[m];
+        		  ctr++;
+        	  }
+          }
+          $scope.AllDispositions = orderActiveList;
           // add associated field
           for (var x=0;x<$scope.AllDispositions.length;x++){
               if ($scope.modSkillData.UseDispositions){
@@ -82,10 +92,11 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
 
     );
     function getScripts(){
+    	var token = SOAPClient.ICToken;
         icSOAPServices.ICGET(token,"services/v7.0/scripts?isActive=true").then(
             function(data){
                 var orderedlist;
-
+                console.log($scope);
                 orderedlist = orderBy(data.data.resultSet.scripts, "scriptName", false);
                 var scripts = orderedlist;
                 var idx;
@@ -123,6 +134,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
     function getCampaign() {
         icSOAPServices.icGet("Campaign_GetList").then(
             function (data) {
+            	var found = false;
                 var orderedlist = orderBy(data, "CampaignName", false);
                 $scope.CampaignData = orderedlist;
                 console.log($scope);
@@ -133,7 +145,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
                             $scope.SkillCampId = $scope.CampaignData[x].CampaignNo;
                             $scope.modSkillData.campaignName = $scope.CampaignData[x].CampaignName;
                             $scope.modSkillData.campaignId = $scope.CampaignData[x].CampaignNo;
-                            //                       found = true;
+                            found = true;
                             break;
                         }
                     }

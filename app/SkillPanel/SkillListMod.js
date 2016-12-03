@@ -7,16 +7,25 @@ var app = angular.module('SkyboxApp');
 
 app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$filter', function ($scope, icSOAPServices, $location, $filter) {
     var orderBy = $filter('orderBy');
+    var filter = "";
+    var typeId;
+    var OB = true;
+    var searchString = "";
+    $scope.SkillFilterSel = "ALL";
     $scope.showSpinner = true;
     $scope.skillTypes = new Array(4);
+    $scope.skillFilterTypes = new Array(3);
     $scope.skillTypes[3] = {name : "Chat"};
-    $scope.skillTypes[0] = {name : "PhoneCall"};
-    $scope.skillTypes[4] = {name : "PhoneCall OB"};
-    $scope.skillTypes[1] = {name : "VoiceMail"};
+    $scope.skillTypes[0] = {name : "Phone Call IB"};
+    $scope.skillTypes[4] = {name : "Phone Call OB"};
+    $scope.skillTypes[1] = {name : "Voice Mail"};
     $scope.skillTypes[2] = {name : "EMail"};
+    $scope.skillFilterTypes[0] = {name : "All"};
+    $scope.skillFilterTypes[1] = {name : "Active"};
+    $scope.skillFilterTypes[2] = {name : "InActive"};
     $scope.skillStatus = new Array;
-    $scope.skillStatus[0] = {Status:"Active"};
-    $scope.skillStatus[1] = {Status:"InActive"};
+    $scope.skillStatus[0] = {Status:"true"};
+    $scope.skillStatus[1] = {Status:"false"};
     $scope.showTable = false;
     String.prototype.replaceAll = function (find, replace) {
         var str = this;
@@ -79,6 +88,28 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                             break;
                     }
                 }
+                getBU();
+            },
+            function(response){
+                $scope.showSpinner = false;
+                alert("BAD:" + JSON.stringify(response));
+            }
+
+        );
+
+    }
+    function getBU(){
+        var token = SOAPClient.ICToken;
+        var extURL = 'services/v7.0/business-unit';
+        icSOAPServices.ICGET(token, extURL).then(
+            function(data){
+ //               alert(JSON.stringify(data.data.resultSet.businessUnits[0]));
+                var blending = data.data.resultSet.businessUnits[0].priorityBased;
+                $scope.bu = data.data.resultSet.businessUnits[0];
+                $scope.blending = true;
+                if (blending == "True"){
+                	$scopr.blending = true;
+                }
                 console.log($scope);
                 $scope.showSpinner = false;
             },
@@ -90,24 +121,47 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
         );
 
     }
-
+    $scope.skillFilterSelected = function() {
+        switch ($scope.SkillFilterSel){
+            case "All": {
+                filter = "";
+                break;
+            }
+            case "Active": {
+                filter = "&isActive=true";
+                break;
+            }
+            case "InActive": {
+                filter = "&isActive=false";
+                break;
+            }
+        }
+        if ($scope.SkillTypeSel != ""){
+            $scope.skillTypeSelected();
+        }
+    };
     $scope.skillTypeSelected = function(){
         $scope.showSpinner = true;
         switch ($scope.SkillTypeSel) {
-            case "PhoneCall":{
+            case "Phone Call IB":{
                 $scope.showCalledID = false;
                 $scope.showOverride = false;
                 $scope.showDirection = true;
                 $scope.showFromAddress = false;
                 $scope.showScript = false;
+                typeId = 4;
+ //               searchString = "&searchString=" + '"' + "isOutbound" + '"' + ":false";
+                OB = false;
                 break;
             }
-            case "VoiceMail":{
+            case "Voice Mail":{
                 $scope.showCalledID = false;
                 $scope.showOverride = false;
                 $scope.showDirection = true;
                 $scope.showFromAddress = false;
                 $scope.showScript = false;
+                typeId = 5;
+                searchString = "";
                 break;
             }
             case "Chat":{
@@ -116,6 +170,8 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                 $scope.showDirection = false;
                 $scope.showFromAddress = false;
                 $scope.showScript = false;
+                searchString = "";
+                typeId = 3;
                 break;
             }
             case "EMail":{
@@ -124,83 +180,60 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                 $scope.showDirection = true;
                 $scope.showFromAddress = true;
                 $scope.showScript = false;
+                searchString = "";
+                typeId = 1;
                 break;
             }
-            case "PhoneCall OB":{
+            case "Phone Call OB":{
                 $scope.showCalledID = true;
                 $scope.showOverride = true;
                 $scope.showDirection = false;
                 $scope.showFromAddress = false;
                 $scope.showScript = true;
+                typeId = 4;
+//                searchString = "&searchString=" + '"' + "isOutbound" + '"' + ":true";
+                OB = true;
                 break;
             }
         }
-        icSOAPServices.icGet("Skill_GetList").then(
+        var token = SOAPClient.ICToken;
+         var extURL = 'services/v8.0/skills?orderBy=skillName&mediaTypeId=' + typeId + filter + searchString;
+         alert(extURL);
+        icSOAPServices.ICGET(token, extURL).then(
             function(data){
                 var orderedlist;
                 $scope.CustomScript = new Array;
                 $scope.CustomScript[0] = {'CustomScriptID' : 0,
                                         'CustomScriptName' : "" };
-                orderedlist = orderBy(data, "SkillName", false);
+               alert(JSON.stringify(data));
+                $scope.sk = data.data.skills;
+ //               orderedlist = orderBy(data.data.skills, "skillName", false);
+                orderedlist = data.data.skills;
                 $scope.SkillDataOrig = new Array;
                 var type = $scope.SkillTypeSel;
-                if(type == "PhoneCall OB"){
-                    type = "PhoneCall";
-                }
 
                 var y = 0;
                 for (var x =0;x<orderedlist.length;x++) {
-                    if (orderedlist[x].MediaType == type) {
-                        if(type == $scope.SkillTypeSel) {
-                            $scope.SkillDataOrig[y] = orderedlist[x];
-                            $scope.SkillDataOrig[y].index = y;
-                            $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].QueueInitPriority + "|" + $scope.SkillDataOrig[y].QueueAcceleration + "|" + $scope.SkillDataOrig[y].QueueMaxPriority;
-                            $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].SLASeconds + "/" + $scope.SkillDataOrig[y].SLAPercent;
-                            $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].UseShortAbandonThreshold + ", " + $scope.SkillDataOrig[y].ShortAbandonThreshold;
- /*                           if ($scope.SkillDataOrig[y].CustomScriptID != 0) {
-                                var found = false;
-                                var scriptIdx = $scope.CustomScript.length;
-                                for (var w = 0; w < scriptIdx; w++) {
-                                    if ($scope.CustomScript[w].CustomScriptID == $scope.SkillDataOrig[y].CustomScriptID) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    $scope.CustomScript[scriptIdx] = {
-                                        'CustomScriptID': $scope.SkillDataOrig[y].CustomScriptID,
-                                        'CustomScriptName': $scope.SkillDataOrig[y].CustomScriptName
-                                    };
-                                }
-                            }
-*/                            y++
-                        }else{
-                            if(orderedlist[x].OutboundSkill) {
+
+                        if(typeId ==4) {
+                            if(orderedlist[x].isOutbound == OB) {
+
                                 $scope.SkillDataOrig[y] = orderedlist[x];
                                 $scope.SkillDataOrig[y].index = y;
-                                $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].QueueInitPriority + "|" + $scope.SkillDataOrig[y].QueueAcceleration + "|" + $scope.SkillDataOrig[y].QueueMaxPriority;
-                                $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].SLASeconds + "/" + $scope.SkillDataOrig[y].SLAPercent;
-                                $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].UseShortAbandonThreshold + ", " + $scope.SkillDataOrig[y].ShortAbandonThreshold;
-                                //if ($scope.SkillDataOrig[y].CustomScriptID != 0) {
-                                //    var found = false;
-                                //    var scriptIdx = $scope.CustomScript.length;
-                                //    for (var w = 0; w < scriptIdx; w++) {
-                                //        if ($scope.CustomScript[w].CustomScriptID == $scope.SkillDataOrig[y].CustomScriptID) {
-                                //            found = true;
-                                //            break;
-                                //        }
-                                //    }
-                                //    if (!found) {
-                                //        $scope.CustomScript[scriptIdx] = {
-                                //            'CustomScriptID': $scope.SkillDataOrig[y].CustomScriptID,
-                                //            'CustomScriptName': $scope.SkillDataOrig[y].CustomScriptName
-                                //        };
-                                //    }
-                                //}
-                                y++;
+                                $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].initialPriority + "|" + $scope.SkillDataOrig[y].acceleration + "|" + $scope.SkillDataOrig[y].maxPriority;
+                                $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].serviceLevelThreshold + "/" + $scope.SkillDataOrig[y].serviceLevelGoal;
+                                $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].enableShortAbandon + ", " + $scope.SkillDataOrig[y].shortAbandonThreshold;
+                                 y++
                             }
+                        }else{
+                            $scope.SkillDataOrig[y] = orderedlist[x];
+                            $scope.SkillDataOrig[y].index = y;
+                            $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].initialPriority + "|" + $scope.SkillDataOrig[y].acceleration + "|" + $scope.SkillDataOrig[y].maxPriority;
+                            $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].serviceLevelThreshold + "/" + $scope.SkillDataOrig[y].serviceLevelGoal;
+                            $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].enableShortAbandon + ", " + $scope.SkillDataOrig[y].shortAbandonThreshold;
+                             y++;
                         }
-                    }
+
                 }
                 switch (type){
                     case "PhoneCall":

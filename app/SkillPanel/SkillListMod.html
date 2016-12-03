@@ -6,11 +6,15 @@
     <option ng-repeat="skillType in skillTypes" value="{{skillType.name}}" >{{skillType.name}}</option>
 </select>
 <br/><br/>
+<label > Select Filter </label>
+<select  ng-model="SkillFilterSel" ng-change="skillFilterSelected()">
+    <option ng-repeat="skillFilterType in skillFilterTypes" value="{{skillFilterType.name}}" >{{skillFilterType.name}}</option>
+</select>
 <br/><br/>
 <table class="table table-bordered">
     <tr  class="active">
         <th>Skill Name</th>
-        <th>Status</th>
+        <th>isActive</th>
         <th>Campaign</th>
         <th ng-show="showDirection">OB</th>
         <th ng-show="showOverride">Over<br/>ride</th>
@@ -19,8 +23,8 @@
         <th ng-show="showFromAddress">From Address</th>
         <th>SL/%</th>
         <th>Short<br/>Abandons</th>
-        <th>Priority</th>
-        <th>Enable<br/>Blending</th>
+        <th ng-show="blending">Priority</th>
+        <th ng-show="blending">Enable<br/>Blending</th>
         <th>Use<br/>Disp.</th>
         <th>Req.<br>Disp.</th>
     </tr>
@@ -30,26 +34,24 @@
 
     <tr ng-repeat="sk in SkillData">
         <td>
-            <input type="text" ng-model="sk.SkillName"/>
+            <input type="text" ng-model="sk.skillName"/>
         </td>
         <td>
-            <select ng-model="sk.Status">
-                <option ng-repeat="st in skillStatus" value="{{st.Status}}" >{{st.Status}}</option>
-            </select>
+            <input type="checkbox" ng-model="sk.isActive" ng-checked="sk.isActive" />
         </td>
-        <td><select  ng-model="sk.CampaignName" ng-change="campChanged(sk.index)">
+        <td><select  ng-model="sk.campaignName" ng-change="campChanged(sk.index)">
             <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
         </select></td>
         <td ng-show="showDirection">
-            <input type="checkbox" ng-model="sk.OutboundSkill" ng-checked="sk.OutboundSkill" />
+            <input type="checkbox" ng-model="sk.isOutbound" ng-checked="sk.OutboundSkill" />
         </td>
         <td ng-show="showOverride">
-            <input type="checkbox" ng-model="sk.OverrideCallerID" ng-checked="sk.OverrideCallerID" />
+            <input type="checkbox" ng-model="sk.callerId" ng-checked="sk.OverrideCallerID" />
         </td>
         <td ng-show="showCalledID">
-            <input type="text" ng-model="sk.CallerIDNumber" maxlength="10" size="10" />
+            <input type="text" ng-model="sk.callerIdOverride" maxlength="10" size="10" />
         </td>
-        <td ng-show="showScript"><select  ng-model="sk.CustomScriptName" ng-change="scriptChanged(sk.index)">
+        <td ng-show="showScript"><select  ng-model="sk.scriptName" ng-change="scriptChanged(sk.index)">
             <option ng-repeat="script in CustomScript" value="{{script.scriptName}}" >{{script.scriptName}}</option>
         </select></td>
         <td ng-show="showFromAddress">
@@ -57,8 +59,8 @@
         </td>
         <td><input type="text" ng-model="sk.SLA" maxlength="7" size="7"/></td>
         <td><input type="text" ng-model="sk.ShortAbandon" maxlength="10" size="10"/></td>
-        <td><input type="text" ng-model="sk.Priority" maxlength="12" size="12"/></td>
-        <td>
+        <td ng-show="blending"><input type="text" ng-model="sk.Priority" maxlength="12" size="12"/></td>
+        <td ng-show="blending">
             <input type="checkbox" ng-model="sk.EnableBlending" ng-checked="sk.EnableBlending" />
         </td>
         <td>

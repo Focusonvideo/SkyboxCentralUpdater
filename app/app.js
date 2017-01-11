@@ -4,7 +4,7 @@
 angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute','base64','ngCookies'])
 
     .controller('SkyboxController',['$rootScope', '$scope', 'icSOAPServices', '$soap', '$http',  function($rootScope, $scope, icSOAPServices, $soap, $http) {
-        $scope.ccc = "good";
+        $scope.Acct = "";
 
         // Tab counter
 //        var counter = 1;
@@ -19,8 +19,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute','base64',
         $rootScope.$on('loggin_event', function () {
             $scope.LoggedIN = true;
         });
-
-
+        $scope.$on('savedata',function(event,data) {
+            //receive the data as second parameter
+            $scope.Acct = data;
+        });
 
     }])
     .controller('testController',function($scope){

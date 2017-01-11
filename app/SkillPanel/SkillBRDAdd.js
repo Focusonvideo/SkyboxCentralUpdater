@@ -80,8 +80,9 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
     $scope.AddBRDSkill = function () {
        var  parms4Add = CreateAddParms();
  //       alert(JSON.stringify(parms4Add));
-       icSOAPServices.icGet("Skill_Add", parms4Add).then(
+       icSOAPServices.ICPOST(token,"services/v8.0/skills", parms4Add).then(
             function (data) {
+                alert(JSON.stringify(data));
                  $scope.SkipSkillBtn();
             },
             function (response) {
@@ -298,7 +299,7 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
         console.log($scope);
     };
     $scope.SkipSkillBtn = function(){
-        if($scope.massBRDInput != ""){
+        if($scope.massBRDInput != "" || $scope.massBRDInput != null){
             var skillList = $scope.massBRDInput.split(String.fromCharCode(10));
             if (skillList.length > 0) {
                 // remove first skill off the top.
@@ -313,6 +314,8 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                     processSkillLine(skillList[1]);
                 }
             }
+        }else{
+            clearAll();
         }
 
     };
@@ -325,24 +328,28 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                 $scope.showCallerID = true;
                 $scope.showFromAddress = false;
                 $scope.showShortAbandon = true;
+                $scope.showSLA = true;
                 break;
             case "VoiceMail":
                 $scope.showDirection = true;
                 $scope.showCallerID = false;
                 $scope.showFromAddress = false;
                 $scope.showShortAbandon = true;
+                $scope.showSLA = false;
                 break;
             case "Chat":
                 $scope.showDirection = false;
                 $scope.showCallerID = false;
                 $scope.showFromAddress = false;
                 $scope.showShortAbandon = true;
+                $scope.showSLA = true;
                 break;
             case "EMail":
                 $scope.showDirection = true;
                 $scope.showCallerID = false;
                 $scope.showFromAddress = true;
                 $scope.showShortAbandon = false;
+                $scope.showSLA = false;
                 break;
 
         }
@@ -358,13 +365,13 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                         $scope.modSkillData.OverrideCallerID = false;
                     }
                     parm1 = {
-                        skill: {
+                        skills: [{
                             skillName: $scope.modSkillData.skillName,
-                            mediaTypeName: $scope.SkillTypeSel,
+//                            mediaTypeName: $scope.SkillTypeSel,
                             mediaTypeId: 4,
                             isActive: true,
                             campaignId: $scope.modSkillData.campaignId,
-                            isOutbound: $scope.modSkillData.isOutbound,
+                            isOutbound: true,
                             initialPriority: $scope.modSkillData.initialPriority,
                             acceleration: $scope.modSkillData.acceleration,
                             maxPriority: $scope.modSkillData.maxPriority,
@@ -373,17 +380,17 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                             serviceLevelThreshold: 30,
                             serviceLevelGoal: 90,
                             campaignName: $scope.modSkillData.campaignName
-                        }
+                        }]
                     };
                 }else{  // Inbound
                     parm1 = {
-                        skill: {
+                        skills: [{
                             skillName: $scope.modSkillData.skillName,
-                            mediaTypeName: $scope.SkillTypeSel,
+//                            mediaTypeName: $scope.SkillTypeSel,
                             mediaTypeId: 4,
                             isActive: true,
                             campaignId: $scope.modSkillData.campaignId,
-                            isOutbound: $scope.modSkillData.isOutbound,
+                            isOutbound:false,
                             serviceLevelThreshold: $scope.modSkillData.serviceLevelThreshold,
                             serviceLevelGoal: $scope.modSkillData.serviceLevelGoal,
                             initialPriority: $scope.modSkillData.initialPriority,
@@ -392,14 +399,14 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                             CampaignName: $scope.modSkillData.CampaignName,
                             shortAbandonThreshold: $scope.modSkillData.shortAbandonThreshold,
                             enableShortAbandon: $scope.modSkillData.enableShortAbandon
-                        }
+                        }]
                     };
                 }
                 break;
             case "Chat":
-                 parm1 = {skill:{
+                 parm1 = {skills:[{
                      skillName: $scope.modSkillData.skillName,
-                     mediaTypeName: $scope.SkillTypeSel,
+//                     mediaTypeName: $scope.SkillTypeSel,
                      mediaTypeId: 3,
                      isActive: true,
                      campaignId: $scope.modSkillData.campaignId,
@@ -411,12 +418,12 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                      CampaignName: $scope.modSkillData.CampaignName,
                      shortAbandonThreshold: $scope.modSkillData.shortAbandonThreshold,
                      enableShortAbandon: $scope.modSkillData.enableShortAbandon
-                }};
+                }]};
                 break;
             case "VoiceMail":
-               parm1 = {skill:{
+               parm1 = {skills:[{
                    skillName: $scope.modSkillData.skillName,
-                   mediaTypeName: $scope.SkillTypeSel,
+//                   mediaTypeName: $scope.SkillTypeSel,
                    mediaTypeId: 5,
                    isActive: true,
                    campaignId: $scope.modSkillData.campaignId,
@@ -429,10 +436,10 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                    CampaignName: $scope.modSkillData.CampaignName,
                    shortAbandonThreshold: $scope.modSkillData.shortAbandonThreshold,
                    enableShortAbandon: $scope.modSkillData.enableShortAbandon
-                }};
+                }]};
                 break;
             case "EMail":
-                parm1 = {skill:{
+                parm1 = {skills:[{
                     skillName: $scope.modSkillData.skillName,
                     mediaTypeName: $scope.SkillTypeSel,
                     mediaTypeId: 1,
@@ -446,7 +453,7 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
                     acceleration: $scope.modSkillData.acceleration,
                     maxPriority: $scope.modSkillData.maxPriority,
                     CampaignName: $scope.modSkillData.CampaignName
-                }};
+                }]};
                 break;
         }
         return parm1;

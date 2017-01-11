@@ -4,49 +4,69 @@
 <input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateSkillDisp()" value="Update Skill/Disposition Assoc." />
 <input type="submit" class="btn btn-primary btn-lg" ng-click="SaveConfig()" ng-show="showAddConfig"  value="Save Current Skill/Disp Assoc." />
 <input type="submit" class="btn btn-primary btn-lg" ng-click="UseConfig()" ng-show="showUseConfig" value="Apply Saved Skill/Disp Assoc." />
-<br/><br/>
+<br/>
+<br/>
+<label > Select Skill Type </label>
+<select  ng-model="SkillTypeSel" ng-change="skillTypeSelected()">
+    <option ng-repeat="skillType in skillTypes" value="{{skillType.name}}" >{{skillType.name}}</option>
+</select>
+<br/>
+
 <label > Select Skill: </label>
 <select  ng-model="modSkillSelected" ng-change="skillSelected()">
-    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillName}}" style="{{selSkill.skillColor}}">{{selSkill.SkillName}}</option>
-<!--    <option ng-repeat="selSkill in skills" value="{{selSkill.SkillNo}}" {{selSkill.Selected}}>{{selSkill.SkillName}}</option> -->
- </select>    Only Skills that 'Use Dispositions' are listed. Set Use Disp before making association.
-<br/><br/>
+    <option ng-repeat="selSkill in SkillData" value="{{selSkill.skillName}}" style="{{selSkill.skillColor}}">{{selSkill.skillName}}</option>
+ </select>
+<br/>
+<br/>
 <table class="table table-bordered">
     <tr  class="active">
-        <TH>Disp.ID</TH>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Assoc.</th>
-        <th>List Pri.</th>
-        <th>Use Comment</th>
-        <th>Comment Req.</th>
-        <th>Long Desc.</th>
-        <th>Notes</th>
-        <th>Last Modified</th>
+        <TH maxlength="7" size="7" >ACW Type</TH>
+        <th ng-show="showState">ACW State</th>
+        <th ng-show="showSeconds" maxlength="7" size="7" ng-show="showSeconds">Max ACW Sec.</th>
+        <th ng-show = "showReq" >Disp. Req.</th>
     </tr>
-    <tr ng-repeat="tm in SkillDispData">
-        <td>{{tm.DispositionID}}</td>
-        <td>{{tm.Description}}</td>
-        <td>{{tm.Status}}</td>
+    <tr>
         <td>
-            <input type="checkbox" ng-model="tm.Assoc" ng-checked="tm.Assoc"  ng-change="AssocChanged(tm.idx)"/>
+           <!--<input type="text" ng-model="ACWDisposition" maxlength="10" size="10"/>-->
+            <select  ng-model="ACWDisposition" ng-change="ACWTypeChanged()">
+                <option ng-repeat="acw in ACWType" value="{{acw}}" >{{acw}}</option>
+            </select>
+        </td>
+        <td ng-show="showState">
+            <!--<input type="text" ng-model="ACWState" maxlength="10" size="10"/>-->
+            <select  ng-model="ACWState" ng-change="ACWStateChanged()">
+                <option ng-repeat="unavail in OutstateData" value="{{unavail.Description}}" >{{unavail.Description}}</option>
+            </select>
+        </td>
+        <td ng-show="showSeconds" >
+            <input type="text" ng-model="ACWMaxSec" maxlength="10" size="10" ng-change="ACWSecondsChanged()"/>
+        </td>
 
- <!--           <select  ng-model="tm.Assoc" ng-change="AssocChanged(tm.idx)">
-                <option  value="{{tm.yesnos[0].name}}" {{tm.yesnos[0].sel}} >{{tm.yesnos[0].name}}</option>
-                <option  value="{{tm.yesnos[1].name}}" {{tm.yesnos[1].sel}} >{{tm.yesnos[1].name}}</option>
-            </select>  -->
+        <td ng-show = "showReq">
+            <input type="checkbox" ng-model="requireDisposition" ng-checked="requireDisposition" ng-change="ACWreqiredChanged()"/>
         </td>
-        <td>
-            <input type="text" ng-model="tm.ListPriority" ng-show="tm.showit" ng-change="priorityChanged(tm.idx)"  size="5"/>
-        </td>
-        <td>
-            <input type="checkbox" ng-model="tm.UseComments" ng-checked="tm.UseComments" ng-show="tm.showit" ng-change="useComChanged(tm.idx)"/>
-       </td>
-        <td>
-            <input type="checkbox" ng-model="tm.CommentsRequired" ng-checked="tm.CommentsRequired" ng-show="tm.showit" ng-change="reqComChanged(tm.idx)"/>
-        </td>
-        <td>{{tm.LongDescription}}</td>
-        <td>{{tm.Notes}}</td>
-        <td>{{tm.LastModified}}</td>
+
     </tr>
+
+</table>
+<br/>
+<table class="table table-bordered" ng-show = "showDisp">
+    <tr  class="active">
+        <TH maxlength="7" size="7">Disp.ID</TH>
+        <th>Description</th>
+        <th maxlength="7" size="7">Status</th>
+        <th maxlength="7" size="7">Assoc.</th>
+        <th maxlength="7" size="7">List Pri.</th>
+      </tr>
+    <tr ng-repeat="tm in SkillDispData">
+        <td maxlength="7" size="7">{{tm.DispositionID}}</td>
+        <td maxlength="15" size="15">{{tm.Description}}</td>
+        <td maxlength="7" size="7">{{tm.Status}}</td>
+        <td maxlength="7" size="7">
+            <input type="checkbox" ng-model="tm.Assoc" ng-checked="tm.Assoc"  ng-change="AssocChanged(tm.idx)" maxlength="7" size="7"/>
+        </td>
+        <td maxlength="7" size="7">
+            <input type="text" ng-model="tm.ListPriority" ng-show="tm.showit" ng-change="priorityChanged(tm.idx)"  maxlength="7" size="7" />
+        </td>
+   </tr>
 </table>

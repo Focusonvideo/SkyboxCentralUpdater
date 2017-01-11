@@ -12,21 +12,22 @@
 </select>
 <br/><br/>
 <table class="table table-bordered">
+
     <tr  class="active">
         <th>Skill Name</th>
         <th>isActive</th>
         <th>Campaign</th>
         <th ng-show="showDirection">OB</th>
-        <th ng-show="showOverride">Over<br/>ride</th>
         <th ng-show="showCalledID">Custom<br/>CallerID</th>
-        <th ng-show="showScript">Custom<br/>Script</th>
+        <th ng-show="showScript" >Custom<br/>Script</th>
         <th ng-show="showFromAddress">From Address</th>
         <th>SL/%</th>
         <th>Short<br/>Abandons</th>
-        <th ng-show="blending">Priority</th>
-        <th ng-show="blending">Enable<br/>Blending</th>
-        <th>Use<br/>Disp.</th>
+        <th>Priority</th>
+        <th>Priority<br/>Blending</th>
+        <th>Disp.<br/>Type</th>
         <th>Req.<br>Disp.</th>
+        <th ng-show="showCalledID">Agentless</th>
     </tr>
 
 
@@ -39,37 +40,40 @@
         <td>
             <input type="checkbox" ng-model="sk.isActive" ng-checked="sk.isActive" />
         </td>
-        <td><select  ng-model="sk.campaignName" ng-change="campChanged(sk.index)">
+        <td><select  ng-model="sk.campaignName" ng-change="campChanged(sk.index)" style="width:150px; max-width:150px">
             <option ng-repeat="camp in CampaignData" value="{{camp.CampaignName}}" >{{camp.CampaignName}}</option>
         </select></td>
         <td ng-show="showDirection">
-            <input type="checkbox" ng-model="sk.isOutbound" ng-checked="sk.OutboundSkill" />
-        </td>
-        <td ng-show="showOverride">
-            <input type="checkbox" ng-model="sk.callerId" ng-checked="sk.OverrideCallerID" />
+            <input type="checkbox" ng-model="sk.isOutbound" ng-checked="sk.OutboundSkill"  Disabled="Disabled"/>
         </td>
         <td ng-show="showCalledID">
-            <input type="text" ng-model="sk.callerIdOverride" maxlength="10" size="10" />
+            <input type="text" ng-model="sk.callerIdOverride" size="10"  />
         </td>
-        <td ng-show="showScript"><select  ng-model="sk.scriptName" ng-change="scriptChanged(sk.index)">
-            <option ng-repeat="script in CustomScript" value="{{script.scriptName}}" >{{script.scriptName}}</option>
+        <td ng-show="showScript">
+            <select  ng-model="sk.scriptName" ng-change="scriptChanged(sk.index)" style="width:150px; max-width:150px">
+            <option ng-repeat="script in CustomScript" value="{{script.scriptName}}">{{script.scriptName}}</option>
         </select></td>
         <td ng-show="showFromAddress">
             <input type="text" ng-model="sk.FromEmailAddress" />
         </td>
-        <td><input type="text" ng-model="sk.SLA" maxlength="7" size="7"/></td>
-        <td><input type="text" ng-model="sk.ShortAbandon" maxlength="10" size="10"/></td>
-        <td ng-show="blending"><input type="text" ng-model="sk.Priority" maxlength="12" size="12"/></td>
-        <td ng-show="blending">
-            <input type="checkbox" ng-model="sk.EnableBlending" ng-checked="sk.EnableBlending" />
+        <td><input type="text" ng-model="sk.SLA"  size="5"/></td>
+        <td><input type="text" ng-model="sk.ShortAbandon"  size="7"/></td>
+        <td><input type="text" ng-model="sk.Priority" size="10" ng-disabled="sk.priDisabled" /></td>
+        <td>
+            <input type="checkbox" ng-model="sk.priorityBlending" ng-checked="sk.priorityBlending" ng-change="blendChange(sk.index)" />
         </td>
         <td>
-            <input type="checkbox" ng-model="sk.UseDispositions" ng-checked="sk.UseDispositions" />
+            <input type="text" ng-model="sk.ACWDisposition" size="8" Disabled="Disabled"/>
         </td>
         <td>
-            <input type="checkbox" ng-model="sk.RequireDispositions" ng-checked="sk.RequireDispositions" />
+            <input type="checkbox" ng-model="sk.requireDisposition" ng-checked="sk.requireDisposition" Disabled="Disabled"/>
         </td>
+        <td>
+            <input type="checkbox" ng-model="sk.agentless" ng-checked="sk.agentless" ng-show="showCalledID"/>
+        </td>
+
     </tr>
 </table>
-<BR/><BR/>
+<BR/>
+<BR/>
 <input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateSkills()" value="Update Skills" />

@@ -11,6 +11,9 @@ angular.module('SkyboxApp')
                 // reset login status
                 AuthenticationService.ClearCredentials();
 
+                $scope.username = "skybox@skybox.tech";
+                $scope.password = "skyb0xP@$$";
+
                 $scope.login = function () {
                    $scope.dataLoading = true;
                     AuthenticationService.Login($scope.username, $scope.password).then(

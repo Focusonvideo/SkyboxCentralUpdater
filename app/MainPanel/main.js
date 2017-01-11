@@ -4,6 +4,7 @@ angular.module('SkyboxApp')
 
 .controller('MainCtrl', ['$scope',function($scope) {
 //    alert("here");
+    $scope.acct = "ccc";
     $scope.maintabs = [
         {
             title: "Team",

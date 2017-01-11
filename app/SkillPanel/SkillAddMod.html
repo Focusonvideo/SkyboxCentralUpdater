@@ -22,7 +22,7 @@
             </select>
         </td>
 
-        <td><input type="checkbox" ng-model="modSkillData.isOutbound" ng-checked="modSkillData.isOutbound"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.isOutbound" ng-checked="modSkillData.isOutbound" Disabled="Disabled"/></td>
         <td><input type="text" ng-model="modSkillData.serviceLevelThreshold" size="4" /></td>
         <td><input type="text" ng-model="modSkillData.serviceLevelGoal" size="4"/></td>
     </tr>
@@ -37,7 +37,7 @@
         <th>Bcc Email<br/>Address</TH>
     </tr>
     <tr >
-        <td><input type="checkbox" ng-model="modSkillData.agentless" ng-checked="modSkillData.agentless" /></td>
+        <td><input type="checkbox" ng-model="modSkillData.agentless" ng-checked="modSkillData.agentless" Disabled ="Disabled"/></td>
         <td><input type="text" ng-model="modSkillData.notes"/></td>
         <td><input type="checkbox" ng-model="modSkillData.interruptible" ng-checked="modSkillData.Interruptible" /></td>
         <td><input type="checkbox" ng-model="modSkillData.emailFromEditable" ng-checked="modSkillData.FromEmailEditable"/></td>
@@ -58,12 +58,12 @@
     </tr>
     <tr >
         <td>
-            <select  ng-model="modSkillData.acwTypeName" ng-change="DispSelected()" ng-disabled="modSkillData.agentless">
+            <select  ng-model="modSkillData.acwTypeName" ng-change="DispSelected()" disabled="disabled" >
                  <option ng-repeat="d_type in DispOpt" value="{{d_type.name}}" >{{d_type.name}}</option>
              </select>
         </td>
-        <td><input type="checkbox" ng-model="modSkillData.requireDispositions" ng-checked="modSkillData.RequireDispositions" ng-disabled="modSkillData.agentless"/></td>
-        <td><input type="text" ng-model="modSkillData.maxSecondsACW" ng-disabled="modSkillData.agentless"/></td>
+        <td><input type="checkbox" ng-model="modSkillData.requireDispositions" ng-checked="modSkillData.RequireDispositions" disabled="disabled" /></td>
+        <td><input type="text" ng-model="modSkillData.maxSecondsACW" disabled="disabled" /></td>
         <td><input type="text" ng-model="modSkillData.initialPriority" size="5"/></td>
         <td><input type="text" ng-model="modSkillData.acceleration" size="5"/></td>
         <td><input type="text" ng-model="modSkillData.maxPriority" size="5"/></td>
@@ -93,7 +93,14 @@
         <td><input type="checkbox" ng-model="modSkillData.enableShortAbandon" ng-checked="modSkillData.UseShortAbandonThreshold"/></td>
         <td><input type="checkbox" ng-model="modSkillData.countShortAbandons" ng-checked="modSkillData.IncludeShortAbandons"/></td>
         <td><input type="checkbox" ng-model="modSkillData.countOtherAbandons" ng-checked="modSkillData.IncludeOtherAbandons"/></td>
-        <td><input type="text" ng-model="modSkillData.scriptName"/></td>
+
+        <td>
+            <!--<input type="text" ng-model="modSkillData.scriptName"/>-->
+            <select  ng-model="modSkillData.scriptName" ng-change="ScriptSelected()">
+                <option ng-repeat="scr in ScriptData" value="{scr.scriptName}}" >{{scr.scriptName}}</option>
+            </select>
+        </td>
+
         <td><input type="checkbox" ng-model="modSkillData.priorityBlending" ng-checked="modSkillData.EnableBlending" /></td>
     </tr>
 </table>

@@ -12,7 +12,7 @@ angular.module('SkyboxApp')
             pass:'', //  'colleeN101',
             appName:'', //   'Skybox_mobil',
             vendName:'', //  'Skybox_communications',
-            BusUnit:'', //  '4594585',
+            BusUnit:'4594585', //  '4594585',
             soapPass:'' //  '10BC037E-35B9-4FBD-95A8-F342C0D9ACB8'
         };
  /*   */
@@ -38,6 +38,8 @@ angular.module('SkyboxApp')
        for (var x=0;x<$scope.BUList.length;x++){
            if($scope.SelectedBU == $scope.BUList[x].Name){
                $scope.user.BusUnit = $scope.BUList[x].BU_Number__c;
+               // $scope.Acct = $scope.SelectedBU;
+               $scope.$emit('savedata',$scope.SelectedBU);
                $scope.attemptLogin2();
            }
        }
@@ -125,7 +127,11 @@ angular.module('SkyboxApp')
     $scope.attemptLogin = function() {
         $scope.showSpinner = true;
         var url;
-        url = {resource_server_base_uri: "https://login.incontact.com/"};
+        if ($scope.user.international) {
+            url = {resource_server_base_uri: "https://login.incontact.eu/"};
+        } else {
+             url = {resource_server_base_uri: "https://login.incontact.com/"};
+        }
         SOAPClient.tokenData = url;
         // check if there is no soapPass - if not, look up BU in SF for soapPass
         if ($scope.user.soapPass == "" && $scope.user.BusUnit.length != "") {

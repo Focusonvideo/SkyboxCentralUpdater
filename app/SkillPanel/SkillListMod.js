@@ -26,6 +26,11 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
     $scope.skillStatus = new Array;
     $scope.skillStatus[0] = {Status:"true"};
     $scope.skillStatus[1] = {Status:"false"};
+    $scope.ACWType = new Array(4);
+    $scope.ACWType[0] = "";
+    $scope.ACWType[1] = "None";
+    $scope.ACWType[2] = "Disp.";
+    $scope.ACWType[3] = "Auto Disp.";
     $scope.showTable = false;
     String.prototype.replaceAll = function (find, replace) {
         var str = this;
@@ -52,6 +57,8 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                 var orderedlist;
                 orderedlist = orderBy(data.data.resultSet.scripts, "scriptName", false);
                 $scope.allScripts = orderedlist;
+
+                var no_script = {"scriptName" : "None", "scriptId" : "0"};
 
                 var t1 = 0;
                 var t2 = 0;
@@ -88,6 +95,11 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                             break;
                     }
                 }
+                $scope.script1[t1] = no_script;
+                $scope.script2[t2] = no_script;
+                $scope.script3[t3] = no_script;
+                $scope.script4[t4] = no_script;
+                $scope.script0[t0] = no_script;
                 getBU();
             },
             function(response){
@@ -136,8 +148,15 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                 break;
             }
         }
-        if ($scope.SkillTypeSel != ""){
+        if (($scope.SkillTypeSel != "") && ($scope.SkillTypeSel != undefined)) {
             $scope.skillTypeSelected();
+        }
+    };
+    $scope.blendChange = function(idx){
+        if (($scope.SkillData[idx].priorityBlending) || (!$scope.SkillData[idx].isOutbound)){
+            $scope.SkillData[idx].priDisabled = false;
+        }else{
+            $scope.SkillData[idx].priDisabled = true;
         }
     };
     $scope.skillTypeSelected = function(){
@@ -169,7 +188,7 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                 $scope.showOverride = false;
                 $scope.showDirection = false;
                 $scope.showFromAddress = false;
-                $scope.showScript = false;
+                $scope.showScript = true;
                 searchString = "";
                 typeId = 3;
                 break;
@@ -198,14 +217,14 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
         }
         var token = SOAPClient.ICToken;
          var extURL = 'services/v8.0/skills?orderBy=skillName&mediaTypeId=' + typeId + filter + searchString;
-         alert(extURL);
+ //        alert(extURL);
         icSOAPServices.ICGET(token, extURL).then(
             function(data){
                 var orderedlist;
                 $scope.CustomScript = new Array;
                 $scope.CustomScript[0] = {'CustomScriptID' : 0,
                                         'CustomScriptName' : "" };
-               alert(JSON.stringify(data));
+ //              alert(JSON.stringify(data));
                 $scope.sk = data.data.skills;
  //               orderedlist = orderBy(data.data.skills, "skillName", false);
                 orderedlist = data.data.skills;
@@ -220,9 +239,15 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
 
                                 $scope.SkillDataOrig[y] = orderedlist[x];
                                 $scope.SkillDataOrig[y].index = y;
+                                if((orderedlist[x].priorityBlending) || (!orderedlist[x].isOutbound)) {
+                                    $scope.SkillDataOrig[y].priDisabled = false;
+                                }else{
+                                    $scope.SkillDataOrig[y].priDisabled = true;
+                                }
                                 $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].initialPriority + "|" + $scope.SkillDataOrig[y].acceleration + "|" + $scope.SkillDataOrig[y].maxPriority;
                                 $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].serviceLevelThreshold + "/" + $scope.SkillDataOrig[y].serviceLevelGoal;
                                 $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].enableShortAbandon + ", " + $scope.SkillDataOrig[y].shortAbandonThreshold;
+                                $scope.SkillDataOrig[y].ACWDisposition = $scope.ACWType[$scope.SkillDataOrig[y].acwTypeId];
                                  y++
                             }
                         }else{
@@ -231,12 +256,14 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                             $scope.SkillDataOrig[y].Priority = $scope.SkillDataOrig[y].initialPriority + "|" + $scope.SkillDataOrig[y].acceleration + "|" + $scope.SkillDataOrig[y].maxPriority;
                             $scope.SkillDataOrig[y].SLA = $scope.SkillDataOrig[y].serviceLevelThreshold + "/" + $scope.SkillDataOrig[y].serviceLevelGoal;
                             $scope.SkillDataOrig[y].ShortAbandon = $scope.SkillDataOrig[y].enableShortAbandon + ", " + $scope.SkillDataOrig[y].shortAbandonThreshold;
+                            $scope.SkillDataOrig[y].ACWDisposition = $scope.ACWType[$scope.SkillDataOrig[y].acwTypeId];
                              y++;
                         }
 
                 }
                 switch (type){
-                    case "PhoneCall":
+                    case "Phone Call OB":
+                    case "Phone Call IB":
                         $scope.CustomScript = $scope.script4;
                         break;
                     case "Chat":
@@ -259,116 +286,104 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
     };
     $scope.campChanged = function(idx){
         for(var w=0;w<$scope.CampaignData.length;w++){
-            if ($scope.CampaignData[w].CampaignName == $scope.SkillData[idx].CampaignName){
-                $scope.SkillData[idx].CampaignNo = $scope.CampaignData[w].CampaignNo;
+            if ($scope.CampaignData[w].CampaignName == $scope.SkillData[idx].campaignName){
+                $scope.SkillData[idx].campaignId = $scope.CampaignData[w].CampaignNo;
             }
         }
     };
     $scope.scriptChanged = function(idx){
         for(var w=0;w<$scope.CustomScript.length;w++){
-            if ($scope.CustomScript[w].CustomScriptName == $scope.SkillData[idx].CustomScriptName){
-                $scope.SkillData[idx].CustomScriptID = $scope.CustomScript[w].CustomScriptID;
+            if ($scope.CustomScript[w].scriptName == $scope.SkillData[idx].scriptName){
+                $scope.SkillData[idx].scriptId = $scope.CustomScript[w].scriptId;
             }
         }
     };
     function SkillChanged(idx){
-        var changed = false;
-        if($scope.SkillData[idx].SkillName != $scope.SkillDataOrig[idx].SkillName) changed = true;
-        if($scope.SkillData[idx].Status != $scope.SkillDataOrig[idx].Status) changed = true;
-        if($scope.SkillData[idx].CampaignName != $scope.SkillDataOrig[idx].CampaignName) changed = true;
-        if($scope.SkillData[idx].OutboundSkill != $scope.SkillDataOrig[idx].OutboundSkill) changed = true;
-        if($scope.SkillData[idx].OverrideCallerID != $scope.SkillDataOrig[idx].OverrideCallerID) changed = true;
-        if($scope.SkillData[idx].CallerIDNumber != $scope.SkillDataOrig[idx].CallerIDNumber) changed = true;
-        if($scope.SkillData[idx].SLA != $scope.SkillDataOrig[idx].SLA) changed = true;
-        if($scope.SkillData[idx].ShortAbandon != $scope.SkillDataOrig[idx].ShortAbandon) changed = true;
-        if($scope.SkillData[idx].Priority != $scope.SkillDataOrig[idx].Priority) changed = true;
-        if($scope.SkillData[idx].EnableBlending != $scope.SkillDataOrig[idx].EnableBlending) changed = true;
-        if($scope.SkillData[idx].UseDispositions != $scope.SkillDataOrig[idx].UseDispositions) changed = true;
-        if($scope.SkillData[idx].RequireDispositions != $scope.SkillDataOrig[idx].RequireDispositions) changed = true;
-        if($scope.SkillData[idx].FromEmailAddress != $scope.SkillDataOrig[idx].FromEmailAddress) changed = true;
-        if($scope.SkillData[idx].CustomScriptName != $scope.SkillDataOrig[idx].CustomScriptName) changed = true;
+        var dq = '"';
+        var changed = "{";
+        if($scope.SkillData[idx].skillName != $scope.SkillDataOrig[idx].skillName) {
+                if ($scope.SkillData[idx].skillName.length > 30){
+                    alert($scope.SkillData[idx].skillName + " Skill Name too long! 30 char. or less");
+                    return null;
+                }
+                changed = changed + dq + "skillName" + dq + " : " + dq + $scope.SkillData[idx].skillName + dq + ",";
+        }
+        if($scope.SkillData[idx].isActive != $scope.SkillDataOrig[idx].isActive) {
+            changed = changed + dq + "isActive" + dq + " : " + dq + $scope.SkillData[idx].isActive + dq + ",";
+        }
+        if($scope.SkillData[idx].campaignName != $scope.SkillDataOrig[idx].campaignName) {
+            changed = changed + dq + "campaignId" + dq + " : " + dq + $scope.SkillData[idx].campaignId + dq + ",";
+        }
+        if($scope.SkillData[idx].callerIdOverride != $scope.SkillDataOrig[idx].callerIdOverride) {
+           changed = changed + dq + "callerIdOverride" + dq + " : " + dq + $scope.SkillData[idx].callerIdOverride + dq + ",";
+        }
+        if($scope.SkillData[idx].agentless != $scope.SkillDataOrig[idx].agentless) {
+
+             if ($scope.SkillData[idx].agentless){
+                 changed = changed + dq + "agentless" + dq + " : " + dq  +  $scope.SkillData[idx].agentless + dq   + ",";
+                 changed = changed + "\"agentlessPorts\":1,";
+                 changed = changed + "\"acwTypeId\":1,";
+             }else{
+                 changed = changed + "\"agentlessPorts\":{},";
+                 changed = changed + dq + "agentless" + dq + " : " + dq  +  $scope.SkillData[idx].agentless + dq   + ",";
+             }
+        }
+
+        if($scope.SkillData[idx].SLA != $scope.SkillDataOrig[idx].SLA) {
+            var thresh_goal = $scope.SkillData[idx].SLA.split("/");
+            changed = changed + dq + "ServiceLevelThreshold" + dq + " : " + dq + thresh_goal[0] + dq + ",";
+            changed = changed + dq + "ServiceLevelGoal" + dq + " : " + dq + thresh_goal[1] + dq + ",";
+        }
+        if($scope.SkillData[idx].ShortAbandon != $scope.SkillDataOrig[idx].ShortAbandon) {
+            var esa_sat = $scope.SkillData[idx].ShortAbandon.split(",");
+            changed = changed + dq + "enableShortAbandon" + dq + " : " + dq + esa_sat[0] + dq + ",";
+            changed = changed + dq + "shortAbandonThreshold" + dq + " : " + dq + esa_sat[1].trim() + dq + ",";
+        }
+        if($scope.SkillData[idx].Priority != $scope.SkillDataOrig[idx].Priority) {
+            var IAM = $scope.SkillData[idx].Priority.split("|");
+            changed = changed + dq + "initailPriority" + dq + " : " + dq + IAM[0] + dq + ",";
+            changed = changed + dq + "acceleraation" + dq + " : " + dq + IAM[1] + dq + ",";
+            changed = changed + dq + "maxPriority" + dq + " : " + dq + IAM[2] + dq + ",";
+        }
+        if($scope.SkillData[idx].priorityBlending != $scope.SkillDataOrig[idx].priorityBlending) {
+            changed = changed + dq + "priorityBlending" + dq + " : " + dq + $scope.SkillData[idx].priorityBlending + dq + ",";
+        }
+        if($scope.SkillData[idx].UseDispositions != $scope.SkillDataOrig[idx].UseDispositions) {
+ //           changed = true;
+        }
+        if($scope.SkillData[idx].requireDispositions != $scope.SkillDataOrig[idx].requireDispositions) {
+              changed = changed + dq + "requireDispositions" + dq + " : " + dq + $scope.SkillData[idx].requireDispositions + dq + ",";
+        }
+        if($scope.SkillData[idx].emailFromAddress != $scope.SkillDataOrig[idx].emailFromAddress) {
+
+ //           changed = true;
+        }
+        if($scope.SkillData[idx].scriptName != $scope.SkillDataOrig[idx].scriptName)  {
+            changed = changed + dq + "scriptId" + dq + " : " + dq + $scope.SkillData[idx].scriptId + dq + ",";
+        }
+        var idx = changed.lastIndexOf(",");
+        if (idx != -1) {
+            changed = "{" + dq + "skill" + dq + ":" + changed.substr(0, idx) + "}}";
+             var updateJSON = JSON.parse(changed);
+//            alert(JSON.stringify(updateJSON));
+        }else{
+            changed = null;
+        }
         return changed;
     }
     $scope.UpdateSkills = function(){
         $scope.showSpinner = true;
+        var token = SOAPClient.ICToken;
+        var extURL = 'services/v8.0/skills/';
+
         var updatecount = 0;
         for (var x=0;x<$scope.SkillData.length;x++){
-            if(SkillChanged(x)){
-                var sla = $scope.SkillData[x].SLA.split("/");
-                $scope.SkillData[x].SLASeconds = sla[0].trim();
-                $scope.SkillData[x].SLAPercent = sla[1].trim();
-                var sa = $scope.SkillData[x].ShortAbandon.split(",");
-                $scope.SkillData[x].UseShortAbandonThreshold = sa[0].trim();
-                $scope.SkillData[x].ShortAbandonThreshold = sa[1].trim();
-                var pri = $scope.SkillData[x].Priority.split("|");
-                $scope.SkillData[x].QueueInitPriority = pri[0].trim();
-                $scope.SkillData[x].QueueAcceleration = pri[1].trim();
-                $scope.SkillData[x].QueueMaxPriority = pri[2].trim();
-                var parm = {
-                    skill: {
-                        "SkillNo": $scope.SkillData[x].SkillNo,
-                        "SkillName": $scope.SkillData[x].SkillName,
-                        "MediaType": $scope.SkillData[x].MediaType,
-                        "Status": $scope.SkillData[x].Status,
-                        "CampaignNo": $scope.SkillData[x].CampaignNo,
-                        "OutboundSkill": $scope.SkillData[x].OutboundSkill,
-                        "SLASeconds": $scope.SkillData[x].SLASeconds,
-                        "SLAPercent": $scope.SkillData[x].SLAPercent,
-                        "Notes": $scope.SkillData[x].Notes,
-                        "Description": $scope.SkillData[x].Description,
-                        "Interruptible": $scope.SkillData[x].Interruptible,
-                        "FromEmailEditable": $scope.SkillData[x].FromEmailEditable,
-                        "FromEmailAddress": $scope.SkillData[x].FromEmailAddress ,
-                        "BccEmailAddress": $scope.SkillData[x].BccEmailAddress,
-                        "UseDispositions": $scope.SkillData[x].UseDispositions,
-                        "RequireDispositions": $scope.SkillData[x].RequireDispositions,
-                        "DispositionTimer": $scope.SkillData[x].DispositionTimer,
-                        "QueueInitPriority": $scope.SkillData[x].QueueInitPriority,
-                        "QueueAcceleration": $scope.SkillData[x].QueueAcceleration,
-                        "QueueFunction": $scope.SkillData[x].QueueFunction,
-                        "QueueMaxPriority": $scope.SkillData[x].QueueMaxPriority,
-                        "ActiveMinWorkTime": $scope.SkillData[x].ActiveMinWorkTime,
-                        "OverrideCallerID": $scope.SkillData[x].OverrideCallerID,
-                        "CallerIDNumber": $scope.SkillData[x].CallerIDNumber,
-                        "UseScreenPops": $scope.SkillData[x].UseScreenPops,
-                        "CustomScreenPopApp": $scope.SkillData[x].CustomScreenPopApp,
-                        "CampaignName": $scope.SkillData[x].CampaignName,
-                        "ShortAbandonThreshold": $scope.SkillData[x].ShortAbandonThreshold,
-                        "UseShortAbandonThreshold": $scope.SkillData[x].UseShortAbandonThreshold,
-                        "IncludeShortAbandons": $scope.SkillData[x].IncludeShortAbandons,
-                        "IncludeOtherAbandons": $scope.SkillData[x].IncludeOtherAbandons,
-                        "CustomScriptID": $scope.SkillData[x].CustomScriptID,
-                        "CustomScriptName": $scope.SkillData[x].CustomScriptName,
-                        "EnableBlending": $scope.SkillData[x].EnableBlending
-
-                    }
-                };
-                if (parm.skill.Notes == null || parm.skill.Notes == undefined ) {
-                    parm.skill.Notes = "";
-                }
-                if (parm.skill.Description == null || parm.skill.Description == undefined) {
-                    parm.skill.Description = "";
-                }
-                if (parm.skill.FromEmailAddress == null  || parm.skill.FromEmailAddress == undefined){
-                    parm.skill.FromEmailAddress = "";
-                }
-                if (parm.skill.BccEmailAddress == null || parm.skill.BccEmailAddress == undefined){
-                    parm.skill.BccEmailAddress = "";
-                }
-                if (parm.skill.CustomScreenPopApp == null || parm.skill.CustomScreenPopApp == undefined){
-                    parm.skill.CustomScreenPopApp = "";
-                }
-                if (parm.skill.CustomScriptName == null || parm.skill.CustomScriptName == undefined){
-                    parm.skill.CustomScriptName = "";
-                }
-                if (parm.skill.CustomScriptName == null || parm.skill.CustomScriptName == undefined){
-                    parm.skill.CustomScriptName = "";
-                }
-                if (parm.skill.CallerIDNumber == null || parm.skill.CallerIDNumber == undefined){
-                    parm.skill.CallerIDNumber = "";
-                }
+            var updateJSON = SkillChanged(x);
+            if (updateJSON != null){
                 updatecount++;
-                icSOAPServices.icGet("Skill_Update", parm).then(
+                console.log(extURL + $scope.SkillData[x].skillId);
+                console.log(JSON.stringify(updateJSON));
+                icSOAPServices.ICPUT(token,extURL + $scope.SkillData[x].skillId,updateJSON).then(
                     function () {
                         updatecount--;
                         if (updatecount == 0) {
@@ -378,6 +393,11 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
                     },
                     function (response) {
                         alert("failed" + JSON.stringify(response));
+                        updatecount--;
+                        if (updatecount == 0) {
+                            $scope.showSpinner = false;
+                            $location.path("/skill");
+                        }
                     }
                 );
 

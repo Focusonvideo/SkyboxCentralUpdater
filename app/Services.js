@@ -94,8 +94,8 @@ angular.module('SkyboxApp')
             }])
 
     .factory("icSOAPServices",function icSOAPServicesFactory($soap,$http){
-         var proxyAdd = "http://tools.skybox.tech:8080";
-  //     var proxyAdd = "http://localhost:8080";
+        var proxyAdd = "http://tools.skybox.tech:8080";
+ //         var proxyAdd = "http://localhost:8080";
         var Base64 = {
             // private property
             _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",

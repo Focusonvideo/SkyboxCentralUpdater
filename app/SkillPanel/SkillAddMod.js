@@ -19,9 +19,11 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
         var str = this;
         return str.replace(new RegExp(find, 'g'), replace);
     };
-    var phoneScripts = new Array();
-    var chatScripts = new Array();
-    var emailScripts = new Array();
+    var phoneScripts = [];
+    var chatScripts = [];
+    var emailScripts = [];
+    var workItemScripts = [];
+
     $scope.DispOpt = [
         {name: 'None'},
         {name: 'Disp.'},
@@ -37,7 +39,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
             if ($scope.modSkillData.agentless) {
                 $scope.modSkillData.UseDispositions = false;
             } else {
-                $scope.modSkillData.UseDispositions = true;
+                $scope.modSkillData.UseDispositions = false;
             }
             $scope.modSkillData.acwTypeName = "Disp.";
             break;
@@ -58,7 +60,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
     icSOAPServices.icGet("Disposition_GetList").then(
       function(data){
           var orderList = orderBy(data, "DispositionName", false);
-          var orderActiveList = new Array();
+          var orderActiveList = [];
           var ctr = 0;
           for (var m=0;m<orderList.length;m++){
         	  if(orderList[m].Status == "Active"){
@@ -123,6 +125,20 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
 
                     }
                 }
+                switch ($scope.modSkillData.mediaTypeId){
+                    case '1': // email
+                        $scope.ScriptData = emailScripts;
+                        break;
+                    case '3': // chat
+                        $scope.ScriptData = chatScripts;
+                        break;
+                    case '4': // phone
+                        $scope.ScriptData = phoneScripts;
+                        break;
+                    case '6': // workitem
+                        $scope.ScriptData = workItemScripts;
+                        break;
+                }
                 getCampaign();
             },
             function(resp){
@@ -177,7 +193,7 @@ app.controller('SkillModCtrl', ['$scope', 'icSOAPServices', '$location', '$filte
                 $scope.modSkillData.acwTypeId = "1";
                 break;
             case "Disp.":
-                $scope.modSkillData.UseDispositions = true;
+                $scope.modSkillData.UseDispositions = false;
                 $scope.modSkillData.acwTypeId = "2";
                 break;
             case "Auto Wrap":

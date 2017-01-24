@@ -82,7 +82,7 @@ app.controller('SkillBRDAddCtrl', ['$scope', 'icSOAPServices', '$location', '$fi
  //       alert(JSON.stringify(parms4Add));
        icSOAPServices.ICPOST(token,"services/v8.0/skills", parms4Add).then(
             function (data) {
-                alert(JSON.stringify(data));
+ //               alert(JSON.stringify(data));
                  $scope.SkipSkillBtn();
             },
             function (response) {

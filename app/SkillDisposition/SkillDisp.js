@@ -489,6 +489,14 @@ angular.module('SkyboxApp')
                  icSOAPServices.ICPUT(token, extURL + $scope.SkillData[skillIdx].skillId, updateJSON).then(
                     function () {
                         $scope.showSpinner = false;
+                        skillIdx++;
+                        if (skillIdx <= $scope.SkillData.length){
+                            $scope.modSkillSelected = $scope.SkillData[skillIdx].skillName;
+                            $scope.skillSelected();
+                        }
+
+
+
                     },
                     function (response) {
                         alert("failed" + JSON.stringify(response));

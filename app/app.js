@@ -140,6 +140,10 @@ angular.module("SkyboxApp", ['angularSpinner', 'angularSoap','ngRoute','base64',
                  templateUrl:'POCs/POCs.html',
                  controller: 'POCCtrl'
              })
+             .when('/agentSkill',{
+                 templateUrl:'AgentSkill/AgentSkill.html',
+                 controller: 'AgentSkillCtrl'
+             })
              .when('/main',{
                 templateUrl:'MainPanel/Main.html',
                 controller: 'MainCtrl'

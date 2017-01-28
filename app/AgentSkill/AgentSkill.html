@@ -1,0 +1,30 @@
+<h2 class="text-center">Agent to Skill Association</h2>
+<span us-spinner spinner-on="showSpinner"></span>
+<br/><br/>
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UpdateAgentSkill()" value="Update Agent to Skill Assoc." />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="SaveConfig()" ng-show="showAddConfig"  value="Save Current Agent/Skill Assoc." />
+<input type="submit" class="btn btn-primary btn-lg" ng-click="UseConfig()" ng-show="showUseConfig" value="Apply Saved Agent/Skill Assoc." />
+<br/>
+<br/>
+
+<label > Select Agent: </label>
+<select  ng-model="modAgentSelected" ng-change="AgentSelected()">
+    <option ng-repeat="selAgent in AgentData" value="{{selAgent.agentName}}" style="{{selSkill.skillColor}}">{{selAgent.agentName}}</option>
+</select>
+<br/>
+<br/>
+<table class="table table-bordered">
+    <tr  class="active">
+        <TH >Assoc.</TH>
+        <th >Skill Name</th>
+        <th >Campaign</th>
+    </tr>
+    <tr ng-repeat="tm in SkillData">
+        <td >
+            <input type="checkbox" ng-model="assocAgentSkill" ng-checked="assocAgentSkill" ng-change="assocAgentSkillChanged()"/>
+        </td>
+
+        <td >{{tm.skillName}}</td>
+        <td >{{tm.campaignName}}</td>
+    </tr>
+</table>

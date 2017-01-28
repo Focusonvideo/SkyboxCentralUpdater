@@ -43,6 +43,12 @@ angular.module('SkyboxApp')
             ref:"#skilldisp"
         },
         {
+            title: "Agent/Skill",
+            url: "AgentSkill/AgentSkill.html",
+            pgclass:"fa fa-shield",
+            ref:"#agentSkill"
+        },
+        {
             title: "Agents",
             url: "Agents/Agent.html",
             pgclass:"fa fa-shield",

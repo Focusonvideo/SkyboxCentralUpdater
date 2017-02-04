@@ -95,7 +95,7 @@ angular.module('SkyboxApp')
 
     .factory("icSOAPServices",function icSOAPServicesFactory($soap,$http){
         var proxyAdd = "http://tools.skybox.tech:8080";
- //         var proxyAdd = "http://localhost:8080";
+ //        var proxyAdd = "http://localhost:8080";
         var Base64 = {
             // private property
             _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -162,7 +162,7 @@ angular.module('SkyboxApp')
 
         };
      //  var base_url = "https://login.incontact.com/inSideWS/insidews.asmx";
-        var base_url = "http://localhost:8080";
+     //   var base_url = "http://localhost:8080";
         return {
             icGet: function(action, parms){
                 return $soap.post(proxyAdd,action,parms);
@@ -281,6 +281,21 @@ angular.module('SkyboxApp')
                 var config = {
                     method:'POST',
                     url:proxyAdd + '/SkyboxProxy/restful/ICPOST/' + URL,
+                    data: dataParms,
+                    headers: {
+                        'content-type':'application/json',
+                        accept:'application/json',
+                        authorization:accessBearer
+                    }
+                };
+                return $http(config);
+            },
+            ICDELETE:function(token,ExtURL,dataParms){
+                var accessBearer = 'Bearer ' + token.access_token;
+                var URL = token.resource_server_base_uri + ExtURL;
+                var config = {
+                    method:'DELETE',
+                    url:proxyAdd + '/SkyboxProxy/restful/ICDELETE/' + URL,
                     data: dataParms,
                     headers: {
                         'content-type':'application/json',

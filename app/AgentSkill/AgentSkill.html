@@ -11,7 +11,12 @@
 <select  ng-model="modAgentSelected" ng-change="AgentSelected()">
     <option ng-repeat="selAgent in AgentData" value="{{selAgent.agentName}}" style="{{selSkill.skillColor}}">{{selAgent.agentName}}</option>
 </select>
+
 <br/>
+<br/>
+Skills
+<input type="button" class="btn btn-primary" ng-click="SetAll()"  value="Set All" />
+<input type="button" class="btn btn-primary" ng-click="ClearAll()"  value="Clear All" />
 <br/>
 <table class="table table-bordered">
     <tr  class="active">
@@ -21,7 +26,7 @@
     </tr>
     <tr ng-repeat="tm in SkillData">
         <td >
-            <input type="checkbox" ng-model="assocAgentSkill" ng-checked="assocAgentSkill" ng-change="assocAgentSkillChanged()"/>
+            <input type="checkbox" ng-model="tm.assocAgentSkill" ng-checked="tm.assocAgentSkill" ng-change="assocAgentSkillChanged(tm.index)"/>
         </td>
 
         <td >{{tm.skillName}}</td>

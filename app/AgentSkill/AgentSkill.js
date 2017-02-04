@@ -7,6 +7,7 @@ angular.module('SkyboxApp')
     .controller('AgentSkillCtrl', ['$scope', 'icSOAPServices', '$location', '$filter',  function($scope, icSOAPServices, $location, $filter) {
         var filter = "&isActive=true";
         var skillIdx = 0;
+        var agentID = "";
 
         String.prototype.replaceAll = function (find, replace) {
             var str = this;
@@ -20,7 +21,7 @@ angular.module('SkyboxApp')
         var orderBy = $filter('orderBy');
         var token = SOAPClient.ICToken;
 //        var extURL = 'services/v8.0/skills?orderBy=skillName,campaignName';
-        var extURL = 'services/v8.0/skills?orderBy=skillName';
+        var extURL = 'services/v8.0/skills?orderBy=skillName&isActive=true';
 
         icSOAPServices.ICGET(token, extURL).then(
             function(data){
@@ -34,10 +35,10 @@ angular.module('SkyboxApp')
                 alert("BAD:" + JSON.stringify(response));
             }
         );
-        console.log($scope);
+        // console.log($scope);
         var getAgents = function() {
  //           extURL = 'services/v8.0/agents?orderBy=lastName,teamName';
-            extURL = 'services/v8.0/agents?orderBy=lastName';
+            extURL = 'services/v8.0/agents?orderBy=lastName&isActive=true';
             icSOAPServices.ICGET(token, extURL).then(
                 function (data) {
                     var orderedlist = orderBy(data.data.agents, "lastName", false);
@@ -55,319 +56,166 @@ angular.module('SkyboxApp')
             );
         };
         $scope.AgentSelected = function(){
-            for(var i=0;i<$scope.SkillDispData.length;i++){
-                $scope.SkillDispData[i].AssocChanged = false;
+            $scope.showSpinner = true;
+            for(var i=0;i<$scope.SkillData.length;i++){
+                $scope.SkillData[i].AssocChanged = false;
+                $scope.SkillData[i].assocAgentSkill = false;
+                $scope.SkillData[i].index = i;
             }
-            $scope.SkillData = JSON.parse(JSON.stringify($scope.SkillDataOrig));
-            for (var x=0;x<$scope.SkillData.length;x++){
-                if($scope.modSkillSelected == $scope.SkillData[x].skillName){
+            $scope.CurrentTeam = "";
+            $scope.SkillOrigData = JSON.parse(JSON.stringify($scope.SkillData));
+            for (var x=0;x<$scope.AgentData.length;x++){
+                if($scope.modAgentSelected == $scope.AgentData[x].agentName){
                     skillIdx = x;
-                }
-            }
-            var dispositions = [];
-            dispositions = $scope.SkillData[skillIdx].dispositions;
-            $scope.ACWDisposition = $scope.SkillData[skillIdx].ACWDisposition;
-            $scope.ACWState = $scope.SkillData[skillIdx].stateNameACW;
-            $scope.ACWMaxSec = $scope.SkillData[skillIdx].maxSecondsACW;
-            $scope.requireDisposition = $scope.SkillData[skillIdx].requireDisposition;
-            switch ($scope.SkillData[skillIdx].acwTypeId) {
-                case 1: // None
-                    $scope.showDisp = false;
-                    $scope.showSeconds = false;
-                    $scope.showState = false;
-                    $scope.showReq = false;
+                    agentID =  $scope.AgentData[x].agentId;
                     break;
-                case 2: // Disp
-                    $scope.showDisp = true;
-                    $scope.showSeconds = true;
-                    $scope.showReq = true;
-                    $scope.showState = true;
-                    break;
-                case 3: // Auto
-                    $scope.showDisp = false;
-                    $scope.showSeconds = true;
-                    $scope.showReq = false;
-                    $scope.showState = true;
-                    break;
+                }
             }
-            for(var i=0;i<$scope.SkillDispData.length;i++){
-                var found = false;
-                if (dispositions != undefined) {
-                    for (var x = 0; x < dispositions.length; x++) {
-                        if (dispositions[x].dispositionId == $scope.SkillDispData[i].DispositionID) {
-                            found = true;
-                            break;
-                        }
+            if (agentID > 0) {
+                extURL = 'services/v8.0/agents/' + agentID + '/skills?orderBy=skillName&isSkillActive=true';
+                icSOAPServices.ICGET(token, extURL).then(
+                    function (data) {
+                        $scope.agentskill = data.data.resultSet.agentSkillAssignments;
+                         for (var x=0;x<$scope.agentskill.length;x++){
+                             for (var y=0;y<$scope.SkillData.length;y++){
+                                 if($scope.agentskill[x].skillId == $scope.SkillData[y].skillId){
+                                     $scope.SkillData[y].assocAgentSkill = true;
+                                     break;
+                                 }
+                             }
+                         }
+                        $scope.showSpinner = false;
+                        $scope.showAddConfig = true;
+                        // console.log($scope);
+                     },
+                    function (response) {
+                        $scope.showSpinner = false;
+                        alert("BAD:" + JSON.stringify(response));
                     }
-                }
-                if(found){
-                    $scope.SkillDispData[i].Assoc = true;
+                );
 
-                    $scope.SkillDispData[i].yesnos[0].sel = 'selected';
-                    $scope.SkillDispData[i].yesnos[1].sel = '';
-                    $scope.SkillDispData[i].ListPriority = dispositions[x].priority;
-                    $scope.SkillDispData[i].SkillDispositionID = dispositions[x].dispositionId;
-                    $scope.SkillDispData[i].showit = true;
-
-                }else{
-                    $scope.SkillDispData[i].showit = false;
-                    $scope.SkillDispData[i].Assoc = false;
-                    $scope.SkillDispData[i].yesnos[1].sel = 'selected';
-                    $scope.SkillDispData[i].yesnos[0].sel = '';
-                    $scope.SkillDispData[i].ListPriority = 0;
-                    $scope.SkillDispData[i].useSelected[0].sel = "";
-                    $scope.SkillDispData[i].useSelected[1].sel = "";
-                }
             }
-            console.log($scope);
-            $scope.showAddConfig = true;
+         // console.log($scope);
+            // $scope.showAddConfig = true;
 
         };
-        $scope.ACWStateChanged = function(){
-            $scope.SkillData[skillIdx].stateNameACW = $scope.ACWState;
-            for (var i=0;i<$scope.OutstateData.length;i++){
-                if ($scope.ACWState == $scope.OutstateData[i].Description){
-                    $scope.SkillData[skillIdx].stateIdACW = $scope.OutstateData[i].OutstateCode;
-                }
-            }
-        };
-        $scope.ACWSecondsChanged = function(){
-            $scope.SkillData[skillIdx].maxSecondsACW = $scope.ACWMaxSec;
-        };
-        $scope.ACWreqiredChanged = function(){
-            $scope.SkillData[skillIdx].requireDisposition = $scope.requireDisposition;
+         $scope.assocAgentSkillChanged = function(index){
+            $scope.SkillData[index].AssocChanged = true;
         };
 
-        $scope.priorityChanged = function(index){
-            // priorities change
-            $scope.SkillDispData[index].propertyChanged = true;
 
-        };
-        $scope.AssocChanged = function(index){
-            $scope.SkillDispData[index].AssocChanged = true;
-            if($scope.SkillDispData[index].Assoc == false){
-                // reset show
-                $scope.SkillDispData[index].showit = false;
-                // remove from list priority
-                var curPri = $scope.SkillDispData[index].ListPriority;
-                $scope.SkillDispData[index].ListPriority = 0;
-                for (var x=0;x < $scope.SkillDispData.length; x++) {
-                    if ($scope.SkillDispData[x].ListPriority > curPri ) {
-                        $scope.SkillDispData[x].ListPriority = $scope.SkillDispData[x].ListPriority - 1;
-                    }
-                }
-            }else{
-                $scope.SkillDispData[index].showit = true;
-                // add to list priority
-                //find current max priority this will be the next
-                var maxPri = 0;
-                for (var x=0;x < $scope.SkillDispData.length; x++) {
-                    if ($scope.SkillDispData[x].ListPriority > maxPri ) {
-                        maxPri = $scope.SkillDispData[x].ListPriority;
-                    }
-                }
-                $scope.SkillDispData[index].ListPriority = maxPri + 1;
-            }
-        };
         $scope.SaveConfig = function(){
-            $scope.savedDispDataConfig = new Array($scope.SkillDispData.length);
-            for (var x=0;x < $scope.SkillDispData.length; x++) {
-                $scope.savedDispDataConfig[x]= {
-                    ListPriority : $scope.SkillDispData[x].ListPriority,
-                    showit : $scope.SkillDispData[x].showit,
-                    useSelected:[{sel:$scope.SkillDispData[x].useSelected[0].sel},
-                        {sel:$scope.SkillDispData[x].useSelected[1].sel}],
-                    yesnos:[{name:$scope.SkillDispData[x].yesnos[0].name,
-                        sel:$scope.SkillDispData[x].yesnos[0].sel},
-                        {name:$scope.SkillDispData[x].yesnos[1].name,
-                            sel:$scope.SkillDispData[x].yesnos[1].sel}
-                    ]
+            $scope.savedDataConfig = new Array($scope.SkillData.length);
+            for (var x=0;x < $scope.SkillData.length; x++) {
+                $scope.savedDataConfig[x]= {
+                    assocAgentSkill : $scope.SkillData[x].assocAgentSkill
                 }
-
             }
-            $scope.savedSkillData = {"acwTypeId": $scope.SkillData[skillIdx].acwTypeId,
-                "stateIdACW":$scope.SkillData[skillIdx].stateIdACW,
-                "maxSecondsACW":$scope.SkillData[skillIdx].maxSecondsACW,
-                "requireDisposition":$scope.SkillData[skillIdx].requireDisposition,
-                "ACWDisposition": $scope.ACWDisposition,
-                "ACWMaxSec": $scope.ACWMaxSec,
-                "ACWState": $scope.ACWState};
-
             $scope.showUseConfig = true;
         };
         $scope.UseConfig = function(){
-            for (var x = 0; x < $scope.SkillDispData.length; x++) {
-                $scope.SkillDispData[x].ListPriority = $scope.savedDispDataConfig[x].ListPriority;
-                $scope.SkillDispData[x].useSelected[0].sel = $scope.savedDispDataConfig[x].useSelected[0].sel;
-                $scope.SkillDispData[x].useSelected[1].sel = $scope.savedDispDataConfig[x].useSelected[1].sel;
-                $scope.SkillDispData[x].yesnos[0].name = $scope.savedDispDataConfig[x].yesnos[0].name;
-                $scope.SkillDispData[x].yesnos[0].sel = $scope.savedDispDataConfig[x].yesnos[0].sel;
-                $scope.SkillDispData[x].yesnos[1].name = $scope.savedDispDataConfig[x].yesnos[1].name;
-                $scope.SkillDispData[x].yesnos[1].sel = $scope.savedDispDataConfig[x].yesnos[1].sel;
-                $scope.SkillDispData[x].showit = $scope.savedDispDataConfig[x].showit;
+            for (var x = 0; x < $scope.SkillData.length; x++) {
+                if ($scope.SkillData[x].assocAgentSkill != $scope.savedDataConfig[x].assocAgentSkill){
+                    $scope.SkillData[x].assocAgentSkill = $scope.savedDataConfig[x].assocAgentSkill;
+                    $scope.SkillData[x].AssocChanged = true;
+                }
             }
-            $scope.SkillData[skillIdx].requireDisposition = $scope.savedSkillData.requireDisposition;
-            $scope.requireDisposition = $scope.savedSkillData.requireDisposition;
-            $scope.SkillData[skillIdx].acwTypeId = $scope.savedSkillData.acwTypeId;
-            $scope.ACWDisposition = $scope.savedSkillData.ACWDisposition;
-            $scope.ACWState = $scope.savedSkillData.ACWState;
-            $scope.SkillData[skillIdx].maxSecondsACW = $scope.savedSkillData.maxSecondsACW;
-            $scope.SkillData[skillIdx].stateIdACW = $scope.savedSkillData.stateIdACW;
-            $scope.ACWMaxSec = $scope.savedSkillData.ACWMaxSec;
-
-            $scope.ACWTypeChanged();
         };
-        $scope.UpdateSkillDisp = function() {
-            if ($scope.SkillData[skillIdx].acwTypeId != 1) {
-                if ($scope.SkillData[skillIdx].acwTypeId == 3) {
-                    if ($scope.SkillData[skillIdx].stateIdACW == 0) {
-                        alert("ACW State cannot be blank");
-                        return;
-                    }
-                    if ($scope.SkillData[skillIdx].maxSecondsACW == 0) {
-                        alert("Max ACW Sec. cannot be 0");
-                        return;
-                    }
-                } else {
-                    // type 2  Disp.
-                    if (!$scope.SkillData[skillIdx].requireDisposition) {
-                        if ($scope.SkillData[skillIdx].maxSecondsACW == 0) {
-                            alert("Max ACW Sec. cannot be 0");
-                            return;
-                        }
-                    }
-                    if ($scope.SkillData[skillIdx].stateIdACW == 0) {
-                        alert("ACW State cannot be blank");
-                        return;
-                    }
-                    var f = false;
-                    for (var x = 0; x < $scope.SkillDispData.length; x++) {
-                        if ($scope.SkillDispData[x].ListPriority > 0) {
-                            f = true;
-                            break;
-                        }
-                    }
-                    if (!f) {
-                        alert("must have at least one disposition associated with this skill");
-                        return;
-                    }
-                }
-
+        $scope.SetAll = function(){
+            for (var x = 0; x < $scope.SkillData.length; x++) {
+                    $scope.SkillData[x].assocAgentSkill = true;
+                    $scope.SkillData[x].AssocChanged = true;
+             }
+        };
+        $scope.ClearAll = function(){
+            for (var x = 0; x < $scope.SkillData.length; x++) {
+                    $scope.SkillData[x].assocAgentSkill = false;
+                    $scope.SkillData[x].AssocChanged = true;
             }
+        };
+        $scope.UpdateAgentSkill = function() {
             $scope.showSpinner = true;
-            var oldDisp = [];
-            var dispString = ""
-            oldDisp = $scope.SkillDataOrig[skillIdx].dispositions;
-            for (var x = 0; x < $scope.SkillDispData.length; x++) {
-                if ($scope.SkillDispData[x].ListPriority > 0) {
-                    // look for it in the old data
-                    var foundit = false;
-                    if (oldDisp != undefined) {
-                        // look for old disposition
-                        var found = false;
-                        for (var w = 0; w < oldDisp.length; w++) {
-                            if (oldDisp[w].dispositionId == $scope.SkillDispData[x].DispositionID) {
-                                found = true;
-                                if (oldDisp[w].priority != $scope.SkillDispData[x].ListPriority) {
-                                    dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                                    dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                                    break;
-                                } else {
-                                    // no change
-                                    break;
-                                }
-                            }
-                        }
-                        if (!found) {
-                            // new item
-                            dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                            dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                        }
-                    } else {
-                        // there were no dispositions before. therefore, ADD
-                        dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                        dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                    }
-                } else {
-                    // not associated now - see if it was prior
-                    if (oldDisp != undefined) {
-                        // look for old disposition
-                        var found = false;
-                        for (var w = 0; w < oldDisp.length; w++) {
-                            if (oldDisp[w].dispositionId == $scope.SkillDispData[x].DispositionID) {
-                                if (oldDisp[w].priority != $scope.SkillDispData[x].ListPriority) {
-                                    dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                                    dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                                    break;
-                                } else {
-                                    // no change
-                                    break;
-                                }
-                            }
-                        }
+            var addList = [];
+            var deleteList = [];
+            var addIdx = 0;
+            var deleteIdx = 0;
+            var doAdd = false;
+            var doDelete = false;
+            for (var x = 0; x < $scope.SkillData.length; x++) {
+                if ($scope.SkillData[x].AssocChanged){
+                    if ($scope.SkillData[x].assocAgentSkill){
+                        // set add
+                        addList[addIdx] = {
+                            skillId:$scope.SkillData[x].skillId,
+                            proficiency:3,
+                            isActive:true
+                        };
+                        addIdx++;
+                        doAdd = true;
+                    }else{
+                        // set delete
+                        deleteList[deleteIdx] = {
+                            skillId:$scope.SkillData[x].skillId
+                        };
+                        deleteIdx++;
+                        doDelete = true;
                     }
                 }
+
             }
-            if (dispString.length > 0) {
-                dispString = dispString.substr(0, dispString.length - 1);
-                dispString = "\"dispositions\":[" + dispString + "]";
-                // dispString = "\"acwTypeId\":2,\"dispositions\":[" + dispString + "]";
-                //               console.log(dispString);
-            }
-            var dispstr = "";
-            if ($scope.SkillData[skillIdx].stateIdACW != $scope.SkillDataOrig[skillIdx].stateIdACW) {
-                dispstr = dispstr + "\"stateIdACW\":" + $scope.SkillData[skillIdx].stateIdACW + ",";
-            }
-            if ($scope.SkillData[skillIdx].requireDisposition != $scope.SkillDataOrig[skillIdx].requireDisposition) {
-                dispstr = dispstr + "\"requireDisposition\":" + $scope.SkillData[skillIdx].requireDisposition + ",";
-            }
-            if ($scope.SkillData[skillIdx].acwTypeId != $scope.SkillDataOrig[skillIdx].acwTypeId) {
-                dispstr = dispstr + "\"acwTypeId\":" + $scope.SkillData[skillIdx].acwTypeId + ",";
-            }
-            if ($scope.SkillData[skillIdx].maxSecondsACW != $scope.SkillDataOrig[skillIdx].maxSecondsACW) {
-                dispstr = dispstr + "\"maxSecondsACW\":" + $scope.SkillData[skillIdx].maxSecondsACW + ",";
-            }
-            if (dispstr.length > 0) {
-                dispstr = "{\"skill\":{" + dispstr.substr(0, dispstr.length - 1);
-                if (dispString.length > 0) {
-                    dispstr = dispstr + "," + dispString + "}}";
-                } else {
-                    dispstr = dispstr + "}}";
-                }
-            } else {
-                if (dispString.length > 0) {
-                    dispstr = "{\"skill\":{" + dispString + "}}";
-                }
-            }
-            if (dispstr.length > 0) {
-                var updateJSON = JSON.parse(dispstr);
-                console.log(JSON.stringify(updateJSON));
-                console.log($scope.SkillData[skillIdx].skillId);
-                var token = SOAPClient.ICToken;
-                var extURL = 'services/v8.0/skills/';
-                icSOAPServices.ICPUT(token, extURL + $scope.SkillData[skillIdx].skillId, updateJSON).then(
-                    function () {
-                        $scope.showSpinner = false;
-                        skillIdx++;
-                        if (skillIdx <= $scope.SkillData.length){
-                            $scope.modSkillSelected = $scope.SkillData[skillIdx].skillName;
-                            $scope.skillSelected();
+            var addjson = {skills:addList};
+            var deletejson = {skills:deleteList};
+            // console.log(JSON.stringify(addjson));
+            // console.log(JSON.stringify(deletejson));
+            extURL = 'services/v8.0/agents/' + agentID + '/skills';
+            if (doAdd) {
+                icSOAPServices.ICPOST(token, extURL, addjson).then(
+                    function (data) {
+                        $scope.AddReturn = data.data;
+                        // console.log($scope);
+                        if (doDelete) {
+                            extURL = 'services/v8.0/agents/' + agentID + '/skills';
+                            icSOAPServices.ICDELETE(token, extURL, deletejson).then(
+                                function (data) {
+                                    $scope.deletereturn = data.data;
+                                    $scope.showSpinner = false;
+                                    // console.log($scope);
+                                },
+                                function (response) {
+                                    $scope.showSpinner = false;
+                                    alert("BAD:" + JSON.stringify(response));
+                                }
+                            );
+                        }else{
+                            $scope.showSpinner = false;
                         }
-
-
-
                     },
                     function (response) {
-                        alert("failed" + JSON.stringify(response));
                         $scope.showSpinner = false;
+                        alert("BAD:" + JSON.stringify(response));
                     }
                 );
-            } else {
-                $scope.showSpinner = false;
+            }else{
+                if (doDelete){
+                    extURL = 'services/v8.0/agents/' + agentID + '/skills';
+                    icSOAPServices.ICDELETE(token, extURL, deletejson).then(
+                        function (data) {
+                            $scope.deletereturn = data.data;
+                            $scope.showSpinner = false;
+                            // console.log($scope);
+                        },
+                        function (response) {
+                            $scope.showSpinner = false;
+                            alert("BAD:" + JSON.stringify(response));
+                        }
+                    );
+                }else{
+                    $scope.showSpinner = false;
+                }
             }
-        };
 
-        // pass 2 Add
-        $scope.showSpinner = false;
+
+         };
+
 
     }]);

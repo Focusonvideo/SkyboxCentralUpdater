@@ -12,7 +12,8 @@ angular.module('SkyboxApp')
             pass:'', //  'colleeN101',
             appName:'', //   'Skybox_mobil',
             vendName:'', //  'Skybox_communications',
-            BusUnit:'4594585', //  '4594585',
+ //           BusUnit:'4594585', //  '4594585',
+            BusUnit:'', //  '4594585',
             soapPass:'' //  '10BC037E-35B9-4FBD-95A8-F342C0D9ACB8'
         };
  /*   */

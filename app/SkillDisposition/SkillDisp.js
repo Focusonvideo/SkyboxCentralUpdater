@@ -315,6 +315,7 @@ angular.module('SkyboxApp')
             for (var x=0;x < $scope.SkillDispData.length; x++) {
                 $scope.savedDispDataConfig[x]= {
                                  ListPriority : $scope.SkillDispData[x].ListPriority,
+                                        Assoc : $scope.SkillDispData[x].Assoc,
                                        showit : $scope.SkillDispData[x].showit,
                                     useSelected:[{sel:$scope.SkillDispData[x].useSelected[0].sel},
                                                 {sel:$scope.SkillDispData[x].useSelected[1].sel}],
@@ -346,6 +347,7 @@ angular.module('SkyboxApp')
                 $scope.SkillDispData[x].yesnos[1].name = $scope.savedDispDataConfig[x].yesnos[1].name;
                 $scope.SkillDispData[x].yesnos[1].sel = $scope.savedDispDataConfig[x].yesnos[1].sel;
                 $scope.SkillDispData[x].showit = $scope.savedDispDataConfig[x].showit;
+                $scope.SkillDispData[x].Assoc = $scope.savedDispDataConfig[x].Assoc;
             }
             $scope.SkillData[skillIdx].requireDisposition = $scope.savedSkillData.requireDisposition;
             $scope.requireDisposition = $scope.savedSkillData.requireDisposition;
@@ -402,51 +404,51 @@ angular.module('SkyboxApp')
             for (var x = 0; x < $scope.SkillDispData.length; x++) {
                 if ($scope.SkillDispData[x].ListPriority > 0) {
                     // look for it in the old data
-                    var foundit = false;
-                    if (oldDisp != undefined) {
-                        // look for old disposition
-                        var found = false;
-                        for (var w = 0; w < oldDisp.length; w++) {
-                            if (oldDisp[w].dispositionId == $scope.SkillDispData[x].DispositionID) {
-                                found = true;
-                                if (oldDisp[w].priority != $scope.SkillDispData[x].ListPriority) {
-                                    dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                                    dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                                    break;
-                                } else {
-                                    // no change
-                                    break;
-                                }
-                            }
-                        }
-                        if (!found) {
-                            // new item
-                            dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                            dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                        }
-                    } else {
+                    // var foundit = false;
+                    // if (oldDisp != undefined) {
+                    //     // look for old disposition
+                    //     var found = false;
+                    //     for (var w = 0; w < oldDisp.length; w++) {
+                    //         if (oldDisp[w].dispositionId == $scope.SkillDispData[x].DispositionID) {
+                    //             found = true;
+                    //             if (oldDisp[w].priority != $scope.SkillDispData[x].ListPriority) {
+                    //                 dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
+                    //                 dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
+                    //                 break;
+                    //             } else {
+                    //                 // no change
+                    //                 break;
+                    //             }
+                    //         }
+                    //     }
+                    //     if (!found) {
+                    //         // new item
+                    //         dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
+                    //         dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
+                    //     }
+                    // } else {
                         // there were no dispositions before. therefore, ADD
                         dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
                         dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                    }
+                    // }
                 } else {
                     // not associated now - see if it was prior
-                    if (oldDisp != undefined) {
-                        // look for old disposition
-                        var found = false;
-                        for (var w = 0; w < oldDisp.length; w++) {
-                            if (oldDisp[w].dispositionId == $scope.SkillDispData[x].DispositionID) {
-                                if (oldDisp[w].priority != $scope.SkillDispData[x].ListPriority) {
-                                    dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
-                                    dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
-                                    break;
-                                } else {
-                                    // no change
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    // if (oldDisp != undefined) {
+                    //     // look for old disposition
+                    //     var found = false;
+                    //     for (var w = 0; w < oldDisp.length; w++) {
+                    //         if (oldDisp[w].dispositionId == $scope.SkillDispData[x].DispositionID) {
+                    //             if (oldDisp[w].priority != $scope.SkillDispData[x].ListPriority) {
+                    //                 dispString = dispString + "{\"dispositionId\":\"" + $scope.SkillDispData[x].DispositionID + "\",";
+                    //                 dispString = dispString + "\"priority\":\"" + $scope.SkillDispData[x].ListPriority + "\"},";
+                    //                 break;
+                    //             } else {
+                    //                 // no change
+                    //                 break;
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             }
             if (dispString.length > 0) {
@@ -488,12 +490,13 @@ angular.module('SkyboxApp')
                 var extURL = 'services/v8.0/skills/';
                  icSOAPServices.ICPUT(token, extURL + $scope.SkillData[skillIdx].skillId, updateJSON).then(
                     function () {
-                        $scope.showSpinner = false;
                         skillIdx++;
+                        $scope.skillTypeSelected();
                         if (skillIdx <= $scope.SkillData.length){
                             $scope.modSkillSelected = $scope.SkillData[skillIdx].skillName;
                             $scope.skillSelected();
                         }
+                        $scope.showSpinner = false;
 
 
 

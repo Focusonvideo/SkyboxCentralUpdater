@@ -21,7 +21,7 @@
         <th ng-show="showCalledID">Custom<br/>CallerID</th>
         <th ng-show="showScript" >Custom<br/>Script</th>
         <th ng-show="showFromAddress">From Address</th>
-        <th>SL/%</th>
+        <th>SLA/%</th>
         <th>Short<br/>Abandons</th>
         <th>Priority</th>
         <th>Priority<br/>Blending</th>
@@ -60,7 +60,7 @@
         <td><input type="text" ng-model="sk.ShortAbandon"  size="7"/></td>
         <td><input type="text" ng-model="sk.Priority" size="10" ng-disabled="sk.priDisabled" /></td>
         <td>
-            <input type="checkbox" ng-model="sk.priorityBlending" ng-checked="sk.priorityBlending" ng-change="blendChange(sk.index)" />
+            <input type="checkbox" ng-model="sk.priorityBlending" ng-checked="sk.priorityBlending" ng-change="blendChange(sk.index)" {{blendingDisabled}} />
         </td>
         <td>
             <input type="text" ng-model="sk.ACWDisposition" size="8" Disabled="Disabled"/>

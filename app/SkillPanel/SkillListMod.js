@@ -50,7 +50,7 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
     );
     function getScripts(){
         var token = SOAPClient.ICToken;
-        var extURL = 'services/v7.0/scripts?isactive=true&testing=true';
+        var extURL = 'services/v13.0/scripts?isactive=true&testing=true';
         icSOAPServices.ICGET(token, extURL).then(
             function(data){
 //                alert(JSON.stringify(data.data.resultSet.scripts));
@@ -112,15 +112,19 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
     }
     function getBU(){
         var token = SOAPClient.ICToken;
-        var extURL = 'services/v7.0/business-unit';
+        var extURL = 'services/v13.0/business-unit';
         icSOAPServices.ICGET(token, extURL).then(
             function(data){
- //               alert(JSON.stringify(data.data.resultSet.businessUnits[0]));
-                var blending = data.data.resultSet.businessUnits[0].priorityBased;
-                $scope.bu = data.data.resultSet.businessUnits[0];
-                $scope.blending = true;
-                if (blending == "True"){
-                	$scopr.blending = true;
+//                alert(JSON.stringify(data));
+//                alert(JSON.stringify(data.data.businessUnits[0]));
+                var blending = data.data.businessUnits[0].priorityBasedBlending;
+                $scope.bu = data.data.businessUnits[0];
+                $scope.blending = false;
+                var dq = '"';
+                $scope.blendingDisabled = "disabled=" + dq + "Disabled" + dq;
+                if (blending == "true"){
+                	$scope.blending = true;
+                	$scope.blendingDisabled = "";
                 }
                 console.log($scope);
                 $scope.showSpinner = false;
@@ -216,7 +220,7 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
             }
         }
         var token = SOAPClient.ICToken;
-         var extURL = 'services/v8.0/skills?orderBy=skillName&mediaTypeId=' + typeId + filter + searchString;
+         var extURL = 'services/v13.0/skills?orderBy=skillName&mediaTypeId=' + typeId + filter + searchString;
  //        alert(extURL);
         icSOAPServices.ICGET(token, extURL).then(
             function(data){
@@ -312,7 +316,8 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
             changed = changed + dq + "isActive" + dq + " : " + dq + $scope.SkillData[idx].isActive + dq + ",";
         }
         if($scope.SkillData[idx].campaignName != $scope.SkillDataOrig[idx].campaignName) {
-            changed = changed + dq + "campaignId" + dq + " : " + dq + $scope.SkillData[idx].campaignId + dq + ",";
+//            changed = changed + dq + "campaignId" + dq + " : " + dq + $scope.SkillData[idx].campaignId + dq + ",";
+            changed = changed + dq + "campaignId" + dq + " : "  + $scope.SkillData[idx].campaignId + ",";
         }
         if($scope.SkillData[idx].callerIdOverride != $scope.SkillDataOrig[idx].callerIdOverride) {
            changed = changed + dq + "callerIdOverride" + dq + " : " + dq + $scope.SkillData[idx].callerIdOverride + dq + ",";
@@ -331,22 +336,30 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
 
         if($scope.SkillData[idx].SLA != $scope.SkillDataOrig[idx].SLA) {
             var thresh_goal = $scope.SkillData[idx].SLA.split("/");
-            changed = changed + dq + "ServiceLevelThreshold" + dq + " : " + dq + thresh_goal[0] + dq + ",";
-            changed = changed + dq + "ServiceLevelGoal" + dq + " : " + dq + thresh_goal[1] + dq + ",";
+//            changed = changed + dq + "serviceLevelThreshold" + dq + " : " + dq + thresh_goal[0] + dq + ",";
+//            changed = changed + dq + "serviceLevelGoal" + dq + " : " + dq + thresh_goal[1] + dq + ",";
+            changed = changed + dq + "serviceLevelThreshold" + dq + " : "  + thresh_goal[0]  + ",";
+            changed = changed + dq + "serviceLevelGoal" + dq + " : "  + thresh_goal[1]  + ",";
         }
         if($scope.SkillData[idx].ShortAbandon != $scope.SkillDataOrig[idx].ShortAbandon) {
             var esa_sat = $scope.SkillData[idx].ShortAbandon.split(",");
-            changed = changed + dq + "enableShortAbandon" + dq + " : " + dq + esa_sat[0] + dq + ",";
-            changed = changed + dq + "shortAbandonThreshold" + dq + " : " + dq + esa_sat[1].trim() + dq + ",";
+ //           changed = changed + dq + "enableShortAbandon" + dq + " : " + dq + esa_sat[0] + dq + ",";
+ //           changed = changed + dq + "shortAbandonThreshold" + dq + " : " + dq + esa_sat[1].trim() + dq + ",";
+            changed = changed + dq + "enableShortAbandon" + dq + " : "  + esa_sat[0]  + ",";
+            changed = changed + dq + "shortAbandonThreshold" + dq + " : "  + esa_sat[1].trim()  + ",";
         }
         if($scope.SkillData[idx].Priority != $scope.SkillDataOrig[idx].Priority) {
             var IAM = $scope.SkillData[idx].Priority.split("|");
-            changed = changed + dq + "initailPriority" + dq + " : " + dq + IAM[0] + dq + ",";
-            changed = changed + dq + "acceleraation" + dq + " : " + dq + IAM[1] + dq + ",";
-            changed = changed + dq + "maxPriority" + dq + " : " + dq + IAM[2] + dq + ",";
+            // changed = changed + dq + "initailPriority" + dq + " : " + dq + IAM[0] + dq + ",";
+            // changed = changed + dq + "acceleraation" + dq + " : " + dq + IAM[1] + dq + ",";
+            // changed = changed + dq + "maxPriority" + dq + " : " + dq + IAM[2] + dq + ",";
+            changed = changed + dq + "initailPriority" + dq + " : " +  IAM[0]  + ",";
+            changed = changed + dq + "acceleraation" + dq + " : " +  IAM[1]  + ",";
+            changed = changed + dq + "maxPriority" + dq + " : " +  IAM[2]  + ",";
         }
         if($scope.SkillData[idx].priorityBlending != $scope.SkillDataOrig[idx].priorityBlending) {
-            changed = changed + dq + "priorityBlending" + dq + " : " + dq + $scope.SkillData[idx].priorityBlending + dq + ",";
+//            changed = changed + dq + "priorityBlending" + dq + " : " + dq + $scope.SkillData[idx].priorityBlending + dq + ",";
+            changed = changed + dq + "priorityBlending" + dq + " : "  + $scope.SkillData[idx].priorityBlending  + ",";
         }
         if($scope.SkillData[idx].UseDispositions != $scope.SkillDataOrig[idx].UseDispositions) {
  //           changed = true;
@@ -359,7 +372,8 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
  //           changed = true;
         }
         if($scope.SkillData[idx].scriptName != $scope.SkillDataOrig[idx].scriptName)  {
-            changed = changed + dq + "scriptId" + dq + " : " + dq + $scope.SkillData[idx].scriptId + dq + ",";
+//            changed = changed + dq + "scriptId" + dq + " : " + dq + $scope.SkillData[idx].scriptId + dq + ",";
+            changed = changed + dq + "scriptId" + dq + " : "  + $scope.SkillData[idx].scriptId  + ",";
         }
         var idx = changed.lastIndexOf(",");
         if (idx != -1) {
@@ -374,7 +388,7 @@ app.controller('SkillListModCtrl', ['$scope', 'icSOAPServices', '$location', '$f
     $scope.UpdateSkills = function(){
         $scope.showSpinner = true;
         var token = SOAPClient.ICToken;
-        var extURL = 'services/v8.0/skills/';
+        var extURL = 'services/v14.0/skills/';
 
         var updatecount = 0;
         for (var x=0;x<$scope.SkillData.length;x++){
